@@ -3,180 +3,309 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#1f2937">
+  <meta name="theme-color" content="#ffffff">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — Summer V6</title>
+  <title>Latin Revision — Soft Scholar V7</title>
   <style>
-    :root{--ink:#202124;--muted:#6b7280;--line:#d8dadd;--paper:#fff;--bg:#f5f6f7;--good:#e8f6ea;--amber:#fff4d8;--bad:#fdebec;--accent:#26354a}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
-    header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:16px max(18px,env(safe-area-inset-left))}
-    header h1{margin:0;font-size:23px}header p{margin:4px 0 0;color:var(--muted);font-size:13px}.wrap{max-width:1080px;margin:auto;padding:20px}
-    .card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
-    h2,h3{margin-top:0}.score{font-size:31px;font-weight:750}.small{font-size:13px}.muted{color:var(--muted)}.hidden{display:none!important}
-    button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;min-height:42px}
-    button.secondary{background:#fff;color:var(--ink);border-color:#aeb3ba}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.between{justify-content:space-between}
-    .progress{height:10px;border-radius:999px;background:#e7e8ea;overflow:hidden}.bar{height:100%;background:var(--accent);width:0}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:12px}
-    .green{background:var(--good)}.amber{background:var(--amber)}.red{background:var(--bad)}.phase{margin:24px 2px 10px;font-size:14px;color:#4b5563;text-transform:uppercase;letter-spacing:.05em}
-    .day{border-left:5px solid var(--accent)}.day h2{margin:0 0 5px;font-size:21px}.scope{margin-top:10px;padding-top:10px;border-top:1px solid #eceeef}.question{font-size:20px;font-weight:700;margin:15px 0;line-height:1.45}
-    .context{white-space:pre-wrap;background:#f9fafb;border:1px solid #e3e5e8;border-radius:11px;padding:14px;font-size:18px;margin:13px 0;overflow-wrap:anywhere}
-    textarea,input[type=text]{width:100%;border:1px solid #9ca3af;border-radius:10px;padding:12px;font:inherit;font-size:17px;background:#fff}textarea{min-height:125px;resize:vertical}
-    .answers{display:grid;gap:8px}.answerbtn{background:#fff;color:var(--ink);text-align:left;border-color:#b8bdc4}.answerbtn.selected{outline:3px solid #26354a;background:#eef2f7}
-    .feedback{border:1px solid var(--line);border-radius:11px;padding:14px;margin-top:14px}.goodbox{background:var(--good)}.badbox{background:var(--bad)}.answerexample{background:#fff;border-left:4px solid var(--accent);padding:10px;margin-top:9px}
-    .notesgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px}.notebox{background:#fafafa;border:1px solid #e1e3e6;border-radius:12px;padding:14px}.notebox ul{margin:5px 0 0;padding-left:20px}.notice{border-left:5px solid #b7791f;background:#fff8e7}
-    .audit{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.audit div{background:#fafafa;border:1px solid #e7e7e7;border-radius:9px;padding:9px}
-    footer{padding:22px;text-align:center;color:var(--muted);font-size:12px}.fileinput{display:none}
-    @media(max-width:580px){.wrap{padding:12px}.card{padding:15px}.question{font-size:18px}.context{font-size:16px}header h1{font-size:20px}}
+    :root{
+      --ink:#24312c;--muted:#708078;--line:#d9e6df;--paper:#fff;
+      --sage:#4e7c68;--sage-dark:#365d4c;--sage-soft:#eaf4ef;
+      --lav:#755b9e;--lav-soft:#f0eafb;--rose:#a45e67;--rose-soft:#faecef;
+      --gold:#9a6c38;--gold-soft:#fbf3e8;--track:#edf2ef;
+      --heading:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+      --body:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{background:#fff}
+    body{margin:0;background:#fff;color:var(--ink);font-family:var(--body);line-height:1.5}
+    button,textarea,input{font:inherit}
+    button{cursor:pointer;min-height:44px}
+    button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid #bcaed6;outline-offset:2px}
+    .hidden{display:none!important}
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    .eyebrow{color:var(--lav);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+    h1,h2,h3{font-family:var(--heading);font-weight:600;line-height:1.18}
+    h1{font-size:clamp(29px,5vw,43px);margin:6px 0 8px}
+    h2{font-size:24px;margin:0 0 8px}
+    h3{font-size:18px;margin:0 0 7px}
+    p{margin:8px 0}
+    .app-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-left))}
+    .header-inner{max-width:1120px;margin:auto;display:flex;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;margin-right:auto;font-family:var(--heading);font-size:20px;font-weight:600}
+    .brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:14px;background:var(--sage);color:#fff;box-shadow:3px 3px 0 var(--lav-soft);font-family:var(--heading);font-size:22px}
+    .header-tag{display:none;color:var(--muted);font-size:13px}
+    .sound-button{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);padding:8px 13px;display:flex;align-items:center;gap:7px}
+    .sound-dot{width:9px;height:9px;border-radius:50%;background:var(--sage)}
+    .sound-button[aria-pressed="false"] .sound-dot{background:#b8c0bc}
+    .wrap{max-width:1120px;margin:auto;padding:24px max(16px,env(safe-area-inset-left)) 38px}
+    .hero{position:relative;overflow:hidden;padding:15px 2px 22px}
+    .hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-85px;top:-95px;background:var(--lav-soft);z-index:-1}
+    .hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
+    .hero p{max-width:650px;color:var(--muted)}
+    .streak{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:var(--gold-soft);color:var(--gold);white-space:nowrap}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .summary{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;min-width:0}
+    .summary:nth-child(1){border-top:4px solid var(--sage)}
+    .summary:nth-child(2){border-top:4px solid var(--lav)}
+    .summary:nth-child(3){border-top:4px solid var(--gold)}
+    .summary:nth-child(4){border-top:4px solid var(--rose)}
+    .summary-label{color:var(--muted);font-size:13px}
+    .summary-value{font-family:var(--heading);font-size:31px;font-weight:600;margin:3px 0}
+    .progress{height:8px;border-radius:999px;background:var(--track);overflow:hidden;margin-top:9px}
+    .progress-bar{height:100%;width:0;background:var(--sage);border-radius:999px;transition:width .2s ease}
+    .primary,.secondary,.ghost{border-radius:999px;padding:10px 16px}
+    .primary{border:1px solid var(--sage);background:var(--sage);color:#fff;box-shadow:0 7px 16px rgba(78,124,104,.16)}
+    .primary:hover{background:var(--sage-dark)}
+    .secondary{border:1px solid var(--line);background:#fff;color:var(--ink)}
+    .ghost{border:0;background:var(--sage-soft);color:var(--sage-dark)}
+    button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+    .action-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+    .between{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .dashboard-actions{border:1px solid var(--line);border-radius:19px;padding:16px;margin:17px 0;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+    .phase{margin:28px 2px 11px;color:var(--lav);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+    .day-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff;padding:18px;margin-bottom:12px;box-shadow:0 8px 22px rgba(61,94,79,.055)}
+    .day-card:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;right:-42px;bottom:-46px;background:var(--sage-soft)}
+    .day-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:15px;align-items:center;position:relative;z-index:1}
+    .day-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+    .day-title h2{margin:0;font-size:22px}
+    .status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
+    .status.mastered{background:var(--sage-soft);color:var(--sage-dark)}
+    .status.started{background:var(--gold-soft);color:var(--gold)}
+    .status.new{background:var(--rose-soft);color:var(--rose)}
+    .scope{border-top:1px solid var(--line);margin-top:12px;padding-top:11px;color:var(--muted);font-size:13px;position:relative;z-index:1}
+    .cycle-line{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin-top:6px;flex-wrap:wrap}
+    .cycle-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:var(--lav-soft);color:var(--lav)}
+    .notice{border:1px solid #ead7b9;border-left:5px solid var(--gold);border-radius:15px;background:var(--gold-soft);padding:14px;margin-bottom:15px}
+    .parent-panel{border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:22px;background:#fff}
+    .storage-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 15px}
+    .storage-item{background:var(--sage-soft);border-radius:14px;padding:12px}
+    .storage-item:nth-child(2){background:var(--lav-soft)}
+    .fileinput{display:none}
+    .notes-shell,.quiz-shell,.results-shell{max-width:880px;margin:auto}
+    .page-card{border:1px solid var(--line);border-radius:24px;background:#fff;padding:clamp(18px,4vw,30px);box-shadow:0 12px 32px rgba(61,94,79,.07)}
+    .notes-header{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:17px}
+    .must-box{background:var(--lav-soft);border-radius:20px;padding:18px;margin:15px 0}
+    .must-box h3{color:var(--lav)}
+    .must-box ul,.note-section ul,.feedback-list{margin:7px 0 0;padding-left:22px}
+    .must-box li,.note-section li,.feedback-list li{margin:7px 0}
+    .notes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+    .note-section{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
+    .note-section:nth-child(2n){border-color:#e3dbef}
+    .exact-scope{border-left:4px solid var(--sage);background:var(--sage-soft);border-radius:0 14px 14px 0;padding:13px 15px;margin:15px 0}
+    .quiz-top{margin-bottom:17px}
+    .quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .quiz-badges{display:flex;gap:7px;flex-wrap:wrap}
+    .question-context{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #e3dbef;border-radius:18px;background:var(--lav-soft);padding:16px;margin:15px 0;font-family:var(--heading);font-size:19px}
+    .direction{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--sage-soft);color:var(--sage-dark);font-size:12px;font-weight:700}
+    .question-text{font-family:var(--heading);font-size:23px;line-height:1.35;margin:15px 0}
+    .answers{display:grid;gap:9px}
+    .answer-button{border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);text-align:left;padding:12px 14px;min-height:48px}
+    .answer-button:hover{border-color:#bcaed6;background:#fbf9fe}
+    .answer-button.selected{border:2px solid var(--lav);background:var(--lav-soft)}
+    textarea{width:100%;min-height:140px;border:1px solid #b8c9c0;border-radius:17px;padding:14px;background:#fff;color:var(--ink);font-size:17px;resize:vertical}
+    .feedback{margin-top:17px;border-radius:20px;padding:18px;border:1px solid var(--line)}
+    .feedback.good{background:var(--sage-soft);border-color:#c6dfd2}
+    .feedback.bad{background:var(--rose-soft);border-color:#efcbd1}
+    .feedback-title{font-family:var(--heading);font-size:22px;margin-bottom:8px}
+    .your-answer{padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.75);margin:9px 0}
+    .answer-example{background:#fff;border-left:4px solid var(--lav);border-radius:0 13px 13px 0;padding:12px 14px;margin:11px 0}
+    .explanation-box{background:#fff;border-radius:15px;padding:14px;margin-top:11px}
+    .memory-box{background:var(--gold-soft);border-radius:14px;padding:12px 14px;margin-top:11px;color:#6f4d29}
+    .review-schedule{font-size:13px;margin-top:11px;color:var(--rose)}
+    .result-score{font-family:var(--heading);font-size:44px;margin:8px 0}
+    .result-message{font-size:17px}
+    .file-note{font-size:12px;color:var(--muted);margin-top:9px}
+    @media(min-width:760px){.header-tag{display:block}}
+    @media(max-width:880px){.summary-grid{grid-template-columns:repeat(2,1fr)}.notes-grid{grid-template-columns:1fr}}
+    @media(max-width:620px){
+      .wrap{padding-top:17px}.hero-row{align-items:flex-start;flex-direction:column}.streak{align-self:flex-start}
+      .summary-grid{grid-template-columns:1fr 1fr;gap:9px}.summary{padding:14px}.summary-value{font-size:27px}
+      .day-main{grid-template-columns:1fr}.day-main .primary{width:100%}.storage-grid{grid-template-columns:1fr}
+      .notes-header{flex-direction:column}.question-text{font-size:21px}.page-card{border-radius:20px}
+    }
   </style>
 </head>
 <body>
-<header><h1>Latin Revision — Summer V6</h1><p>Source-locked • dated blocks • automatic marking • 2-day/7-day reviews • 85% mastery</p></header>
-<main class="wrap">
-  <section id="dashboard">
-    <div id="migration" class="card notice hidden"></div>
-    <div class="grid">
-      <div class="card"><h3>Overall mastery</h3><div class="score" id="overall">0%</div><div class="progress"><div class="bar" id="overallbar"></div></div></div>
-      <div class="card"><h3>Questions in bank</h3><div class="score" id="totalcount">0</div><div class="small muted">All restricted to summer coverage</div></div>
-      <div class="card"><h3>Due today</h3><div class="score" id="duecount">0</div><button id="duebtn" onclick="startDue()">Do due reviews</button></div>
-      <div class="card"><h3>Weak / scheduled</h3><div class="score" id="weakcount">0</div><button onclick="startWrong()">Retest weak questions</button></div>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand"><span class="brand-mark">L</span><span>Latin Revision</span></div>
+      <span class="header-tag">Soft Scholar · Summer source-locked</span>
+      <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span class="sound-dot"></span><span id="soundLabel">Sound on</span></button>
     </div>
-    <div class="card">
-      <div class="row between"><div><h2 style="margin-bottom:5px">Revision by exact learning date</h2><div class="small muted">Each card has its own question pool. Later material cannot leak into an earlier date.</div></div><button class="secondary" onclick="startMixed()">Mixed test from attempted blocks</button></div>
-    </div>
-    <div id="daylist"></div>
-    <div class="card">
-      <h3>Source-lock audit</h3>
-      <p class="small">Only the Year 8 Latin teacher-coverage booklet and the 18 July–3 September summer schedule are used. Travel/rest dates contain no practice. <strong>ad urbem</strong>, <strong>ad villam</strong> and Ancient Greece appear only on or after their scheduled dates.</p>
-      <div class="audit"><div><strong>Stages 1–12</strong><br><span class="small">Separated by 18–29 Jul</span></div><div><strong>Grammar</strong><br><span class="small">12–22 Aug only</span></div><div><strong>Set texts</strong><br><span class="small">23–25 Aug only</span></div><div><strong>Ancient Greece</strong><br><span class="small">28 Aug only</span></div></div>
-    </div>
-    <div class="card"><h3>Parent controls</h3><div class="row"><button class="secondary" onclick="exportProgress()">Export progress</button><button class="secondary" onclick="document.getElementById('importfile').click()">Import progress</button><input id="importfile" class="fileinput" type="file" accept="application/json" onchange="importProgress(event)"><button class="secondary" onclick="resetProgress()">Reset progress</button></div></div>
-  </section>
+  </header>
 
-  <section id="notes" class="hidden"><div class="card">
-    <div class="row between"><div><div class="small muted">2–4 MINUTE QUICK REVISION</div><h2 id="notestitle" style="margin:4px 0"></h2></div><span class="pill amber">Read once, then test</span></div>
-    <p id="notesintro"></p><div class="notesgrid"><div class="notebox"><h3>Before you start</h3><ul id="notesitems"></ul></div><div class="notebox"><h3>Exact scope today</h3><p id="notesscope"></p></div></div>
-    <div style="height:12px"></div><div class="row"><button id="notesstartbtn">Start this practice</button><button class="secondary" onclick="showDashboard()">Back to dates</button></div>
-  </div></section>
+  <main class="wrap">
+    <section id="dashboard">
+      <div id="migration" class="notice hidden"></div>
+      <div class="hero">
+        <div class="hero-row">
+          <div><div class="eyebrow">Today · Summer revision</div><h1>Small steps make strong memory.</h1><p>Choose one exact dated block. Fresh practice uses unseen questions first; mistakes return through the separate 2-day and 7-day review schedule.</p></div>
+          <div class="streak">✦ <span>Focused practice, not endless papers</span></div>
+        </div>
+      </div>
 
-  <section id="quiz" class="hidden"><div class="card">
-    <div class="row between"><strong id="quiztitle"></strong><span id="qcounter" class="small muted"></span></div><div class="progress"><div class="bar" id="quizbar"></div></div>
-    <div id="qcontext" class="context"></div><div id="direction" class="pill"></div><div id="qtext" class="question"></div><div id="inputarea"></div>
-    <div id="feedback" class="feedback hidden"></div><div style="height:11px"></div><div class="row"><button id="checkbtn" onclick="checkAnswer()">Check answer</button><button id="nextbtn" class="hidden" onclick="nextQuestion()">Next</button><button class="secondary" onclick="showDashboard()">Stop</button></div>
-  </div></section>
+      <div class="summary-grid">
+        <div class="summary"><div class="summary-label">Overall mastery</div><div class="summary-value" id="overall">0%</div><div class="progress"><div class="progress-bar" id="overallbar"></div></div></div>
+        <div class="summary"><div class="summary-label">Questions in bank</div><div class="summary-value" id="totalcount">0</div><div class="small muted">Summer content only</div></div>
+        <div class="summary"><div class="summary-label">Due today</div><div class="summary-value" id="duecount">0</div><button id="duebtn" class="ghost" onclick="startDue()">Review due questions</button></div>
+        <div class="summary"><div class="summary-label">Scheduled reviews</div><div class="summary-value" id="weakcount">0</div><div class="small muted">Held out of normal practice</div></div>
+      </div>
 
-  <section id="results" class="hidden"><div class="card"><h2>Finished</h2><div id="resultscore" class="score"></div><p id="resultmsg"></p><div class="row"><button onclick="showDashboard()">Back to dated index</button><button class="secondary" onclick="startDue()">Do due reviews</button></div></div></section>
-</main>
-<footer><span id="versionline">Latin Revision V6</span> • progress stays on this device • works offline after first load</footer>
+      <div class="dashboard-actions">
+        <div><h3 style="margin-bottom:3px">Revision by exact learning date</h3><div class="small muted">Each card has its own locked scope and no-repeat question cycle.</div></div>
+        <button class="secondary" onclick="startMixed()">Mixed test from attempted blocks</button>
+      </div>
 
-<script src="question-bank.js"></script>
-<script>
-const bank=window.LATIN_BANK||[], blocks=window.LATIN_BLOCKS||[], notes=window.LATIN_NOTES||{}, meta=window.LATIN_META||{};
-const masteryTarget=85, stateKey='latinSummerV6State';
-let migrationMessage='', quizQuestions=[], current=0, score=0, quizTitle='', quizDay='', reviewMode=false;
+      <div id="daylist"></div>
 
-function emptyState(){return {version:6,attempts:[],reviews:{},results:{}}}
-function loadState(){
-  try{const saved=JSON.parse(localStorage.getItem(stateKey)||'null');if(saved)return Object.assign(emptyState(),saved)}catch(e){}
-  try{
-    const old=JSON.parse(localStorage.getItem('latinV3State')||'null');
-    if(old){const s=emptyState();s.attempts=Array.isArray(old.attempts)?old.attempts:[];migrationMessage='Your earlier score history was carried into V6. The old weak-question list was cleared because the 23-question prototype was replaced by a newly numbered source-locked bank.';return s}
-  }catch(e){}
-  return emptyState();
-}
-let state=loadState();
-const byId=new Map(bank.map(q=>[q.id,q]));
+      <section class="parent-panel">
+        <div class="between"><div><div class="eyebrow">Parent controls</div><h2 style="margin-top:5px">Progress stays on this iPad</h2></div><span class="cycle-badge">Auto-saved after every answer</span></div>
+        <p class="muted">Closing the app, closing Safari or restarting the iPad does not normally remove progress. Export a backup before a major update or before clearing Safari website data.</p>
+        <div class="storage-grid">
+          <div class="storage-item"><strong>Last saved</strong><br><span id="lastSaved" class="small">Not yet</span></div>
+          <div class="storage-item"><strong>Last backup</strong><br><span id="lastBackup" class="small">No backup exported yet</span></div>
+        </div>
+        <div class="action-row">
+          <button class="primary" onclick="exportProgress()">Backup progress</button>
+          <button class="secondary" onclick="document.getElementById('importfile').click()">Restore backup</button>
+          <input id="importfile" class="fileinput" type="file" accept="application/json" onchange="importProgress(event)">
+          <button class="secondary" onclick="resetProgress()">Reset progress</button>
+        </div>
+        <div class="file-note">Do not use Private Browsing for the installed app. Keep the same GitHub Pages address when updating.</div>
+      </section>
+    </section>
 
-function stripMarks(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-function norm(s){return stripMarks(s).toLowerCase().replace(/[“”‘’.,!?;:'"()\-]/g,' ').replace(/\s+/g,' ').trim()}
-function normExact(s){return norm(s).replace(/^(the|a|an)\s+/,'')}
-function tokens(s){return new Set(norm(s).split(' ').filter(Boolean))}
-function phrase(answer,p){return (' '+norm(answer)+' ').includes(' '+norm(p)+' ')}
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function todayISO(){const d=new Date(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${d.getFullYear()}-${m}-${day}`}
-function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
-function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
-function show(id){['dashboard','notes','quiz','results'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0)}
-function showDashboard(){renderDashboard();show('dashboard')}
+    <section id="notes" class="notes-shell hidden">
+      <article class="page-card">
+        <div class="notes-header">
+          <div><div class="eyebrow">Essentials + detailed revision</div><h1 id="notesTitle" style="font-size:34px"></h1><p id="notesIntro" class="muted"></p></div>
+          <span class="cycle-badge">Read, recall, then test</span>
+        </div>
+        <div class="must-box"><h3>Must memorise</h3><ul id="mustList"></ul></div>
+        <div id="notesSections" class="notes-grid"></div>
+        <div class="exact-scope"><strong>Exact scope today</strong><div id="notesScope" class="small" style="margin-top:4px"></div></div>
+        <div class="action-row"><button id="notesStartButton" class="primary">I’ve reviewed this — start practice</button><button class="secondary" onclick="showDashboard()">Back to dates</button></div>
+      </article>
+    </section>
 
-function poolFor(block){
-  if(block.mode==='weak')return Object.keys(state.reviews||{}).map(id=>byId.get(id)).filter(Boolean);
-  if(block.mode==='due')return Object.entries(state.reviews||{}).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);
-  const days=block.sourceDays||[block.day];return bank.filter(q=>days.includes(q.day));
-}
-function latestPct(day){const a=(state.attempts||[]).filter(x=>x.day===day);return a.length?a[a.length-1].percent:null}
-function phaseFor(day){
-  if(['18 Jul','19 Jul'].includes(day))return 'Week 1 — diagnostic and foundations';
-  if(['24 Jul','25 Jul','26 Jul','27 Jul','28 Jul','29 Jul','31 Jul'].includes(day))return 'Week 2 — core content build';
-  if(['9 Aug','11 Aug','12 Aug'].includes(day))return 'Week 4 — retrieval and grammar';
-  if(['15 Aug','16 Aug','18 Aug','19 Aug'].includes(day))return 'Week 5 — stronger language';
-  if(['22 Aug','23 Aug','24 Aug','25 Aug','28 Aug'].includes(day))return 'Week 6 — higher skills and set texts';
-  return 'Week 7 — assess and consolidate only';
-}
-function renderDashboard(){
-  document.getElementById('totalcount').textContent=bank.length;
-  const reviewEntries=Object.entries(state.reviews||{}),due=reviewEntries.filter(([,r])=>r.due<=todayISO()).length;
-  document.getElementById('duecount').textContent=due;document.getElementById('weakcount').textContent=reviewEntries.length;document.getElementById('duebtn').disabled=!due;
-  const scored=blocks.map(b=>latestPct(b.day)).filter(x=>x!==null),overall=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):0;
-  document.getElementById('overall').textContent=overall+'%';document.getElementById('overallbar').style.width=overall+'%';
-  document.getElementById('versionline').textContent=`Latin Revision ${meta.version||'V6'} • ${bank.length} source-locked questions`;
-  const mig=document.getElementById('migration');if(migrationMessage){mig.textContent=migrationMessage;mig.classList.remove('hidden')}else mig.classList.add('hidden');
-  const list=document.getElementById('daylist');list.innerHTML='';let phase='';
-  blocks.forEach(block=>{
-    const thisPhase=phaseFor(block.day);if(thisPhase!==phase){phase=thisPhase;const h=document.createElement('h3');h.className='phase';h.textContent=phase;list.appendChild(h)}
-    const pool=poolFor(block),pct=latestPct(block.day),status=pct===null?'Not started':pct>=masteryTarget?'Mastered':pct+'%',cls=pct===null?'red':pct>=masteryTarget?'green':pct>=70?'amber':'red';
-    const d=document.createElement('div');d.className='card day';
-    const action=block.mode==='weak'?'Retest weak items':block.mode==='due'?'Do due retest':block.day==='30 Aug'?'Start mini-assessment':'Practice this date';
-    d.innerHTML=`<div class="row between"><div><h2>${block.day}</h2><strong>${block.label}</strong><div class="small muted">${pool.length} eligible questions • ${Math.min(block.sample,pool.length)} drawn per attempt</div></div><div class="row"><span class="pill ${cls}">${status}</span><button ${pool.length?'':'disabled'} data-day="${block.day}">${action}</button></div></div><div class="scope small"><strong>Locked scope:</strong> ${block.scope}</div>`;
-    d.querySelector('button').onclick=()=>openNotes(block.day);list.appendChild(d);
-  });
-}
-function openNotes(day){const block=blocks.find(b=>b.day===day),n=notes[day]||{title:day,intro:'Quick review before practice.',items:[]};document.getElementById('notestitle').textContent=n.title;document.getElementById('notesintro').textContent=n.intro;document.getElementById('notesitems').innerHTML=(n.items||[]).map(x=>`<li>${x}</li>`).join('');document.getElementById('notesscope').textContent=block.scope;document.getElementById('notesstartbtn').onclick=()=>startBlock(block);show('notes')}
-function startBlock(block){const pool=poolFor(block);if(!pool.length){alert('There are no eligible questions in this block yet.');showDashboard();return}reviewMode=['weak','due'].includes(block.mode);const n=Math.min(block.sample,pool.length);startQuiz(shuffle([...pool]).slice(0,n),`${block.day} — ${block.label}`,block.day)}
-function attemptedContentDays(){return blocks.filter(b=>!b.mode&&b.day!=='30 Aug'&&latestPct(b.day)!==null).map(b=>b.day)}
-function startMixed(){const days=attemptedContentDays();if(!days.length){alert('Complete at least one dated block first.');return}const pool=bank.filter(q=>days.includes(q.day));reviewMode=false;startQuiz(shuffle([...pool]).slice(0,Math.min(15,pool.length)),'Mixed test — attempted blocks','Mixed')}
-function startWrong(){const pool=Object.keys(state.reviews||{}).map(id=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No weak questions are saved.');return}reviewMode=true;startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Weak-question retest','Weak')}
-function startDue(){const pool=Object.entries(state.reviews||{}).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No reviews are due today.');return}reviewMode=true;startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Due spaced-repetition review','Due')}
-function startQuiz(qs,title,day){quizQuestions=qs;current=0;score=0;quizTitle=title;quizDay=day;show('quiz');renderQuestion()}
-function renderQuestion(){
-  const q=quizQuestions[current];document.getElementById('quiztitle').textContent=quizTitle;document.getElementById('qcounter').textContent=`${current+1}/${quizQuestions.length}`;document.getElementById('quizbar').style.width=`${current/quizQuestions.length*100}%`;
-  const c=document.getElementById('qcontext');c.textContent=q.context||'';c.classList.toggle('hidden',!q.context);document.getElementById('direction').textContent=q.direction||q.topic;document.getElementById('qtext').textContent=q.q;
-  const area=document.getElementById('inputarea');area.innerHTML='';if(q.type==='mc'){const box=document.createElement('div');box.className='answers';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='answerbtn';b.textContent=o;b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.selected='1'};box.appendChild(b)});area.appendChild(box)}else{area.innerHTML='<textarea id="textanswer" autocomplete="off" autocapitalize="none" placeholder="Write the full answer here."></textarea>'}
-  document.getElementById('feedback').className='feedback hidden';document.getElementById('checkbtn').classList.remove('hidden');document.getElementById('nextbtn').classList.add('hidden');
-}
-function mark(q,answer){
-  if(q.type==='exact_any')return {ok:(q.accepted||[]).some(x=>normExact(x)===normExact(answer)),missing:[]};
-  if(q.type==='eng_auto'){
-    if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return {ok:true,missing:[]};const missing=[];(q.groups||[]).forEach(g=>{if(!g.some(p=>phrase(answer,p)))missing.push(g[0])});return {ok:missing.length===0,missing};
-  }
-  if(q.type==='lat_auto'){
-    if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return {ok:true,missing:[]};const t=tokens(answer),missing=[];(q.latinGroups||[]).forEach(g=>{if(!g.every(x=>t.has(norm(x))))missing.push(g.join(' + '))});return {ok:missing.length===0,missing};
-  }
-  return {ok:false,missing:[]};
-}
-function updateReview(q,ok){
-  state.results[q.id]={ok,date:new Date().toISOString()};
-  if(!ok){state.reviews[q.id]={stage:1,due:addDays(2),lastWrong:new Date().toISOString()};return}
-  const r=state.reviews[q.id];if(reviewMode&&r){if(r.stage===1)state.reviews[q.id]={stage:2,due:addDays(7),lastWrong:r.lastWrong};else delete state.reviews[q.id]}
-}
-function checkAnswer(){
-  const q=quizQuestions[current],fb=document.getElementById('feedback');let ok=false,missing=[];
-  if(q.type==='mc'){const s=document.querySelector('.answerbtn[data-selected="1"]');if(!s){alert('Choose an answer first.');return}ok=norm(s.textContent)===norm(q.a)}else{const input=document.getElementById('textanswer').value.trim();if(!input){alert('Write an answer first.');return}const r=mark(q,input);ok=r.ok;missing=r.missing}
-  if(ok)score++;updateReview(q,ok);save();fb.className='feedback '+(ok?'goodbox':'badbox');let html=ok?'<strong>Correct.</strong>':'<strong>Not quite.</strong>';
-  if(!ok&&missing.length)html+=`<div class="small" style="margin-top:7px">Missing or inaccurate key idea/form:</div><ul>${missing.map(x=>`<li>${x}</li>`).join('')}</ul>`;
-  const answer=q.a||q.answerExample||(q.accepted||[])[0];if(answer)html+=`<div class="answerexample"><strong>Accepted answer example:</strong><br>${answer}</div>`;
-  html+=`<div class="small" style="margin-top:9px">${q.explain||''}</div>`;if(!ok)html+='<div class="small" style="margin-top:8px"><strong>Scheduled:</strong> this question will return in 2 days.</div>';
-  fb.innerHTML=html;document.getElementById('checkbtn').classList.add('hidden');document.getElementById('nextbtn').classList.remove('hidden');
-}
-function nextQuestion(){if(current<quizQuestions.length-1){current++;renderQuestion()}else finish()}
-function finish(){const pct=Math.round(score/quizQuestions.length*100);state.attempts.push({date:new Date().toISOString(),day:quizDay,percent:pct,score,total:quizQuestions.length,title:quizTitle});save();document.getElementById('resultscore').textContent=`${score}/${quizQuestions.length} — ${pct}%`;document.getElementById('resultmsg').textContent=pct>=masteryTarget?'Mastered for this attempt (85%+). Keep any scheduled review dates: one successful attempt is not the end of spaced repetition.':'Below 85%. Missed questions are now scheduled for a 2-day review, followed by a 7-day review after a correct retest.';show('results')}
-function exportProgress(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Latin_Revision_V6_progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importProgress(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data.attempts||!data.reviews)throw new Error();state=Object.assign(emptyState(),data);save();migrationMessage='Progress imported successfully.';showDashboard()}catch(err){alert('This does not look like a valid Latin Revision V6 progress file.')}e.target.value=''};r.readAsText(f)}
-function resetProgress(){if(confirm('Reset all Latin Revision scores and review dates on this device?')){state=emptyState();save();migrationMessage='';showDashboard()}}
-renderDashboard();
-if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-</script>
+    <section id="quiz" class="quiz-shell hidden">
+      <article class="page-card">
+        <div class="quiz-top">
+          <div class="quiz-meta"><div><div class="eyebrow" id="quizTitle"></div><h2 id="questionCounter" style="margin-top:5px"></h2></div><div class="quiz-badges"><span id="freshBadge" class="cycle-badge">Fresh questions first</span><span class="cycle-badge">Auto-saved</span></div></div>
+          <div class="progress"><div id="quizBar" class="progress-bar"></div></div>
+        </div>
+        <div id="questionContext" class="question-context"></div>
+        <span id="direction" class="direction"></span>
+        <div id="questionText" class="question-text"></div>
+        <div id="inputArea"></div>
+        <div id="feedback" class="feedback hidden"></div>
+        <div class="action-row" style="margin-top:15px"><button id="checkButton" class="primary" onclick="checkAnswer()">Check answer</button><button id="nextButton" class="primary hidden" onclick="nextQuestion()">Next question</button><button class="secondary" onclick="showDashboard()">Stop</button></div>
+      </article>
+    </section>
+
+    <section id="results" class="results-shell hidden">
+      <article class="page-card"><div class="eyebrow">Session complete</div><h1>Well done for finishing.</h1><div id="resultScore" class="result-score"></div><p id="resultMessage" class="result-message"></p><div id="cycleResult" class="exact-scope"></div><div class="action-row"><button class="primary" onclick="showDashboard()">Back to dated plan</button><button id="resultDueButton" class="secondary" onclick="startDue()">Do due reviews</button></div></article>
+    </section>
+  </main>
+
+  <script src="question-bank.js"></script>
+  <script>
+    const bank=window.LATIN_BANK||[],blocks=window.LATIN_BLOCKS||[],notes=window.LATIN_NOTES||{},meta=window.LATIN_META||{};
+    const byId=new Map(bank.map(q=>[q.id,q]));
+    const masteryTarget=85,stateKey='latinSummerV7State',oldStateKey='latinSummerV6State';
+    let state,migrationMessage='',quizQuestions=[],current=0,score=0,quizTitle='',quizDay='',reviewMode=false,sessionInfo={};
+
+    function emptyState(){return{version:7,attempts:[],reviews:{},results:{},cycles:{},settings:{sound:true},lastSaved:null,lastBackup:null}}
+    function mergeState(saved){const base=emptyState(),out=Object.assign(base,saved||{});out.version=7;out.reviews=out.reviews||{};out.results=out.results||{};out.cycles=out.cycles||{};out.settings=Object.assign({sound:true},out.settings||{});out.attempts=Array.isArray(out.attempts)?out.attempts:[];return out}
+    function loadState(){
+      try{const saved=JSON.parse(localStorage.getItem(stateKey)||'null');if(saved)return mergeState(saved)}catch(e){}
+      try{const old=JSON.parse(localStorage.getItem(oldStateKey)||'null');if(old){migrationMessage='Your V6 scores and scheduled reviews were carried into V7. New no-repeat cycles start fresh.';return mergeState(old)}}catch(e){}
+      try{const older=JSON.parse(localStorage.getItem('latinV3State')||'null');if(older){migrationMessage='Your earlier score history was carried into V7. New question cycles start fresh.';return mergeState({attempts:older.attempts||[]})}}catch(e){}
+      return emptyState()
+    }
+    state=loadState();
+
+    function esc(value){return String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
+    function stripMarks(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+    function norm(s){return stripMarks(s).toLowerCase().replace(/[“”‘’.,!?;:'"()\-]/g,' ').replace(/\s+/g,' ').trim()}
+    function normExact(s){return norm(s).replace(/^(the|a|an)\s+/,'')}
+    function tokens(s){return new Set(norm(s).split(' ').filter(Boolean))}
+    function phrase(answer,p){return(' '+norm(answer)+' ').includes(' '+norm(p)+' ')}
+    function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+    function todayISO(){const d=new Date(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${d.getFullYear()}-${m}-${day}`}
+    function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+    function formatStamp(value){if(!value)return'Not yet';const d=new Date(value);return Number.isNaN(d.getTime())?'Not yet':d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
+    function save(){state.lastSaved=new Date().toISOString();localStorage.setItem(stateKey,JSON.stringify(state));renderSaveStatus()}
+    function renderSaveStatus(){const a=document.getElementById('lastSaved'),b=document.getElementById('lastBackup');if(a)a.textContent=formatStamp(state.lastSaved);if(b)b.textContent=state.lastBackup?formatStamp(state.lastBackup):'No backup exported yet';const sound=state.settings.sound!==false;document.getElementById('soundButton').setAttribute('aria-pressed',String(sound));document.getElementById('soundLabel').textContent=sound?'Sound on':'Sound off'}
+    function show(id){['dashboard','notes','quiz','results'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0)}
+    function showDashboard(){renderDashboard();show('dashboard')}
+
+    function poolFor(block){if(block.mode==='weak')return Object.keys(state.reviews).map(id=>byId.get(id)).filter(Boolean);if(block.mode==='due')return Object.entries(state.reviews).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);const days=block.sourceDays||[block.day];return bank.filter(q=>days.includes(q.day))}
+    function latestPct(day){const attempts=state.attempts.filter(x=>x.day===day);return attempts.length?attempts[attempts.length-1].percent:null}
+    function cycleFor(day){if(!state.cycles[day])state.cycles[day]={seen:[],lastSession:[],round:1};return state.cycles[day]}
+    function phaseFor(day){if(['18 Jul','19 Jul'].includes(day))return'Week 1 — diagnostic and foundations';if(['24 Jul','25 Jul','26 Jul','27 Jul','28 Jul','29 Jul','31 Jul'].includes(day))return'Week 2 — core content build';if(['9 Aug','11 Aug','12 Aug'].includes(day))return'Week 4 — retrieval and grammar';if(['15 Aug','16 Aug','18 Aug','19 Aug'].includes(day))return'Week 5 — stronger language';if(['22 Aug','23 Aug','24 Aug','25 Aug','28 Aug'].includes(day))return'Week 6 — higher skills and set texts';return'Week 7 — assess and consolidate'}
+    function renderDashboard(){
+      document.getElementById('totalcount').textContent=bank.length;const reviewEntries=Object.entries(state.reviews),due=reviewEntries.filter(([,r])=>r.due<=todayISO()).length;
+      document.getElementById('duecount').textContent=due;document.getElementById('weakcount').textContent=reviewEntries.length;document.getElementById('duebtn').disabled=!due;document.getElementById('resultDueButton').disabled=!due;
+      const scored=blocks.map(b=>latestPct(b.day)).filter(x=>x!==null),overall=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):0;document.getElementById('overall').textContent=overall+'%';document.getElementById('overallbar').style.width=overall+'%';
+      const mig=document.getElementById('migration');if(migrationMessage){mig.textContent=migrationMessage;mig.classList.remove('hidden')}else mig.classList.add('hidden');
+      const list=document.getElementById('daylist');list.innerHTML='';let phase='';
+      blocks.forEach(block=>{
+        const nextPhase=phaseFor(block.day);if(nextPhase!==phase){phase=nextPhase;const h=document.createElement('div');h.className='phase';h.textContent=phase;list.appendChild(h)}
+        const fullPool=poolFor(block),pct=latestPct(block.day),status=pct===null?'Not started':pct>=masteryTarget?'Mastered':pct+'%',statusClass=pct===null?'new':pct>=masteryTarget?'mastered':'started';
+        const pendingIds=new Set(Object.keys(state.reviews)),eligible=block.mode?fullPool:fullPool.filter(q=>!pendingIds.has(q.id)),cycle=block.mode?{seen:[],round:1}:cycleFor(block.day),validSeen=new Set(cycle.seen.filter(id=>eligible.some(q=>q.id===id))),remaining=Math.max(0,eligible.length-validSeen.size),draw=block.mode?Math.min(block.sample,fullPool.length):Math.min(block.sample,remaining||eligible.length);
+        const action=block.mode==='weak'?'Review scheduled items':block.mode==='due'?'Do due review':block.day==='30 Aug'?'Start assessment':`Start ${draw} fresh question${draw===1?'':'s'}`;
+        const card=document.createElement('article');card.className='day-card';card.innerHTML=`<div class="day-main"><div><div class="day-title"><h2>${esc(block.day)}</h2><strong>${esc(block.label)}</strong><span class="status ${statusClass}">${esc(status)}</span></div><div class="cycle-line"><span>${fullPool.length} eligible questions</span>${block.mode?'':`<span class="cycle-badge">Cycle ${cycle.round}: ${validSeen.size}/${eligible.length} seen</span><span>No immediate repeats</span>`}</div></div><button class="primary" ${fullPool.length?'':'disabled'}>${esc(action)}</button></div><div class="scope"><strong>Locked scope:</strong> ${esc(block.scope)}</div>`;
+        card.querySelector('button').onclick=()=>openNotes(block.day);list.appendChild(card)
+      });renderSaveStatus()
+    }
+
+    function openNotes(day){const block=blocks.find(b=>b.day===day),n=notes[day]||{title:day,intro:'Review the exact scope before practice.',must:[],sections:[]};document.getElementById('notesTitle').textContent=n.title;document.getElementById('notesIntro').textContent=n.intro||'';document.getElementById('notesScope').textContent=block.scope;document.getElementById('mustList').innerHTML=(n.must||n.items||[]).map(x=>`<li>${esc(x)}</li>`).join('');document.getElementById('notesSections').innerHTML=(n.sections||[]).map(s=>`<section class="note-section"><h3>${esc(s.title)}</h3><ul>${(s.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`).join('');document.getElementById('notesStartButton').onclick=()=>startBlock(block);show('notes')}
+    function selectFresh(block){
+      const pool=poolFor(block),pending=new Set(Object.keys(state.reviews)),eligible=pool.filter(q=>!pending.has(q.id));if(!eligible.length)return{questions:[],remaining:0,round:cycleFor(block.day).round};
+      const cycle=cycleFor(block.day),validIds=new Set(eligible.map(q=>q.id));cycle.seen=cycle.seen.filter(id=>validIds.has(id));cycle.lastSession=cycle.lastSession.filter(id=>validIds.has(id));let seen=new Set(cycle.seen),remaining=eligible.filter(q=>!seen.has(q.id));
+      if(!remaining.length){cycle.round+=1;cycle.seen=[];remaining=eligible.filter(q=>!cycle.lastSession.includes(q.id));if(!remaining.length)remaining=[...eligible]}
+      const n=Math.min(block.sample,remaining.length),questions=shuffle([...remaining]).slice(0,n);cycle.lastSession=questions.map(q=>q.id);save();return{questions,remaining:Math.max(0,eligible.length-cycle.seen.length-questions.length),round:cycle.round,total:eligible.length}
+    }
+    function startBlock(block){reviewMode=['weak','due'].includes(block.mode);if(reviewMode){const pool=poolFor(block);if(!pool.length){alert('There are no eligible review questions yet.');showDashboard();return}sessionInfo={kind:'review'};startQuiz(shuffle([...pool]).slice(0,Math.min(block.sample,pool.length)),`${block.day} — ${block.label}`,block.day);return}const selected=selectFresh(block);if(!selected.questions.length){alert('Every available question is currently held for a scheduled review. Start with Due today when it becomes available.');showDashboard();return}sessionInfo={kind:'fresh',round:selected.round,remaining:selected.remaining,total:selected.total};startQuiz(selected.questions,`${block.day} — ${block.label}`,block.day)}
+    function attemptedContentDays(){return blocks.filter(b=>!b.mode&&b.day!=='30 Aug'&&latestPct(b.day)!==null).map(b=>b.day)}
+    function startMixed(){
+      const days=attemptedContentDays();if(!days.length){alert('Complete at least one dated block first.');return}const pool=bank.filter(q=>days.includes(q.day)&&!state.reviews[q.id]);if(!pool.length){alert('No mixed questions are currently available.');return}
+      const cycle=cycleFor('Mixed'),valid=new Set(pool.map(q=>q.id));cycle.seen=cycle.seen.filter(id=>valid.has(id));let remaining=pool.filter(q=>!cycle.seen.includes(q.id));if(!remaining.length){cycle.round+=1;cycle.seen=[];remaining=pool.filter(q=>!cycle.lastSession.includes(q.id));if(!remaining.length)remaining=[...pool]}
+      const qs=shuffle([...remaining]).slice(0,Math.min(15,remaining.length));cycle.lastSession=qs.map(q=>q.id);save();reviewMode=false;sessionInfo={kind:'fresh',round:cycle.round,remaining:Math.max(0,pool.length-cycle.seen.length-qs.length),total:pool.length};startQuiz(qs,'Mixed test — attempted blocks','Mixed')
+    }
+    function startDue(){const pool=Object.entries(state.reviews).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No reviews are due today.');return}reviewMode=true;sessionInfo={kind:'review'};startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Due spaced-repetition review','Due')}
+    function startQuiz(qs,title,day){quizQuestions=qs;current=0;score=0;quizTitle=title;quizDay=day;show('quiz');renderQuestion()}
+    function renderQuestion(){
+      const q=quizQuestions[current];document.getElementById('quizTitle').textContent=quizTitle;document.getElementById('questionCounter').textContent=`Question ${current+1} of ${quizQuestions.length}`;document.getElementById('quizBar').style.width=`${current/quizQuestions.length*100}%`;document.getElementById('freshBadge').textContent=sessionInfo.kind==='review'?'Scheduled review':`Cycle ${sessionInfo.round||1} · fresh questions first`;
+      const context=document.getElementById('questionContext');context.textContent=q.context||'';context.classList.toggle('hidden',!q.context);document.getElementById('direction').textContent=q.direction||q.topic;document.getElementById('questionText').textContent=q.q;const area=document.getElementById('inputArea');area.innerHTML='';
+      if(q.type==='mc'){const box=document.createElement('div');box.className='answers';shuffle([...q.opts]).forEach(option=>{const button=document.createElement('button');button.className='answer-button';button.textContent=option;button.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');button.dataset.selected='1'};box.appendChild(button)});area.appendChild(box)}else{area.innerHTML='<textarea id="textAnswer" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Write the full answer here."></textarea>'}
+      document.getElementById('feedback').className='feedback hidden';document.getElementById('checkButton').classList.remove('hidden');document.getElementById('nextButton').classList.add('hidden')
+    }
+    function mark(q,answer){if(q.type==='exact_any')return{ok:(q.accepted||[]).some(x=>normExact(x)===normExact(answer)),missing:[]};if(q.type==='eng_auto'){if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return{ok:true,missing:[]};const missing=[];(q.groups||[]).forEach(g=>{if(!g.some(p=>phrase(answer,p)))missing.push(g[0])});return{ok:missing.length===0,missing}}if(q.type==='lat_auto'){if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return{ok:true,missing:[]};const t=tokens(answer),missing=[];(q.latinGroups||[]).forEach(g=>{if(!g.every(x=>t.has(norm(x))))missing.push(g.join(' + '))});return{ok:missing.length===0,missing}}return{ok:false,missing:[]}}
+    function updateReview(q,ok){state.results[q.id]={ok,date:new Date().toISOString()};if(!ok){state.reviews[q.id]={stage:1,due:addDays(2),lastWrong:new Date().toISOString()};return}const review=state.reviews[q.id];if(reviewMode&&review){if(review.stage===1)state.reviews[q.id]={stage:2,due:addDays(7),lastWrong:review.lastWrong};else delete state.reviews[q.id]}}
+    function checkAnswer(){
+      const q=quizQuestions[current],feedback=document.getElementById('feedback');let ok=false,missing=[],given='';if(q.type==='mc'){const selected=document.querySelector('.answer-button[data-selected="1"]');if(!selected){alert('Choose an answer first.');return}given=selected.textContent;ok=norm(given)===norm(q.a)}else{const input=document.getElementById('textAnswer');given=input.value.trim();if(!given){alert('Write an answer first.');return}const result=mark(q,given);ok=result.ok;missing=result.missing}
+      if(ok)score++;updateReview(q,ok);if(!reviewMode&&sessionInfo.kind==='fresh'){const cycle=cycleFor(quizDay);if(!cycle.seen.includes(q.id))cycle.seen.push(q.id);sessionInfo.remaining=Math.max(0,(sessionInfo.total||0)-cycle.seen.length)}save();playTone(ok?'correct':'wrong');const answer=q.a||q.answerExample||(q.accepted||[])[0]||'';let html=`<div class="feedback-title">${ok?'✓ Correct':'Not quite — let’s fix it'}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
+      if(!ok&&missing.length)html+=`<div><strong>Missing or inaccurate:</strong><ul class="feedback-list">${missing.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;if(answer)html+=`<div class="answer-example"><strong>Accepted answer:</strong><br>${esc(answer)}</div>`;
+      html+=`<div class="explanation-box"><strong>How to work it out</strong><ol class="feedback-list">${(q.steps||[q.explain||'Compare with the accepted answer.']).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${q.explain?`<div class="small muted" style="margin-top:8px">${esc(q.explain)}</div>`:''}</div>`;html+=`<div class="memory-box"><strong>Must remember:</strong> ${esc(q.mustRemember||q.explain||'Review the exact form before moving on.')}</div>`;
+      if(!ok)html+='<div class="review-schedule"><strong>Saved for later:</strong> this question leaves normal Practice and returns in 2 days. After a correct retest, it returns once more in 7 days.</div>';feedback.innerHTML=html;feedback.className='feedback '+(ok?'good':'bad');document.getElementById('checkButton').classList.add('hidden');document.getElementById('nextButton').classList.remove('hidden')
+    }
+    function nextQuestion(){if(current<quizQuestions.length-1){current++;renderQuestion()}else finish()}
+    function finish(){const pct=Math.round(score/quizQuestions.length*100);state.attempts.push({date:new Date().toISOString(),day:quizDay,percent:pct,score,total:quizQuestions.length,title:quizTitle});save();playTone('complete');document.getElementById('resultScore').textContent=`${score}/${quizQuestions.length} — ${pct}%`;document.getElementById('resultMessage').textContent=pct>=masteryTarget?'Mastered for this attempt (85%+). Scheduled reviews still matter: one good attempt is not the end of memory practice.':'Below 85%. Missed questions are now held out of normal Practice and scheduled for a 2-day review.';document.getElementById('cycleResult').innerHTML=sessionInfo.kind==='fresh'?`<strong>Question cycle:</strong> ${sessionInfo.remaining} unseen question${sessionInfo.remaining===1?'':'s'} remain in cycle ${sessionInfo.round}. Your next ordinary Practice will draw from those unseen questions.`:'<strong>Review complete:</strong> correct 2-day items move to a 7-day check; correct 7-day items leave the review queue.';show('results')}
+
+    function toggleSound(){state.settings.sound=state.settings.sound===false;save();if(state.settings.sound)playTone('correct')}
+    function playTone(kind){if(state.settings.sound===false)return;const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;const audio=new Ctx(),patterns={correct:[392,523],wrong:[294,247],complete:[392,523,659]},toneList=patterns[kind]||patterns.correct;toneList.forEach((frequency,index)=>{const oscillator=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+index*.11;oscillator.type='sine';oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(kind==='wrong'?.035:.05,start+.015);gain.gain.exponentialRampToValueAtTime(.0001,start+.16);oscillator.connect(gain).connect(audio.destination);oscillator.start(start);oscillator.stop(start+.18)});setTimeout(()=>audio.close().catch(()=>{}),toneList.length*110+300)}
+    function exportProgress(){state.lastBackup=new Date().toISOString();save();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Latin_Revision_V7_progress_backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+    function importProgress(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!Array.isArray(data.attempts)||!data.reviews)throw new Error();state=mergeState(data);save();migrationMessage='Progress backup restored successfully.';showDashboard()}catch(err){alert('This does not look like a valid Latin Revision progress backup.')}event.target.value=''};reader.readAsText(file)}
+    function resetProgress(){if(confirm('Reset all Latin Revision scores, question cycles and review dates on this device?')){state=emptyState();save();migrationMessage='';showDashboard()}}
+
+    renderDashboard();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  </script>
 </body>
 </html>

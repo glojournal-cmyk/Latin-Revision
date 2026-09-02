@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#4e7c68"/>
+  <circle cx="394" cy="112" r="72" fill="#cfc2e4" opacity="0.95"/>
+  <circle cx="105" cy="410" r="52" fill="#d8ecdf" opacity="0.8"/>
+  <text x="256" y="350" text-anchor="middle" font-family="DejaVu Serif, Georgia, serif" font-size="292" font-weight="600" fill="#ffffff">L</text>
+</svg>

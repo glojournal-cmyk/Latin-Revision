@@ -1,12 +1,12 @@
 {
-  "name": "Latin Revision — Summer",
+  "name": "Latin Revision — Soft Scholar",
   "short_name": "Latin Revision",
-  "description": "Source-locked Year 8 Latin summer revision with dated practice and spaced repetition.",
+  "description": "Source-locked Year 8 Latin summer revision with unseen-first practice, detailed explanations and spaced repetition.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f5f6f7",
-  "theme_color": "#1f2937",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
     {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
