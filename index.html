@@ -1,743 +1,182 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Latin Revision</title>
-<style>
-:root{
-  --bg:#f6f6f6;--card:#fff;--text:#1f1f1f;--muted:#686868;--border:#d7d7d7;
-  --good:#eaf6ea;--amber:#fff4d6;--bad:#fdeaea;--ink:#222
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:#fff;border-bottom:1px solid var(--border);padding:18px 22px;position:sticky;top:0;z-index:8}
-header h1{margin:0;font-size:23px}
-header p{margin:6px 0 0;color:var(--muted);font-size:14px}
-.wrap{max-width:1100px;margin:auto;padding:22px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:15px;padding:19px;margin-bottom:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:14px}
-h2,h3{margin-top:0}.score{font-size:31px;font-weight:700}
-button{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer}
-button.secondary{background:#fff;color:var(--ink)} button.soft{background:#f3f3f3;color:var(--ink);border-color:#ccc}
-.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.between{justify-content:space-between}
-.muted{color:var(--muted)}.small{font-size:13px}.hidden{display:none}
-.progress{height:10px;background:#e9e9e9;border-radius:999px;overflow:hidden}.bar{height:100%;background:#222;width:0}
-.pill{padding:4px 9px;border-radius:999px;border:1px solid var(--border);font-size:12px}
-.green{background:var(--good)}.amber{background:var(--amber)}.red{background:var(--bad)}
-.day{border-top:4px solid #222}
-.daytitle{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-.daytitle h2{margin-bottom:5px}
-.topicrow{padding:11px 0;border-top:1px solid #eee}
-.question{font-size:20px;font-weight:650;line-height:1.45;margin:15px 0}
-.passage{white-space:pre-wrap;background:#fafafa;border:1px solid #e2e2e2;border-radius:11px;padding:14px;line-height:1.6;margin:12px 0;font-size:18px}
-textarea,input[type=text]{width:100%;padding:12px;border:1px solid #aaa;border-radius:9px;font-size:16px;font-family:inherit}
-textarea{min-height:130px;resize:vertical}
-.answers{display:grid;gap:8px}.answerbtn{background:#fff;color:#222;text-align:left}
-.feedback{padding:13px;border:1px solid var(--border);border-radius:10px;margin-top:14px;line-height:1.5}
-.goodbox{background:var(--good)}.badbox{background:var(--bad)}
-.accepted{margin-top:10px;padding:11px;background:#fff;border-left:4px solid #222}
-.missing{margin:8px 0 0;padding-left:20px}
-.noteshead{border-top:5px solid #222}
-.notegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px;margin-top:12px}
-.notebox{border:1px solid #ddd;border-radius:12px;padding:14px;background:#fafafa}
-.notebox h3{font-size:16px;margin:0 0 9px}
-.notebox ul,.notebox ol{margin:0;padding-left:21px;line-height:1.55}
-.noteexample{margin-top:9px;background:#fff;border-left:4px solid #222;padding:10px;line-height:1.5}
-.remember{font-weight:700}
-footer{padding:22px;text-align:center;color:var(--muted);font-size:12px}
-</style>
-
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
-<meta name="theme-color" content="#ffffff">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Latin Revision">
-<meta name="mobile-web-app-capable" content="yes">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#1f2937">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Latin Revision">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Latin Revision — Summer V6</title>
+  <style>
+    :root{--ink:#202124;--muted:#6b7280;--line:#d8dadd;--paper:#fff;--bg:#f5f6f7;--good:#e8f6ea;--amber:#fff4d8;--bad:#fdebec;--accent:#26354a}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45}
+    header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:16px max(18px,env(safe-area-inset-left))}
+    header h1{margin:0;font-size:23px}header p{margin:4px 0 0;color:var(--muted);font-size:13px}.wrap{max-width:1080px;margin:auto;padding:20px}
+    .card{background:var(--paper);border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:13px}
+    h2,h3{margin-top:0}.score{font-size:31px;font-weight:750}.small{font-size:13px}.muted{color:var(--muted)}.hidden{display:none!important}
+    button{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;min-height:42px}
+    button.secondary{background:#fff;color:var(--ink);border-color:#aeb3ba}button:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.between{justify-content:space-between}
+    .progress{height:10px;border-radius:999px;background:#e7e8ea;overflow:hidden}.bar{height:100%;background:var(--accent);width:0}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:12px}
+    .green{background:var(--good)}.amber{background:var(--amber)}.red{background:var(--bad)}.phase{margin:24px 2px 10px;font-size:14px;color:#4b5563;text-transform:uppercase;letter-spacing:.05em}
+    .day{border-left:5px solid var(--accent)}.day h2{margin:0 0 5px;font-size:21px}.scope{margin-top:10px;padding-top:10px;border-top:1px solid #eceeef}.question{font-size:20px;font-weight:700;margin:15px 0;line-height:1.45}
+    .context{white-space:pre-wrap;background:#f9fafb;border:1px solid #e3e5e8;border-radius:11px;padding:14px;font-size:18px;margin:13px 0;overflow-wrap:anywhere}
+    textarea,input[type=text]{width:100%;border:1px solid #9ca3af;border-radius:10px;padding:12px;font:inherit;font-size:17px;background:#fff}textarea{min-height:125px;resize:vertical}
+    .answers{display:grid;gap:8px}.answerbtn{background:#fff;color:var(--ink);text-align:left;border-color:#b8bdc4}.answerbtn.selected{outline:3px solid #26354a;background:#eef2f7}
+    .feedback{border:1px solid var(--line);border-radius:11px;padding:14px;margin-top:14px}.goodbox{background:var(--good)}.badbox{background:var(--bad)}.answerexample{background:#fff;border-left:4px solid var(--accent);padding:10px;margin-top:9px}
+    .notesgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:11px}.notebox{background:#fafafa;border:1px solid #e1e3e6;border-radius:12px;padding:14px}.notebox ul{margin:5px 0 0;padding-left:20px}.notice{border-left:5px solid #b7791f;background:#fff8e7}
+    .audit{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}.audit div{background:#fafafa;border:1px solid #e7e7e7;border-radius:9px;padding:9px}
+    footer{padding:22px;text-align:center;color:var(--muted);font-size:12px}.fileinput{display:none}
+    @media(max-width:580px){.wrap{padding:12px}.card{padding:15px}.question{font-size:18px}.context{font-size:16px}header h1{font-size:20px}}
+  </style>
 </head>
 <body>
-<header>
-  <h1>Latin Revision</h1>
-  <p>Quick notes • dated tests • automatic marking • 85% mastery • iPad ready</p>
-</header>
-
-<div class="wrap">
-<section id="dashboard">
-  <div class="grid">
-    <div class="card"><h3>Overall mastery</h3><div class="score" id="overall">0%</div><div class="progress"><div class="bar" id="overallbar"></div></div></div>
-    <div class="card"><h3>Weak-question bank</h3><div class="score" id="wrongcount">0</div><button onclick="startWrong()">Retest weak questions</button></div>
-    <div class="card"><h3>Mixed test</h3><p class="small">Questions are drawn across completed dated blocks.</p><button onclick="openQuickNotes('Mixed')">Quick review + start test</button></div>
-  </div>
-
-  <div class="card">
-    <h2>Revision by learning date</h2>
-    <p class="muted small">Each block keeps together only the material belonging to that revision day/topic. Use “Practice this day” before using the mixed test.</p>
-  </div>
-  <div id="daylist"></div>
-
-  <div class="card" id="installhelp">
-    <div class="row between">
-      <div>
-        <h3 style="margin-bottom:5px">iPad app mode</h3>
-        <div class="small muted">Once this site is hosted, open it in Safari → Share → Add to Home Screen. It will open like a normal app and can work offline after the first successful load.</div>
-      </div>
-      <span class="pill green">PWA ready</span>
+<header><h1>Latin Revision — Summer V6</h1><p>Source-locked • dated blocks • automatic marking • 2-day/7-day reviews • 85% mastery</p></header>
+<main class="wrap">
+  <section id="dashboard">
+    <div id="migration" class="card notice hidden"></div>
+    <div class="grid">
+      <div class="card"><h3>Overall mastery</h3><div class="score" id="overall">0%</div><div class="progress"><div class="bar" id="overallbar"></div></div></div>
+      <div class="card"><h3>Questions in bank</h3><div class="score" id="totalcount">0</div><div class="small muted">All restricted to summer coverage</div></div>
+      <div class="card"><h3>Due today</h3><div class="score" id="duecount">0</div><button id="duebtn" onclick="startDue()">Do due reviews</button></div>
+      <div class="card"><h3>Weak / scheduled</h3><div class="score" id="weakcount">0</div><button onclick="startWrong()">Retest weak questions</button></div>
     </div>
-  </div>
-
-
-  <div class="card">
-    <h3>Automatic marking for translations</h3>
-    <p class="small">Long answers are marked automatically. The checker accepts several valid English phrasings and ignores punctuation/capitalisation. For English → Latin, normal Latin word-order variation is accepted where the required forms are still correct. The app—not the student—decides whether the answer passes.</p>
-  </div>
-
-  <div class="card">
-    <h3>Parent controls</h3>
-    <div class="row"><button class="secondary" onclick="exportProgress()">Export progress</button><button class="secondary" onclick="resetProgress()">Reset progress</button></div>
-  </div>
-</section>
-
-
-<section id="notes" class="hidden">
-  <div class="card noteshead">
-    <div class="row between">
-      <div>
-        <div class="muted small">QUICK REVISION BEFORE THE TEST</div>
-        <h2 id="notestitle" style="margin:5px 0 0"></h2>
-      </div>
-      <span class="pill amber">About 2–4 minutes</span>
+    <div class="card">
+      <div class="row between"><div><h2 style="margin-bottom:5px">Revision by exact learning date</h2><div class="small muted">Each card has its own question pool. Later material cannot leak into an earlier date.</div></div><button class="secondary" onclick="startMixed()">Mixed test from attempted blocks</button></div>
     </div>
-    <p id="notesintro" class="muted"></p>
-    <div id="notescontent" class="notegrid"></div>
-    <div style="height:12px"></div>
-    <div class="row">
-      <button id="notesstartbtn">I’ve reviewed this — start test</button>
-      <button class="secondary" onclick="showDashboard()">Back to index</button>
+    <div id="daylist"></div>
+    <div class="card">
+      <h3>Source-lock audit</h3>
+      <p class="small">Only the Year 8 Latin teacher-coverage booklet and the 18 July–3 September summer schedule are used. Travel/rest dates contain no practice. <strong>ad urbem</strong>, <strong>ad villam</strong> and Ancient Greece appear only on or after their scheduled dates.</p>
+      <div class="audit"><div><strong>Stages 1–12</strong><br><span class="small">Separated by 18–29 Jul</span></div><div><strong>Grammar</strong><br><span class="small">12–22 Aug only</span></div><div><strong>Set texts</strong><br><span class="small">23–25 Aug only</span></div><div><strong>Ancient Greece</strong><br><span class="small">28 Aug only</span></div></div>
     </div>
-  </div>
-</section>
+    <div class="card"><h3>Parent controls</h3><div class="row"><button class="secondary" onclick="exportProgress()">Export progress</button><button class="secondary" onclick="document.getElementById('importfile').click()">Import progress</button><input id="importfile" class="fileinput" type="file" accept="application/json" onchange="importProgress(event)"><button class="secondary" onclick="resetProgress()">Reset progress</button></div></div>
+  </section>
 
-<section id="quiz" class="hidden">
-  <div class="card">
-    <div class="row between"><strong id="quiztitle"></strong><span id="qcounter" class="muted"></span></div>
-    <div class="progress"><div id="quizbar" class="bar"></div></div>
-    <div id="context"></div>
-    <div class="question" id="qtext"></div>
-    <div id="inputarea"></div>
-    <div id="feedback" class="feedback hidden"></div>
-    <div style="height:10px"></div>
-    <div class="row">
-      <button id="checkbtn" onclick="checkAnswer()">Check answer</button>
-      <button id="nextbtn" class="hidden" onclick="nextQuestion()">Next</button>
-      <button class="secondary" onclick="showDashboard()">Back to index</button>
-    </div>
-  </div>
-</section>
+  <section id="notes" class="hidden"><div class="card">
+    <div class="row between"><div><div class="small muted">2–4 MINUTE QUICK REVISION</div><h2 id="notestitle" style="margin:4px 0"></h2></div><span class="pill amber">Read once, then test</span></div>
+    <p id="notesintro"></p><div class="notesgrid"><div class="notebox"><h3>Before you start</h3><ul id="notesitems"></ul></div><div class="notebox"><h3>Exact scope today</h3><p id="notesscope"></p></div></div>
+    <div style="height:12px"></div><div class="row"><button id="notesstartbtn">Start this practice</button><button class="secondary" onclick="showDashboard()">Back to dates</button></div>
+  </div></section>
 
-<section id="results" class="hidden">
-  <div class="card">
-    <h2>Finished</h2>
-    <div class="score" id="resultscore"></div>
-    <p id="resultmsg"></p>
-    <div class="row"><button onclick="openQuickNotes('Mixed')">Quick review + another mixed test</button><button class="secondary" onclick="showDashboard()">Back to dated index</button></div>
-  </div>
-</section>
-</div>
-<footer>Latin only • local progress saving • automatic marking</footer>
+  <section id="quiz" class="hidden"><div class="card">
+    <div class="row between"><strong id="quiztitle"></strong><span id="qcounter" class="small muted"></span></div><div class="progress"><div class="bar" id="quizbar"></div></div>
+    <div id="qcontext" class="context"></div><div id="direction" class="pill"></div><div id="qtext" class="question"></div><div id="inputarea"></div>
+    <div id="feedback" class="feedback hidden"></div><div style="height:11px"></div><div class="row"><button id="checkbtn" onclick="checkAnswer()">Check answer</button><button id="nextbtn" class="hidden" onclick="nextQuestion()">Next</button><button class="secondary" onclick="showDashboard()">Stop</button></div>
+  </div></section>
 
+  <section id="results" class="hidden"><div class="card"><h2>Finished</h2><div id="resultscore" class="score"></div><p id="resultmsg"></p><div class="row"><button onclick="showDashboard()">Back to dated index</button><button class="secondary" onclick="startDue()">Do due reviews</button></div></div></section>
+</main>
+<footer><span id="versionline">Latin Revision V6</span> • progress stays on this device • works offline after first load</footer>
+
+<script src="question-bank.js"></script>
 <script>
-const masteryTarget=85;
+const bank=window.LATIN_BANK||[], blocks=window.LATIN_BLOCKS||[], notes=window.LATIN_NOTES||{}, meta=window.LATIN_META||{};
+const masteryTarget=85, stateKey='latinSummerV6State';
+let migrationMessage='', quizQuestions=[], current=0, score=0, quizTitle='', quizDay='', reviewMode=false;
 
-// "groups" lets the checker accept alternate phrasings.
-// Each required group must have at least one acceptable phrase present.
-// latinTokens are order-independent required Latin form groups.
-const bank = [
-  // 12 AUG — CASES
-  {day:"12 Aug",label:"Cases & declensions",topic:"Cases",type:"mc",
-   q:"In the sentence below, what is the function of ‘furibus’?",
-   context:"ancillae pecuniam furibus dederunt.",
-   opts:["dative recipient: to the thieves","accusative direct object","genitive possession","ablative after a preposition"],
-   a:"dative recipient: to the thieves",
-   explain:"furibus is dative plural because the thieves receive the money."},
-
-  {day:"12 Aug",label:"Cases & declensions",topic:"Cases",type:"mc",
-   q:"Why is ‘urbem’ accusative here?",
-   context:"multi Pompeiani per urbem festinabant.",
-   opts:["per takes the accusative","urbem is the subject","it shows possession","all place words are accusative"],
-   a:"per takes the accusative",
-   explain:"per governs the accusative."},
-
-  {day:"12 Aug",label:"Cases & declensions",topic:"Cases",type:"mc",
-   q:"Choose the best explanation of the contrast.",
-   context:"in templo / in templum",
-   opts:["in the temple / into the temple","into the temple / in the temple","from the temple / to the temple","through the temple / near the temple"],
-   a:"in the temple / into the temple",
-   explain:"in + ablative is location; in + accusative is movement into."},
-
-  // 15 AUG — AGREEMENT, PRONOUNS, POSSESSIVES, PREPOSITIONS
-  {day:"15 Aug",label:"Agreement • pronouns • possessives • prepositions",topic:"Pronouns",type:"mc",
-   q:"What does ‘tibi’ mean in this sentence?",
-   context:"ego tibi libertatem promitto.",
-   opts:["to you (singular)","to me","you as a direct object","your"],
-   a:"to you (singular)", explain:"tibi is dative singular of tu."},
-
-  {day:"15 Aug",label:"Agreement • pronouns • possessives • prepositions",topic:"Pronouns",type:"eng_auto",
-   q:"Translate into natural English. The pronouns must be accurate.",
-   context:"postquam tu in terram decidisti, ego te ad hoc templum portavi.",
-   accepted:[
-     "After you fell to the ground, I carried you to this temple.",
-     "After you had fallen to the ground, I carried you to this temple.",
-     "After you fell on the ground, I carried you to this temple."
-   ],
-   groups:[
-     ["after"],["you fell","you had fallen"],["to the ground","on the ground"],
-     ["i carried you"],["to this temple"]
-   ],
-   explain:"tu = you (subject), ego = I, te = you (object)."},
-
-  {day:"15 Aug",label:"Agreement • pronouns • possessives • prepositions",topic:"Possessives",type:"mc",
-   q:"Choose the correct form of ‘our’ to agree with villam.",
-   context:"ad _____ villam contendimus",
-   opts:["noster","nostra","nostram","nostrum"],
-   a:"nostram", explain:"villam is feminine accusative singular, so nostram agrees with it."},
-
-  {day:"15 Aug",label:"Agreement • pronouns • possessives • prepositions",topic:"ille",type:"mc",
-   q:"Choose the correct form of ille for ‘Caecilius saw that woman’.",
-   context:"Caecilius _____ vidit.",
-   opts:["illa","illam","ille","illi"],
-   a:"illam", explain:"The woman is the direct object: feminine accusative singular = illam."},
-
-  // 16 AUG — WORD BANK / PERFECT CUES
-  {day:"16 Aug",label:"Word banks • perfect cues",topic:"Perfect forms",type:"mc",
-   q:"Which form correctly completes the sentence?",
-   context:"multi cives ex urbe celeriter ________.",
-   opts:["discessimus","discessistis","discesserunt"],
-   a:"discesserunt", explain:"multi cives = they; discesserunt is 3rd person plural perfect."},
-
-  {day:"16 Aug",label:"Word banks • perfect cues",topic:"Perfect forms",type:"eng_auto",
-   q:"Translate the completed sentence into natural English.",
-   context:"multi cives ex urbe celeriter discesserunt.",
-   accepted:[
-     "Many citizens quickly left the city.",
-     "Many citizens left the city quickly.",
-     "Many citizens quickly departed from the city.",
-     "Many citizens departed from the city quickly."
-   ],
-   groups:[["many citizens"],["left","departed"],["the city"],["quickly"]],
-   explain:"discesserunt is a completed action: they left/departed."},
-
-  // 18–19 AUG — FOUR TENSES
-  {day:"18–19 Aug",label:"Four tenses • person & number",topic:"Mixed tenses",type:"eng_auto",
-   q:"Translate carefully. Show the imperfect tense in your English.",
-   context:"feminae cum infantibus per urbem festinabant.",
-   accepted:[
-     "The women with infants were hurrying through the city.",
-     "The women with babies were hurrying through the city.",
-     "The women with infants were rushing through the city.",
-     "The women with babies were rushing through the city."
-   ],
-   groups:[["the women","women"],["with infants","with babies"],["were hurrying","were rushing"],["through the city"]],
-   explain:"festinabant is imperfect: an ongoing past action."},
-
-  {day:"18–19 Aug",label:"Four tenses • person & number",topic:"Mixed tenses",type:"eng_auto",
-   q:"Translate into natural English. Keep both imperfect verbs as background/ongoing actions.",
-   context:"nos ad templum fugiebamus, quod valde timebamus.",
-   accepted:[
-     "We were fleeing to the temple because we were very afraid.",
-     "We were running away to the temple because we were very afraid.",
-     "We were fleeing to the temple because we were very scared.",
-     "We were running to the temple because we were very afraid."
-   ],
-   groups:[["we were fleeing","we were running away","we were running"],["to the temple"],["because"],["we were very afraid","we were very scared"]],
-   explain:"fugiebamus and timebamus are both imperfect."},
-
-  {day:"18–19 Aug",label:"Four tenses • person & number",topic:"Mixed tenses",type:"eng_auto",
-   q:"Translate, showing the pluperfect and imperfect accurately.",
-   context:"servus villam intraverat, ubi dominus manebat.",
-   accepted:[
-     "The slave had entered the house, where the master was staying.",
-     "The slave had entered the villa, where the master was staying.",
-     "The slave had gone into the house, where the master was staying.",
-     "The slave had entered the house, where the master was remaining."
-   ],
-   groups:[["the slave"],["had entered","had gone into"],["the house","the villa"],["where"],["the master"],["was staying","was remaining"]],
-   explain:"intraverat = had entered; manebat = was staying/remaining."},
-
-  {day:"18–19 Aug",label:"Four tenses • person & number",topic:"Person & number",type:"mc",
-   q:"Choose the correct verb for the subject.",
-   context:"vos vias ________.",
-   opts:["complebamus","complebatis","complebant"],
-   a:"complebatis", explain:"vos = you plural; complebatis = you were filling."},
-
-  // 22 AUG — HIGHER SKILLS
-  {day:"22 Aug",label:"Higher skills • English → Latin • mixed translation",topic:"English → Latin",type:"lat_auto",
-   q:"Translate into Latin. Word order may vary, but the cases and verb forms must be correct.",
-   context:"The slave girls gave the money to the thieves.",
-   latinGroups:[
-     ["ancillae"],["pecuniam"],["furibus"],["dederunt"]
-   ],
-   accepted:["ancillae pecuniam furibus dederunt","ancillae furibus pecuniam dederunt","pecuniam ancillae furibus dederunt"],
-   explain:"pecuniam is accusative direct object; furibus is dative recipient; dederunt is perfect plural."},
-
-  {day:"22 Aug",label:"Higher skills • English → Latin • mixed translation",topic:"English → Latin",type:"lat_auto",
-   q:"Translate into Latin.",
-   context:"The young man handed over the sword to the old man.",
-   latinGroups:[["iuvenis"],["gladium"],["seni"],["tradidit"]],
-   accepted:["iuvenis gladium seni tradidit","iuvenis seni gladium tradidit"],
-   explain:"gladium = direct object; seni = dative recipient."},
-
-  {day:"22 Aug",label:"Higher skills • English → Latin • mixed translation",topic:"English → Latin",type:"lat_auto",
-   q:"Translate into Latin, using the perfect for the completed action and the imperfect for the background.",
-   context:"The boys hurried to the city because they were happy.",
-   latinGroups:[["pueri"],["ad","urbem"],["festinaverunt"],["quod"],["erant"],["laeti"]],
-   accepted:["pueri ad urbem festinaverunt quod erant laeti","pueri festinaverunt ad urbem quod erant laeti"],
-   explain:"festinaverunt = completed action; erant = background state."},
-
-  {day:"22 Aug",label:"Higher skills • English → Latin • mixed translation",topic:"Latin → English",type:"eng_auto",
-   q:"Translate carefully. Make sure the perfect verb and the object pronoun are correct.",
-   context:"Grumio me ad hortum duxit.",
-   accepted:[
-     "Grumio led me to the garden.",
-     "Grumio took me to the garden.",
-     "Grumio led me towards the garden."
-   ],
-   groups:[["grumio"],["led me","took me"],["to the garden","towards the garden"]],
-   explain:"me is the direct object; duxit = led/took."},
-
-  // 23 AUG — AD URBEM
-  {day:"23 Aug",label:"ad urbem • set passage • tense focus • comprehension",topic:"ad urbem",type:"eng_auto",
-   q:"Translate this set-text sentence into natural English.",
-   context:"nos urbem petivimus, quod valde timebamus.",
-   accepted:[
-     "We made for the city because we were very afraid.",
-     "We headed for the city because we were very afraid.",
-     "We made our way to the city because we were very afraid.",
-     "We headed to the city because we were very scared."
-   ],
-   groups:[["we"],["made for the city","headed for the city","made our way to the city","headed to the city"],["because"],["we were very afraid","we were very scared"]],
-   explain:"petivimus is perfect; timebamus is imperfect."},
-
-  {day:"23 Aug",label:"ad urbem • set passage • tense focus • comprehension",topic:"ad urbem",type:"mc",
-   q:"Which pair of verbs describes ongoing/background actions?",
-   context:"multi Pompeiani per vias currebant. feminae cum infantibus per urbem festinabant.",
-   opts:["currebant and festinabant","Pompeiani and feminae","per vias and per urbem","multi and infantibus"],
-   a:"currebant and festinabant", explain:"Both are imperfect verbs."},
-
-  {day:"23 Aug",label:"ad urbem • set passage • tense focus • comprehension",topic:"ad urbem",type:"mc",
-   q:"Where did the speaker eventually arrive?",
-   context:"ego ad villam nostram perveni, ubi Metella et Quintus manebant.",
-   opts:["at our house","at the temple","at the forum","at the mountain"],
-   a:"at our house", explain:"ad villam nostram = to our house."},
-
-  // 24–25 AUG — AD VILLAM
-  {day:"24–25 Aug",label:"ad villam • six paragraphs • supported translation",topic:"ad villam",type:"eng_auto",
-   q:"Translate the sentence. Show the perfect and imperfect difference.",
-   context:"Caecilius et amici, postquam urbem intraverunt, villam petebant.",
-   accepted:[
-     "Caecilius and his friends, after they entered the city, were making for the house.",
-     "Caecilius and his friends, after they had entered the city, were heading for the house.",
-     "Caecilius and his friends, after they entered the city, were heading to the house."
-   ],
-   groups:[["caecilius"],["friends"],["after"],["entered the city","had entered the city"],["were making for the house","were heading for the house","were heading to the house"]],
-   explain:"intraverunt = completed action; petebant = ongoing action."},
-
-  {day:"24–25 Aug",label:"ad villam • six paragraphs • supported translation",topic:"ad villam",type:"mc",
-   q:"Why was the journey difficult?",
-   context:"sed iter erat difficile, quod multi Pompeiani vias complebant.",
-   opts:["because many Pompeians were filling the streets","because Caecilius was ill","because the temple was closed","because the friends had left the city"],
-   a:"because many Pompeians were filling the streets",
-   explain:"quod = because; vias complebant = were filling the streets."},
-
-  {day:"24–25 Aug",label:"ad villam • six paragraphs • supported translation",topic:"ad villam",type:"eng_auto",
-   q:"Translate accurately. Pay attention to tibi, tu and me.",
-   context:"tibi gratias maximas ago, quod tu me servavisti.",
-   accepted:[
-     "I give you very great thanks because you saved me.",
-     "I thank you very much because you saved me.",
-     "I give you my greatest thanks because you saved me."
-   ],
-   groups:[["i give you very great thanks","i thank you very much","i give you my greatest thanks"],["because"],["you saved me"]],
-   explain:"tibi = to you; tu = you as subject; me = me as object."}
-];
-
-const dayOrder=["12 Aug","15 Aug","16 Aug","18–19 Aug","22 Aug","23 Aug","24–25 Aug"];
-let state=JSON.parse(localStorage.getItem("latinV3State")||'{"attempts":[],"wrong":[]}');
-let quizQuestions=[],current=0,score=0,title="";
-
-function stripMarks(s){
-  return (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+function emptyState(){return {version:6,attempts:[],reviews:{},results:{}}}
+function loadState(){
+  try{const saved=JSON.parse(localStorage.getItem(stateKey)||'null');if(saved)return Object.assign(emptyState(),saved)}catch(e){}
+  try{
+    const old=JSON.parse(localStorage.getItem('latinV3State')||'null');
+    if(old){const s=emptyState();s.attempts=Array.isArray(old.attempts)?old.attempts:[];migrationMessage='Your earlier score history was carried into V6. The old weak-question list was cleared because the 23-question prototype was replaced by a newly numbered source-locked bank.';return s}
+  }catch(e){}
+  return emptyState();
 }
-function norm(s){
-  return stripMarks(String(s||"")).toLowerCase()
-    .replace(/[.,!?;:'"()\-]/g," ")
-    .replace(/\b(the)\b/g,"the")
-    .replace(/\s+/g," ").trim();
+let state=loadState();
+const byId=new Map(bank.map(q=>[q.id,q]));
+
+function stripMarks(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+function norm(s){return stripMarks(s).toLowerCase().replace(/[“”‘’.,!?;:'"()\-]/g,' ').replace(/\s+/g,' ').trim()}
+function normExact(s){return norm(s).replace(/^(the|a|an)\s+/,'')}
+function tokens(s){return new Set(norm(s).split(' ').filter(Boolean))}
+function phrase(answer,p){return (' '+norm(answer)+' ').includes(' '+norm(p)+' ')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function todayISO(){const d=new Date(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return `${d.getFullYear()}-${m}-${day}`}
+function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
+function show(id){['dashboard','notes','quiz','results'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0)}
+function showDashboard(){renderDashboard();show('dashboard')}
+
+function poolFor(block){
+  if(block.mode==='weak')return Object.keys(state.reviews||{}).map(id=>byId.get(id)).filter(Boolean);
+  if(block.mode==='due')return Object.entries(state.reviews||{}).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);
+  const days=block.sourceDays||[block.day];return bank.filter(q=>days.includes(q.day));
 }
-function tokens(s){return new Set(norm(s).split(" ").filter(Boolean))}
-function containsPhrase(answer, phrase){
-  const a=" "+norm(answer)+" ", p=" "+norm(phrase)+" ";
-  return a.includes(p);
-}
-function containsTokenSequence(answer, seq){
-  const ts=tokens(answer);
-  return seq.every(x=>ts.has(norm(x)));
-}
-
-function save(){localStorage.setItem("latinV3State",JSON.stringify(state));renderDashboard()}
-function show(id){["dashboard","notes","quiz","results"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
-function showDashboard(){renderDashboard();show("dashboard")}
-function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
-
-
-const quickNotes = {
-  "12 Aug":{
-    title:"12 Aug — Cases & declensions",
-    intro:"Fast reminder before the case-function and declension questions.",
-    boxes:[
-      {h:"Case jobs — MUST know",items:[
-        "<b>Nominative</b> = subject / doer",
-        "<b>Accusative</b> = direct object; also after movement/prepositions such as <i>ad</i>, <i>per</i>, <i>prope</i>",
-        "<b>Genitive</b> = possession / “of”",
-        "<b>Dative</b> = recipient / “to or for”",
-        "<b>Ablative</b> = often “by / with / from”; also location after some prepositions",
-        "<b>Vocative</b> = direct address"
-      ]},
-      {h:"Declensions",items:[
-        "1st / 2nd / 3rd declensions: recognise the core endings and use the sentence role to decide the case.",
-        "4th / 5th: recognition is enough at this stage.",
-        "Do not identify a case from one ending alone if the ending could fit more than one case."
-      ]},
-      {h:"Fast exam method",items:[
-        "1. Find the finite verb.",
-        "2. Find the likely subject.",
-        "3. Ask who/what receives the action.",
-        "4. Check any preposition before choosing the noun case."
-      ],ex:"Example: <i>ancillae pecuniam furibus dederunt</i> → <b>pecuniam</b> is the thing given; <b>furibus</b> are the recipients."}
-    ]
-  },
-  "15 Aug":{
-    title:"15 Aug — Agreement • pronouns • possessives • prepositions",
-    intro:"Quick accuracy check: case + agreement + pronoun meaning.",
-    boxes:[
-      {h:"Prepositions",items:[
-        "<i>ad</i> + accusative = to / towards",
-        "<i>per</i> + accusative = through",
-        "<i>prope</i> + accusative = near",
-        "<i>sub</i> + accusative = movement to/under; <i>sub</i> + ablative = position under"
-      ]},
-      {h:"Pronouns in a sentence",items:[
-        "<b>ego</b> = I as subject",
-        "<b>me</b> = me as object",
-        "<b>tu</b> = you as subject",
-        "<b>te</b> = you as object",
-        "<b>tibi</b> = to/for you"
-      ]},
-      {h:"Agreement",items:[
-        "Adjectives and possessives agree with the noun in <b>gender, number and case</b>.",
-        "Do not choose a possessive just from its English meaning.",
-        "<i>nostram villam</i>: both are feminine accusative singular."
-      ],ex:"<i>Caecilius illam vidit</i> → <b>illam</b> because “that woman” is the direct object."}
-    ]
-  },
-  "16 Aug":{
-    title:"16 Aug — Word banks & perfect cues",
-    intro:"Use the word bank, then recognise the perfect person/number ending.",
-    boxes:[
-      {h:"Perfect tense meaning",items:[
-        "Usually a <b>completed past action</b>: did / has done.",
-        "First recognise the learned perfect form or perfect stem.",
-        "Then use the ending to identify person and number."
-      ]},
-      {h:"Common perfect endings",items:[
-        "-i = I",
-        "-isti = you (singular)",
-        "-it = he/she/it",
-        "-imus = we",
-        "-istis = you (plural)",
-        "-erunt = they"
-      ]},
-      {h:"Do not guess from English",items:[
-        "Look at the Latin subject and verb ending together.",
-        "Irregular perfect forms still come from the learned word bank."
-      ],ex:"<i>multi cives ... discesserunt</i> → plural subject + <b>-erunt</b> = “they left / departed”."}
-    ]
-  },
-  "18–19 Aug":{
-    title:"18–19 Aug — Four tenses • person & number",
-    intro:"Before translating, identify tense AND person/number.",
-    boxes:[
-      {h:"Four-tense meaning",items:[
-        "<b>Present</b> = does / is doing",
-        "<b>Imperfect</b> = was doing / used to do",
-        "<b>Perfect</b> = did / has done",
-        "<b>Pluperfect</b> = had done"
-      ]},
-      {h:"Useful recognition cues",items:[
-        "Imperfect often contains <b>-ba-</b>.",
-        "Pluperfect often contains <b>-era-</b> after the perfect stem.",
-        "Perfect uses its learned perfect stem + perfect endings.",
-        "Always finish by checking the person/number ending."
-      ]},
-      {h:"Translation check",items:[
-        "One sentence can mix tenses.",
-        "Perfect often gives the completed event; imperfect often gives background/ongoing action.",
-        "Do not turn every past verb into simple “did”."
-      ],ex:"<i>intraverat ... manebat</i> → “<b>had entered</b> ... <b>was staying</b>”."}
-    ]
-  },
-  "22 Aug":{
-    title:"22 Aug — Higher skills • translation method",
-    intro:"Use the same routine on every unseen sentence instead of translating word-by-word.",
-    boxes:[
-      {h:"Latin → English routine",items:[
-        "1. Underline every finite verb.",
-        "2. Label tense + person/number.",
-        "3. Find the subject.",
-        "4. Mark noun cases and prepositions.",
-        "5. Join the meaning into natural English."
-      ]},
-      {h:"English → Latin routine",items:[
-        "1. Identify subject, verb, direct object and recipient.",
-        "2. Choose tense before writing the verb.",
-        "3. Put direct object in accusative.",
-        "4. Put recipient in dative.",
-        "5. Check agreement at the end."
-      ]},
-      {h:"Final 10-second check",items:[
-        "Verb tense correct?",
-        "Person/number correct?",
-        "Object/recipient cases correct?",
-        "Any preposition forcing a case?",
-        "Natural English / acceptable Latin word order?"
-      ],ex:"“The slave girls gave the money to the thieves” → direct object = <b>pecuniam</b>; recipient = <b>furibus</b>."}
-    ]
-  },
-  "23 Aug":{
-    title:"23 Aug — ad urbem",
-    intro:"Quick set-text refresh: focus on tense contrast, movement phrases and evidence.",
-    boxes:[
-      {h:"Tense contrast",items:[
-        "Perfect = completed event in the story.",
-        "Imperfect = ongoing/background action.",
-        "Annotate the verb tense before translating the line."
-      ],ex:"<i>petivimus</i> = we made/headed for; <i>timebamus</i> = we were afraid."},
-      {h:"Movement & place",items:[
-        "<i>ad</i> + accusative = to/towards",
-        "<i>per</i> + accusative = through",
-        "Keep possessive agreement accurate: e.g. <i>villam nostram</i>."
-      ]},
-      {h:"Comprehension",items:[
-        "Answer from the Latin evidence, not from memory of the story.",
-        "If asked about actions, quote/identify the relevant verb.",
-        "If asked where someone went, locate the movement phrase first."
-      ]}
-    ]
-  },
-  "24–25 Aug":{
-    title:"24–25 Aug — ad villam",
-    intro:"Six-paragraph set-text practice: translate in clauses and keep the narrative tenses separate.",
-    boxes:[
-      {h:"Clause-by-clause method",items:[
-        "Find connectors first: e.g. <i>postquam</i>, <i>quod</i>, <i>ubi</i>.",
-        "Translate one clause at a time.",
-        "Then join them into natural English."
-      ]},
-      {h:"Narrative tense contrast",items:[
-        "<i>intraverunt</i> = they entered (perfect).",
-        "<i>petebant</i> = they were making/heading for (imperfect).",
-        "<i>complebant</i> = they were filling (imperfect)."
-      ]},
-      {h:"Pronoun accuracy",items:[
-        "Do not skip small words: <i>tibi</i>, <i>tu</i>, <i>me</i> can change the meaning.",
-        "Check who is doing the action and who receives it."
-      ],ex:"<i>tibi ... ago ... tu me servavisti</i> → “I thank <b>you</b> ... because <b>you saved me</b>.”"}
-    ]
-  },
-  "Mixed":{
-    title:"Mixed test — 3-minute whole-course refresh",
-    intro:"Read once only. Then close the notes and do the mixed paper.",
-    boxes:[
-      {h:"Cases",items:["Nom = subject","Acc = direct object / after ad, per, prope","Gen = of","Dat = to/for","Abl = by/with/from or location in some phrases","Voc = address"]},
-      {h:"Tenses",items:["Present = does/is doing","Imperfect = was doing/used to","Perfect = did/has done","Pluperfect = had done"]},
-      {h:"Translation order",items:["Verb → tense/person → subject → noun cases → prepositions → natural translation.","For English → Latin: subject → verb tense → object/recipient → agreement."]},
-      {h:"Set texts",items:["ad urbem: watch perfect vs imperfect and movement phrases.","ad villam: translate by clauses; use connectors and narrative tense contrast.","Use Latin evidence for comprehension."]}
-    ]
-  }
-};
-
-function openQuickNotes(day){
-  const n=quickNotes[day];
-  if(!n){
-    if(day==="Mixed") startMixedDirect();
-    else startDayDirect(day);
-    return;
-  }
-  document.getElementById("notestitle").textContent=n.title;
-  document.getElementById("notesintro").textContent=n.intro;
-  const c=document.getElementById("notescontent"); c.innerHTML="";
-  n.boxes.forEach(b=>{
-    const d=document.createElement("div"); d.className="notebox";
-    d.innerHTML=`<h3>${b.h}</h3><ul>${b.items.map(x=>`<li>${x}</li>`).join("")}</ul>${b.ex?`<div class="noteexample">${b.ex}</div>`:""}`;
-    c.appendChild(d);
-  });
-  const btn=document.getElementById("notesstartbtn");
-  btn.onclick=()=> day==="Mixed" ? startMixedDirect() : startDayDirect(day);
-  show("notes");
-}
-
-function getPctForDay(day){
-  let a=(state.attempts||[]).filter(x=>x.day===day);
-  return a.length?Math.round(a.reduce((s,x)=>s+x.percent,0)/a.length):null;
+function latestPct(day){const a=(state.attempts||[]).filter(x=>x.day===day);return a.length?a[a.length-1].percent:null}
+function phaseFor(day){
+  if(['18 Jul','19 Jul'].includes(day))return 'Week 1 — diagnostic and foundations';
+  if(['24 Jul','25 Jul','26 Jul','27 Jul','28 Jul','29 Jul','31 Jul'].includes(day))return 'Week 2 — core content build';
+  if(['9 Aug','11 Aug','12 Aug'].includes(day))return 'Week 4 — retrieval and grammar';
+  if(['15 Aug','16 Aug','18 Aug','19 Aug'].includes(day))return 'Week 5 — stronger language';
+  if(['22 Aug','23 Aug','24 Aug','25 Aug','28 Aug'].includes(day))return 'Week 6 — higher skills and set texts';
+  return 'Week 7 — assess and consolidate only';
 }
 function renderDashboard(){
-  const ats=state.attempts||[];
-  const overall=ats.length?Math.round(ats.reduce((s,x)=>s+x.percent,0)/ats.length):0;
-  document.getElementById("overall").textContent=overall+"%";
-  document.getElementById("overallbar").style.width=overall+"%";
-  document.getElementById("wrongcount").textContent=(state.wrong||[]).length;
-  let list=document.getElementById("daylist");list.innerHTML="";
-  dayOrder.forEach(day=>{
-    const qs=bank.filter(q=>q.day===day), label=qs[0].label;
-    const pct=getPctForDay(day);
-    const cls=pct===null?"red":pct>=85?"green":pct>=70?"amber":"red";
-    const status=pct===null?"Not started":pct>=85?"Mastered":pct+"%";
-    const topics=[...new Set(qs.map(q=>q.topic))];
-    let d=document.createElement("div");d.className="card day";
-    d.innerHTML=`
-      <div class="daytitle">
-        <div><h2>${day}</h2><div><strong>${label}</strong></div><div class="muted small">${qs.length} test-style questions • ${topics.join(" • ")}</div></div>
-        <div class="row"><span class="pill ${cls}">${status}</span><button onclick="openQuickNotes('${day}')">Practice this day</button></div>
-      </div>
-      <div class="topicrow small"><strong>Kept separate:</strong> ${topics.map(t=>" "+t).join(" / ")}</div>`;
-    list.appendChild(d);
+  document.getElementById('totalcount').textContent=bank.length;
+  const reviewEntries=Object.entries(state.reviews||{}),due=reviewEntries.filter(([,r])=>r.due<=todayISO()).length;
+  document.getElementById('duecount').textContent=due;document.getElementById('weakcount').textContent=reviewEntries.length;document.getElementById('duebtn').disabled=!due;
+  const scored=blocks.map(b=>latestPct(b.day)).filter(x=>x!==null),overall=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):0;
+  document.getElementById('overall').textContent=overall+'%';document.getElementById('overallbar').style.width=overall+'%';
+  document.getElementById('versionline').textContent=`Latin Revision ${meta.version||'V6'} • ${bank.length} source-locked questions`;
+  const mig=document.getElementById('migration');if(migrationMessage){mig.textContent=migrationMessage;mig.classList.remove('hidden')}else mig.classList.add('hidden');
+  const list=document.getElementById('daylist');list.innerHTML='';let phase='';
+  blocks.forEach(block=>{
+    const thisPhase=phaseFor(block.day);if(thisPhase!==phase){phase=thisPhase;const h=document.createElement('h3');h.className='phase';h.textContent=phase;list.appendChild(h)}
+    const pool=poolFor(block),pct=latestPct(block.day),status=pct===null?'Not started':pct>=masteryTarget?'Mastered':pct+'%',cls=pct===null?'red':pct>=masteryTarget?'green':pct>=70?'amber':'red';
+    const d=document.createElement('div');d.className='card day';
+    const action=block.mode==='weak'?'Retest weak items':block.mode==='due'?'Do due retest':block.day==='30 Aug'?'Start mini-assessment':'Practice this date';
+    d.innerHTML=`<div class="row between"><div><h2>${block.day}</h2><strong>${block.label}</strong><div class="small muted">${pool.length} eligible questions • ${Math.min(block.sample,pool.length)} drawn per attempt</div></div><div class="row"><span class="pill ${cls}">${status}</span><button ${pool.length?'':'disabled'} data-day="${block.day}">${action}</button></div></div><div class="scope small"><strong>Locked scope:</strong> ${block.scope}</div>`;
+    d.querySelector('button').onclick=()=>openNotes(block.day);list.appendChild(d);
   });
 }
-
-function startDayDirect(day){startQuiz(shuffle(bank.filter(q=>q.day===day)),day,day)}
-function startMixedDirect(){startQuiz(shuffle(bank).slice(0,15),"Mixed test","Mixed")}
-function startMixed(){openQuickNotes("Mixed")}
-function startWrong(){
-  const qs=(state.wrong||[]).map(i=>bank[i]).filter(Boolean);
-  if(!qs.length){alert("No weak questions saved yet.");return}
-  startQuiz(shuffle(qs).slice(0,15),"Weak-question retest","Weak");
-}
-function startQuiz(qs,t,dayTag){quizQuestions=qs;current=0;score=0;title=t;window.currentDayTag=dayTag;show("quiz");renderQuestion()}
-
+function openNotes(day){const block=blocks.find(b=>b.day===day),n=notes[day]||{title:day,intro:'Quick review before practice.',items:[]};document.getElementById('notestitle').textContent=n.title;document.getElementById('notesintro').textContent=n.intro;document.getElementById('notesitems').innerHTML=(n.items||[]).map(x=>`<li>${x}</li>`).join('');document.getElementById('notesscope').textContent=block.scope;document.getElementById('notesstartbtn').onclick=()=>startBlock(block);show('notes')}
+function startBlock(block){const pool=poolFor(block);if(!pool.length){alert('There are no eligible questions in this block yet.');showDashboard();return}reviewMode=['weak','due'].includes(block.mode);const n=Math.min(block.sample,pool.length);startQuiz(shuffle([...pool]).slice(0,n),`${block.day} — ${block.label}`,block.day)}
+function attemptedContentDays(){return blocks.filter(b=>!b.mode&&b.day!=='30 Aug'&&latestPct(b.day)!==null).map(b=>b.day)}
+function startMixed(){const days=attemptedContentDays();if(!days.length){alert('Complete at least one dated block first.');return}const pool=bank.filter(q=>days.includes(q.day));reviewMode=false;startQuiz(shuffle([...pool]).slice(0,Math.min(15,pool.length)),'Mixed test — attempted blocks','Mixed')}
+function startWrong(){const pool=Object.keys(state.reviews||{}).map(id=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No weak questions are saved.');return}reviewMode=true;startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Weak-question retest','Weak')}
+function startDue(){const pool=Object.entries(state.reviews||{}).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No reviews are due today.');return}reviewMode=true;startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Due spaced-repetition review','Due')}
+function startQuiz(qs,title,day){quizQuestions=qs;current=0;score=0;quizTitle=title;quizDay=day;show('quiz');renderQuestion()}
 function renderQuestion(){
-  const q=quizQuestions[current];
-  document.getElementById("quiztitle").textContent=title+" — "+q.topic;
-  document.getElementById("qcounter").textContent=`${current+1}/${quizQuestions.length}`;
-  document.getElementById("quizbar").style.width=`${current/quizQuestions.length*100}%`;
-  document.getElementById("context").innerHTML=q.context?`<div class="passage">${q.context}</div>`:"";
-  document.getElementById("qtext").textContent=q.q;
-  const area=document.getElementById("inputarea"); area.innerHTML="";
-  if(q.type==="mc"){
-    const d=document.createElement("div");d.className="answers";
-    q.opts.forEach(o=>{
-      const b=document.createElement("button");b.className="answerbtn";b.textContent=o;
-      b.onclick=()=>{[...document.querySelectorAll(".answerbtn")].forEach(x=>{x.dataset.sel="";x.style.outline=""});b.dataset.sel="1";b.style.outline="2px solid #222"};
-      d.appendChild(b);
-    });area.appendChild(d);
-  }else{
-    area.innerHTML='<textarea id="textanswer" placeholder="Write the full answer here."></textarea>';
+  const q=quizQuestions[current];document.getElementById('quiztitle').textContent=quizTitle;document.getElementById('qcounter').textContent=`${current+1}/${quizQuestions.length}`;document.getElementById('quizbar').style.width=`${current/quizQuestions.length*100}%`;
+  const c=document.getElementById('qcontext');c.textContent=q.context||'';c.classList.toggle('hidden',!q.context);document.getElementById('direction').textContent=q.direction||q.topic;document.getElementById('qtext').textContent=q.q;
+  const area=document.getElementById('inputarea');area.innerHTML='';if(q.type==='mc'){const box=document.createElement('div');box.className='answers';shuffle([...q.opts]).forEach(o=>{const b=document.createElement('button');b.className='answerbtn';b.textContent=o;b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');b.dataset.selected='1'};box.appendChild(b)});area.appendChild(box)}else{area.innerHTML='<textarea id="textanswer" autocomplete="off" autocapitalize="none" placeholder="Write the full answer here."></textarea>'}
+  document.getElementById('feedback').className='feedback hidden';document.getElementById('checkbtn').classList.remove('hidden');document.getElementById('nextbtn').classList.add('hidden');
+}
+function mark(q,answer){
+  if(q.type==='exact_any')return {ok:(q.accepted||[]).some(x=>normExact(x)===normExact(answer)),missing:[]};
+  if(q.type==='eng_auto'){
+    if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return {ok:true,missing:[]};const missing=[];(q.groups||[]).forEach(g=>{if(!g.some(p=>phrase(answer,p)))missing.push(g[0])});return {ok:missing.length===0,missing};
   }
-  document.getElementById("feedback").className="feedback hidden";
-  document.getElementById("checkbtn").classList.remove("hidden");
-  document.getElementById("nextbtn").classList.add("hidden");
+  if(q.type==='lat_auto'){
+    if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return {ok:true,missing:[]};const t=tokens(answer),missing=[];(q.latinGroups||[]).forEach(g=>{if(!g.every(x=>t.has(norm(x))))missing.push(g.join(' + '))});return {ok:missing.length===0,missing};
+  }
+  return {ok:false,missing:[]};
 }
-
-function markEnglish(q,ans){
-  // exact accepted full variants
-  if((q.accepted||[]).some(x=>norm(x)===norm(ans))) return {ok:true,missing:[]};
-  const missing=[];
-  (q.groups||[]).forEach(group=>{
-    if(!group.some(p=>containsPhrase(ans,p))) missing.push(group[0]);
-  });
-  return {ok:missing.length===0,missing};
-}
-function markLatin(q,ans){
-  if((q.accepted||[]).some(x=>norm(x)===norm(ans))) return {ok:true,missing:[]};
-  const missing=[];
-  (q.latinGroups||[]).forEach(group=>{
-    // A group with multiple entries means ALL are needed if they are separate words like ["ad","urbem"].
-    // A group with one entry is one required form.
-    if(group.length===1){
-      if(!tokens(ans).has(norm(group[0]))) missing.push(group.join(" "));
-    } else {
-      if(!containsTokenSequence(ans,group)) missing.push(group.join(" + "));
-    }
-  });
-  return {ok:missing.length===0,missing};
+function updateReview(q,ok){
+  state.results[q.id]={ok,date:new Date().toISOString()};
+  if(!ok){state.reviews[q.id]={stage:1,due:addDays(2),lastWrong:new Date().toISOString()};return}
+  const r=state.reviews[q.id];if(reviewMode&&r){if(r.stage===1)state.reviews[q.id]={stage:2,due:addDays(7),lastWrong:r.lastWrong};else delete state.reviews[q.id]}
 }
 function checkAnswer(){
-  const q=quizQuestions[current], fb=document.getElementById("feedback");
-  let ok=false, missing=[];
-  if(q.type==="mc"){
-    const s=[...document.querySelectorAll(".answerbtn")].find(x=>x.dataset.sel==="1");
-    if(!s){alert("Choose an answer first.");return}
-    ok=norm(s.textContent)===norm(q.a);
-  }else{
-    const ans=document.getElementById("textanswer").value.trim();
-    if(!ans){alert("Write an answer first.");return}
-    const r=q.type==="eng_auto"?markEnglish(q,ans):markLatin(q,ans);
-    ok=r.ok;missing=r.missing;
-  }
-  record(ok,q);
-  fb.className="feedback "+(ok?"goodbox":"badbox");
-  let html=ok?`<strong>Correct.</strong>`:`<strong>Not quite.</strong>`;
-  if(!ok && missing.length){
-    html+=`<div class="small" style="margin-top:6px">The checker could not find these required ideas/forms:</div><ul class="missing">${missing.map(x=>`<li>${x}</li>`).join("")}</ul>`;
-  }
-  if(q.accepted && q.accepted.length){
-    html+=`<div class="accepted"><strong>Accepted example${q.accepted.length>1?"s":""}:</strong><br>${q.accepted.slice(0,4).join("<br>")}</div>`;
-  }
-  html+=`<div class="small" style="margin-top:8px">${q.explain||""}</div>`;
-  fb.innerHTML=html;
-  document.getElementById("checkbtn").classList.add("hidden");
-  document.getElementById("nextbtn").classList.remove("hidden");
-}
-function record(ok,q){
-  if(ok)score++;
-  const idx=bank.indexOf(q);
-  if(ok) state.wrong=(state.wrong||[]).filter(x=>x!==idx);
-  else if(idx>=0 && !(state.wrong||[]).includes(idx)) state.wrong.push(idx);
-  save();
+  const q=quizQuestions[current],fb=document.getElementById('feedback');let ok=false,missing=[];
+  if(q.type==='mc'){const s=document.querySelector('.answerbtn[data-selected="1"]');if(!s){alert('Choose an answer first.');return}ok=norm(s.textContent)===norm(q.a)}else{const input=document.getElementById('textanswer').value.trim();if(!input){alert('Write an answer first.');return}const r=mark(q,input);ok=r.ok;missing=r.missing}
+  if(ok)score++;updateReview(q,ok);save();fb.className='feedback '+(ok?'goodbox':'badbox');let html=ok?'<strong>Correct.</strong>':'<strong>Not quite.</strong>';
+  if(!ok&&missing.length)html+=`<div class="small" style="margin-top:7px">Missing or inaccurate key idea/form:</div><ul>${missing.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  const answer=q.a||q.answerExample||(q.accepted||[])[0];if(answer)html+=`<div class="answerexample"><strong>Accepted answer example:</strong><br>${answer}</div>`;
+  html+=`<div class="small" style="margin-top:9px">${q.explain||''}</div>`;if(!ok)html+='<div class="small" style="margin-top:8px"><strong>Scheduled:</strong> this question will return in 2 days.</div>';
+  fb.innerHTML=html;document.getElementById('checkbtn').classList.add('hidden');document.getElementById('nextbtn').classList.remove('hidden');
 }
 function nextQuestion(){if(current<quizQuestions.length-1){current++;renderQuestion()}else finish()}
-function finish(){
-  const pct=Math.round(score/quizQuestions.length*100);
-  const dayTag=window.currentDayTag;
-  state.attempts.push({date:new Date().toISOString(),day:dayTag,percent:pct,score,total:quizQuestions.length,title});
-  save();
-  document.getElementById("resultscore").textContent=pct+"%";
-  document.getElementById("resultmsg").textContent=pct>=85?"Mastered for this attempt (85%+).":"Below 85%. The missed questions have been added to the weak-question bank.";
-  show("results");
-}
-function resetProgress(){if(confirm("Reset all saved Latin progress?")){state={attempts:[],wrong:[]};save()}}
-function exportProgress(){
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="Psyche_Latin_V3_progress.json";a.click();URL.revokeObjectURL(a.href);
-}
+function finish(){const pct=Math.round(score/quizQuestions.length*100);state.attempts.push({date:new Date().toISOString(),day:quizDay,percent:pct,score,total:quizQuestions.length,title:quizTitle});save();document.getElementById('resultscore').textContent=`${score}/${quizQuestions.length} — ${pct}%`;document.getElementById('resultmsg').textContent=pct>=masteryTarget?'Mastered for this attempt (85%+). Keep any scheduled review dates: one successful attempt is not the end of spaced repetition.':'Below 85%. Missed questions are now scheduled for a 2-day review, followed by a 7-day review after a correct retest.';show('results')}
+function exportProgress(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Latin_Revision_V6_progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importProgress(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data.attempts||!data.reviews)throw new Error();state=Object.assign(emptyState(),data);save();migrationMessage='Progress imported successfully.';showDashboard()}catch(err){alert('This does not look like a valid Latin Revision V6 progress file.')}e.target.value=''};r.readAsText(f)}
+function resetProgress(){if(confirm('Reset all Latin Revision scores and review dates on this device?')){state=emptyState();save();migrationMessage='';showDashboard()}}
 renderDashboard();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 </script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("./sw.js");
-      // Check for app updates quietly whenever the app opens.
-      reg.update();
-    } catch (err) {
-      console.log("Service worker registration skipped:", err);
-    }
-  });
-}
-</script>
-
 </body>
 </html>

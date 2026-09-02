@@ -1,25 +1,14 @@
 {
-  "name": "Latin Revision",
+  "name": "Latin Revision — Summer",
   "short_name": "Latin Revision",
-  "description": "Private Latin revision app with dated quick notes, test-style questions, automatic marking, mastery tracking and weak-question review.",
-  "start_url": "./",
+  "description": "Source-locked Year 8 Latin summer revision with dated practice and spaced repetition.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "orientation": "any",
+  "background_color": "#f5f6f7",
+  "theme_color": "#1f2937",
   "icons": [
-    {
-      "src": "./icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
   ]
 }
