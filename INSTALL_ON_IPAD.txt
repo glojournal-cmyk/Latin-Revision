@@ -1,0 +1,75 @@
+Latin Revision — iPad PWA Installation Guide
+
+PART A — Put the PWA online from your Windows computer (GitHub Pages)
+
+You only need to do this once.
+
+1. Download and unzip the PWA ZIP.
+2. On Windows, open the unzipped folder. You should see:
+   - index.html
+   - manifest.webmanifest
+   - sw.js
+   - icons folder
+3. Go to github.com on your Windows browser and sign in / create a free account.
+4. Click the + button near the top-right → New repository.
+5. Repository name: latin-revision
+6. Choose Public.
+7. Click Create repository.
+8. On the new repository page, choose Add file → Upload files.
+9. Drag ALL of these from inside the unzipped PWA folder into GitHub:
+   - index.html
+   - manifest.webmanifest
+   - sw.js
+   - the entire icons folder
+10. Scroll down and click Commit changes.
+11. Open the repository Settings tab.
+12. In the left-hand menu, click Pages.
+13. Under Build and deployment:
+    - Source: Deploy from a branch
+    - Branch: main
+    - Folder: /(root)
+    - Click Save
+14. Wait a short while. Refresh the Pages settings page.
+15. GitHub will show the published site address. It normally looks like:
+    https://YOUR-USERNAME.github.io/latin-revision/
+16. Open that address on your Windows computer once to check the app loads.
+
+PART B — Install it on the iPad
+
+1. Make sure the iPad is connected to Wi-Fi.
+2. Open Safari on the iPad.
+   IMPORTANT: Use Safari for the installation step.
+3. Type/paste the GitHub Pages address from Part A.
+4. Wait until the Latin Revision page fully loads.
+5. Tap the Share button in Safari:
+   it looks like a square with an upward arrow.
+6. In the Share menu, scroll down and tap Add to Home Screen.
+7. If the iPad shows an option called Open as Web App, leave it enabled.
+8. The name should be Latin Revision. You can leave it unchanged.
+9. Tap Add.
+10. Return to the iPad Home Screen.
+11. You should now see the LATIN app icon.
+12. Tap it. It should open in its own app-style window without the normal Safari address bar.
+
+PART C — Make offline mode available
+
+1. After installing, open Latin Revision once while the iPad has internet.
+2. Move around the app for a few seconds.
+3. Close it.
+4. The app shell is now cached and should continue to open without internet.
+5. Progress, scores and the weak-question bank are stored locally on that iPad.
+
+IMPORTANT ABOUT PROGRESS
+
+- Do not clear Safari website data for the GitHub Pages site if you want to keep the saved progress.
+- If you delete and reinstall the Home Screen icon, normally the same website data remains, but do not rely on that as your only backup.
+- Use Parent controls → Export progress occasionally to save a backup JSON file.
+
+UPDATING THE APP LATER
+
+If a new version is created:
+1. On Windows, open the same GitHub repository.
+2. Upload/replace the updated files.
+3. Commit changes.
+4. GitHub Pages republishes automatically.
+5. The iPad PWA checks for an updated service worker when it opens.
