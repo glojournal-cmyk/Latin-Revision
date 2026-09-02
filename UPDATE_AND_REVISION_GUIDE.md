@@ -1,70 +1,78 @@
-# Latin Revision V7 Soft Scholar — 更新及使用指南
+# Latin Revision V8 Reliable Practice — 更新及使用指南
 
-## 新版內容
+## 今次最重要的修正
 
-- 固定白底的 **Soft Scholar** 設計：柔和 sage green + lavender、較易閱讀的標題與內文字體。
-- 題庫由 847 題擴充至 **1,056 題**，仍然只限 18 July–3 September 2026 Summer Revision。
-- 18、19、22、23、24、25 August 每日最少 **50 條獨立題目**。
-- 普通 Practice 會優先抽該日未見過的題目；完成整個 cycle 前不會即時重覆。
-- 答錯題目會離開普通 Practice，2 日後進入 Due Review；答對後 7 日再檢查一次。
-- 每題答案頁新增：學生答案、accepted answer、逐步解釋、常見判斷方法、Must remember。
-- 每日筆記新增：Must memorise、核心規則、source例子、常見陷阱及做題檢查清單。
-- 柔和答對、答錯及完成聲效；可在右上角 Sound on/off。
-- 每題答完自動保存；首頁顯示 Last saved / Last backup。
+- 保留白底 **Style C / Soft Scholar** 設計、柔和sage green與lavender、iPad PWA及聲效。
+- 題庫維持 **1,056題**，不再追求數量；今次集中修正判分、抽題、解釋及mastery可信度。
+- `under`會判啱；`(position)`、`(movement)`等老師註解不再要求學生輸入。
+- `he/she`會分別接受自然的`he...`或`she...`答案。
+- `nostri / nostrum`、`vestri / vestrum`會接受任何一個正確source form。
+- possessives三個forms可用任何次序，接受逗號、斜線、`and`、大小寫及多餘空格。
+- 三個forms少一個或加入錯誤form時，feedback會分開列出 **Missing**及 **Incorrect extra answer**。
+- 完整English translation改為key-idea marking；合理自然譯法毋須逐字等同model answer。
+- English → Latin仍接受正常Latin語序變化，但會拒絕遺漏必要form或加入錯誤Latin字。
 
-## 更新前先備份
+## Practice如何抽題
 
-在目前app最下方 Parent controls 按 **Export progress / Backup progress**，把JSON檔案保存在iPad Files。
+- 有當日新題的block：每15題約 **12題當日focus + 3題累積重溫**。
+- 15題內如題池容許，至少約40%為打字／翻譯題，避免一次幾乎全部MC。
+- 9 Aug及30 Aug沒有新內容，會按日期／topic平均抽，不會由最大vocab池壟斷。
+- 普通Practice仍優先使用未見過的focus questions；完成cycle前不即時重覆。
+- 首頁會分開顯示 **focus questions**與 **cumulative-review questions**。
 
-正常更新同一個GitHub repository不會清除舊分數。V7會自動帶入V6的分數、錯題及review日期；新的no-repeat cycle會由零開始。
+## Mastered的新定義
 
-## 在Windows更新原本GitHub Pages
+一次15題取得85%只會顯示 **Strong session**。
 
-1. 下載新版ZIP，右鍵按 **Extract All / 解壓縮**。
-2. 打開解壓後的 `Latin_Revision_PWA_V7_SoftScholar` folder。
-3. 在瀏覽器登入GitHub，進入原本的 `latin-revision` repository。
-4. 按 **Add file → Upload files**。
-5. 將新版folder「裡面」的所有檔案拖入GitHub，包括：
-   - `index.html`
-   - `question-bank.js`
-   - `manifest.webmanifest`
-   - `sw.js`
-   - `icons` folder
-6. 拉到頁面底部按 **Commit changes**。
-7. 不用再設定Settings → Pages，也不用刪除iPad的Home Screen icon。
+一個日期必須：
 
-## 令iPad收到新版
+1. 見過該日整個focus題池；以及
+2. 整個cycle準確率達 **85%或以上**
 
-1. 等GitHub約1–3分鐘完成發佈。
-2. iPad保持連接Wi-Fi。
-3. 完全關閉Latin Revision：由畫面底部向上掃並停頓，再把app預覽向上推走。
-4. 用Safari打開原本GitHub Pages網址並refresh一次。
-5. 關閉Safari，再由Home Screen打開Latin Revision。
-6. 首頁應顯示Soft Scholar設計及 **1,056 questions**。
+才會正式顯示 **Mastered**。因此不會再出現只做13/15，仍有大量未見題目便過早Mastered的情況。
 
-如果仍見到舊版，再完全關閉app並重開一次。新的service worker會刪除V6 cache。
+## 錯題及2日／7日重溫
 
-## 女兒每天使用方法
+- 普通Practice或assessment答錯：離開普通題池，2日後進入Due Review。
+- 2日後答啱：7日後再檢查一次。
+- 7日後再答啱：離開review queue。
+- **Due today**才會推進review階段。
+- 31 Aug Extra Practice可以提早練弱題，但不會提早改動原定due date。
 
-1. 如首頁 **Due today** 大過0，先完成到期的2-day / 7-day review。
-2. 選擇目前正在溫習的日期。
-3. 先看Must memorise及詳細notes；已熟內容可以只看必背框。
-4. 按Start practice，每次做15條未見過題目。
-5. 每題答完必須閱讀How to work it out及Must remember。
-6. 同一日期未達85%，可以再做，但app會優先抽同日其他未見過的題。
-7. 達85%後可轉下一個block，但仍須完成之後到期的review。
-8. 完成數個dated blocks後才做Mixed test；全部內容完成後才做30 Aug assessment。
+## 解釋及Quick Notes
 
-建議每次約15–25分鐘。長卷保留作每1–2星期驗收；日常以app作針對性學習及記憶鞏固。
+- 每題會顯示學生答案、accepted answer、逐步拆解及真正與該題相關的Must remember。
+- 舊版696條重覆通用提示已改成按問題context生成的記憶提示。
+- 早期Stages及photo/dictionary blocks新增實際source-locked必背字、English → Latin recall及檢查方法。
+- 12–25 Aug保留較詳細的cases、pronouns、possessives、tenses、set-text筆記。
 
-## 記錄會否消失
+## 記錄及暫停
 
-正常關閉app、關閉Safari、關機或隔日再開，不會清除記錄。以下情況可能令本機記錄消失：
+- 每次提交答案後自動儲存。
+- 按 **Pause**會保存題目位置及目前分數；首頁按 **Continue practice**即可繼續。
+- 正常關閉app、Safari或iPad不會刪除記錄。
+- V8會帶入V7的分數、錯題及review dates；新的可信mastery cycle由V8作答開始計算。
+- 大更新前仍建議在Parent controls按 **Backup progress**。
 
-- 清除Safari Website Data；
-- 使用Private Browsing；
-- 在app按Reset progress；
-- 改用另一條網址或另一個repository；
-- iPad系統在極端儲存壓力下清理網站資料。
+## 更新原本GitHub Pages
 
-大更新前按 **Backup progress**。如有需要可用 **Restore backup** 匯入JSON。
+1. 先在現有app按 **Backup progress**。
+2. 下載V8 ZIP並在Windows按 **Extract All**。
+3. 打開解壓後folder，確認見到`index.html`、`app.js`、`question-bank.js`、`manifest.webmanifest`、`sw.js`及`icons`。
+4. 進入原本GitHub `latin-revision` repository。
+5. 按 **Add file → Upload files**。
+6. 將V8 folder「裡面」所有檔案拖入去，按 **Commit changes**。
+7. 不用重新設定Pages，也不用刪除iPad Home Screen icon。
+8. 等1–3分鐘，用Safari開原網址並refresh。
+9. 完全關閉Latin Revision，再由Home Screen重開。
+10. 頁面標題應顯示 **Reliable Practice V8**。
+
+## 建議日常用法
+
+1. 先完成 **Due today**。
+2. 看當日Must memorise及真正必背字／規則。
+3. 做一次15題Practice。
+4. 每題都看How to work it out，尤其分辨錯的是meaning、spelling、case、person或tense。
+5. Strong session不等於完成；繼續至整個focus cycle完成。
+6. Full cycle達85%後才轉下一個block。
+7. 每幾個blocks做一次Balanced Mixed Test；最後才做30 Aug assessment。

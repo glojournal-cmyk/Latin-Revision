@@ -1,7 +1,7 @@
 {
-  "name": "Latin Revision — Soft Scholar",
+  "name": "Latin Revision — Reliable Practice V8",
   "short_name": "Latin Revision",
-  "description": "Source-locked Year 8 Latin summer revision with unseen-first practice, detailed explanations and spaced repetition.",
+  "description": "Source-locked Year 8 Latin summer revision with reliable marking, focus-first practice, detailed explanations and spaced repetition.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

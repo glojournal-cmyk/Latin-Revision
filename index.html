@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — Soft Scholar V7</title>
+  <title>Latin Revision — Reliable Practice V8</title>
   <style>
     :root{
       --ink:#24312c;--muted:#708078;--line:#d9e6df;--paper:#fff;
@@ -134,7 +134,7 @@
   <header class="app-header">
     <div class="header-inner">
       <div class="brand"><span class="brand-mark">L</span><span>Latin Revision</span></div>
-      <span class="header-tag">Soft Scholar · Summer source-locked</span>
+      <span class="header-tag">Reliable Practice V8 · Summer source-locked</span>
       <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span class="sound-dot"></span><span id="soundLabel">Sound on</span></button>
     </div>
   </header>
@@ -142,6 +142,7 @@
   <main class="wrap">
     <section id="dashboard">
       <div id="migration" class="notice hidden"></div>
+      <div id="resumePanel" class="notice hidden"><div class="between"><div><strong>Practice paused</strong><div id="resumeText" class="small">Your place is saved on this iPad.</div></div><button class="primary" onclick="resumeSession()">Continue practice</button></div></div>
       <div class="hero">
         <div class="hero-row">
           <div><div class="eyebrow">Today · Summer revision</div><h1>Small steps make strong memory.</h1><p>Choose one exact dated block. Fresh practice uses unseen questions first; mistakes return through the separate 2-day and 7-day review schedule.</p></div>
@@ -153,7 +154,7 @@
         <div class="summary"><div class="summary-label">Overall mastery</div><div class="summary-value" id="overall">0%</div><div class="progress"><div class="progress-bar" id="overallbar"></div></div></div>
         <div class="summary"><div class="summary-label">Questions in bank</div><div class="summary-value" id="totalcount">0</div><div class="small muted">Summer content only</div></div>
         <div class="summary"><div class="summary-label">Due today</div><div class="summary-value" id="duecount">0</div><button id="duebtn" class="ghost" onclick="startDue()">Review due questions</button></div>
-        <div class="summary"><div class="summary-label">Scheduled reviews</div><div class="summary-value" id="weakcount">0</div><div class="small muted">Held out of normal practice</div></div>
+        <div class="summary"><div class="summary-label">Scheduled reviews</div><div class="summary-value" id="weakcount">0</div><div class="small muted" id="weakSummary">Held out of normal practice</div></div>
       </div>
 
       <div class="dashboard-actions">
@@ -204,7 +205,7 @@
         <div id="questionText" class="question-text"></div>
         <div id="inputArea"></div>
         <div id="feedback" class="feedback hidden"></div>
-        <div class="action-row" style="margin-top:15px"><button id="checkButton" class="primary" onclick="checkAnswer()">Check answer</button><button id="nextButton" class="primary hidden" onclick="nextQuestion()">Next question</button><button class="secondary" onclick="showDashboard()">Stop</button></div>
+        <div class="action-row" style="margin-top:15px"><button id="checkButton" class="primary" onclick="checkAnswer()">Check answer</button><button id="nextButton" class="primary hidden" onclick="nextQuestion()">Next question</button><button class="secondary" onclick="pauseQuiz()">Pause</button></div>
       </article>
     </section>
 
@@ -214,7 +215,7 @@
   </main>
 
   <script src="question-bank.js"></script>
-  <script>
+  <script type="text/plain" id="legacy-v7-script">
     const bank=window.LATIN_BANK||[],blocks=window.LATIN_BLOCKS||[],notes=window.LATIN_NOTES||{},meta=window.LATIN_META||{};
     const byId=new Map(bank.map(q=>[q.id,q]));
     const masteryTarget=85,stateKey='latinSummerV7State',oldStateKey='latinSummerV6State';
@@ -307,5 +308,6 @@
 
     renderDashboard();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
   </script>
+  <script src="app.js"></script>
 </body>
 </html>
