@@ -1832,10 +1832,100 @@ function soundPaper(audio,when=.0,volume=.014){
   src.start(t);
 }
 
+
+function soundMetal(audio,when=.0,volume=.026){
+  const t=audio.currentTime+when;
+  [620,930,1370].forEach((freq,index)=>{
+    const osc=audio.createOscillator();
+    const gain=audio.createGain();
+    osc.type=index===0?'triangle':'sine';
+    osc.frequency.setValueAtTime(freq,t);
+    gain.gain.setValueAtTime(.0001,t);
+    gain.gain.exponentialRampToValueAtTime(volume/(index+1),t+.004);
+    gain.gain.exponentialRampToValueAtTime(.0001,t+.13+index*.05);
+    osc.connect(gain).connect(audio.destination);
+    osc.start(t); osc.stop(t+.22);
+  });
+}
+
+function soundRush(audio,when=.0,volume=.010){
+  const length=Math.floor(audio.sampleRate*.16);
+  const buffer=audio.createBuffer(1,length,audio.sampleRate);
+  const data=buffer.getChannelData(0);
+  for(let i=0;i<length;i++){
+    const env=Math.sin(Math.PI*i/length);
+    data[i]=(Math.random()*2-1)*env;
+  }
+  const src=audio.createBufferSource();
+  const filter=audio.createBiquadFilter();
+  const gain=audio.createGain();
+  const t=audio.currentTime+when;
+  src.buffer=buffer;
+  filter.type='bandpass';
+  filter.frequency.setValueAtTime(900,t);
+  filter.frequency.exponentialRampToValueAtTime(2600,t+.14);
+  gain.gain.setValueAtTime(volume,t);
+  gain.gain.exponentialRampToValueAtTime(.0001,t+.16);
+  src.connect(filter).connect(gain).connect(audio.destination);
+  src.start(t);
+}
+
 function playTone(kind){
   if(state.settings.sound===false) return;
   const audio=ensureAudio();
   if(!audio) return;
+
+  if(kind==='gameStart'){
+    soundWood(audio,0,.018,210);
+    soundPluck(audio,392,.045,.020,.18);
+    return;
+  }
+  if(kind==='countdown'){
+    soundWood(audio,0,.024,260);
+    return;
+  }
+  if(kind==='sprintStart'){
+    soundRush(audio,0,.014);
+    soundPluck(audio,523.25,.02,.024,.18);
+    soundPluck(audio,783.99,.09,.026,.22);
+    return;
+  }
+  if(kind==='tick'){
+    soundWood(audio,0,.012,285);
+    return;
+  }
+  if(kind==='timeBoost'){
+    soundRush(audio,0,.009);
+    soundPluck(audio,659.25,.02,.024,.18);
+    soundPluck(audio,880,.10,.026,.23);
+    return;
+  }
+  if(kind==='shieldHit'){
+    soundMetal(audio,0,.020);
+    soundWood(audio,.015,.012,130);
+    return;
+  }
+  if(kind==='sprintStep'){
+    soundWood(audio,0,.012,235);
+    soundPluck(audio,523.25,.025,.018,.14);
+    return;
+  }
+  if(kind==='sentenceDone'){
+    soundPaper(audio,0,.014);
+    soundPluck(audio,329.63,.035,.022,.22);
+    soundPluck(audio,493.88,.12,.026,.28);
+    soundPluck(audio,659.25,.22,.025,.32);
+    return;
+  }
+  if(kind==='victory'){
+    soundMetal(audio,0,.010);
+    soundPluck(audio,329.63,.03,.024,.30);
+    soundPluck(audio,440,.13,.027,.34);
+    soundPluck(audio,554.37,.24,.030,.38);
+    soundPluck(audio,659.25,.36,.031,.44);
+    soundPluck(audio,880,.50,.026,.52);
+    return;
+  }
 
   if(kind==='tile'){
     soundPaper(audio,0,.012);
@@ -2043,7 +2133,7 @@ function gameSafeRender(fn){
 }
 
 /* ===== V9.1 Latin Games engine ===== */
-let latinGame = {type:null,score:0,combo:0,round:0,timer:null,seconds:0,answer:'',selected:[],pairs:[],attempts:0,correct:0};
+let latinGame = {type:null,score:0,combo:0,maxCombo:0,round:0,timer:null,seconds:0,answer:'',selected:[],pairs:[],attempts:0,correct:0,seen:[],boosts:0,startedAt:0,mistakes:0,maxMistakes:0,levelId:0,levelName:'',failed:false,stars:0};
 
 const LATIN_GAME_ART = {
   bronze:"data:image/webp;base64,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",
@@ -2087,9 +2177,65 @@ function updateLatinGameStats(){
   const s=document.getElementById('gameScore');
   const c=document.getElementById('gameCombo');
   const t=document.getElementById('gameTimer');
-  if(s) s.textContent=latinGame.type==='sprint' ? 'Points '+latinGame.score : 'Score '+latinGame.score+'/100';
-  if(c) c.textContent='Combo '+latinGame.combo;
-  if(t) t.textContent=latinGame.type==='sprint' ? latinGame.seconds+'s' : '';
+  const r=document.getElementById('gameRound');
+  const fill=document.getElementById('gameProgressFill');
+  const mood=document.getElementById('gameMood');
+  const sound=document.getElementById('gameSoundButton');
+
+  if(s){
+    if(latinGame.type==='sprint'){
+      s.textContent='Points '+latinGame.score;
+    }else if(latinGame.type==='match' && latinGame.levelId){
+      const left=Math.max(0,(latinGame.maxMistakes||0)-latinGame.mistakes);
+      s.textContent='Score '+latinGame.score+'/100 · ♥ '+left+' left';
+    }else{
+      s.textContent='Score '+latinGame.score+'/100';
+    }
+  }
+
+  if(c){
+    c.textContent='Combo '+latinGame.combo+(latinGame.combo>=5?' 🔥':'');
+    c.classList.toggle('hot',latinGame.combo>=3);
+  }
+  if(t){
+    t.textContent=latinGame.type==='sprint' ? latinGame.seconds+'s' : '';
+    t.classList.toggle('urgent',latinGame.type==='sprint' && latinGame.seconds<=10);
+  }
+
+  const total=latinGame.type==='gladiator'?10:(latinGame.type==='sentence'?5:(latinGame.type==='match'?Math.max(1,latinGame.pairs.length):0));
+  if(r){
+    if(latinGame.type==='sprint'){
+      r.textContent='Answered '+latinGame.round;
+    }else if(latinGame.type==='match' && latinGame.levelId){
+      r.textContent='Level '+latinGame.levelId+' · Pair '+Math.min(latinGame.round+1,total)+' / '+total;
+    }else if(total){
+      r.textContent='Round '+Math.min(latinGame.round+1,total)+' / '+total;
+    }else{
+      r.textContent='';
+    }
+  }
+  if(fill){
+    const pct=latinGame.type==='sprint'
+      ? Math.min(100,Math.max(0,(60-latinGame.seconds)/60*100))
+      : (total?Math.min(100,latinGame.round/total*100):0);
+    fill.style.width=pct+'%';
+  }
+  if(mood){
+    if(latinGame.type==='match' && latinGame.levelId){
+      const left=Math.max(0,(latinGame.maxMistakes||0)-latinGame.mistakes);
+      mood.textContent=latinGame.combo>=3
+        ? '✨ Match streak ×'+latinGame.combo
+        : 'Clear the board before you lose all '+left+' hearts.';
+    }else{
+      mood.textContent=latinGame.combo>=5?'🔥 Magna combo!':
+        latinGame.combo>=3?'✨ '+latinGame.combo+' in a row!':
+        latinGame.type==='sprint' && latinGame.seconds<=10?'Final sprint!':
+        'Keep going — small wins add up.';
+    }
+  }
+  if(sound){
+    sound.textContent=(state.settings.sound===false?'♩ Sound off':'♪ Sound on');
+  }
 }
 
 function latinVocabPairs(){
@@ -2148,10 +2294,15 @@ function latinSentenceBank(){
 
 function startLatinGame(type){
   stopLatinGameTimer();
+
+  ensureAudio();
+  playTone('gameStart');
+
   latinGame={
     type,
     score:0,
     combo:0,
+    maxCombo:0,
     round:0,
     timer:null,
     seconds:type==='sprint'?60:0,
@@ -2159,7 +2310,16 @@ function startLatinGame(type){
     selected:[],
     pairs:[],
     attempts:0,
-    correct:0
+    correct:0,
+    seen:[],
+    boosts:0,
+    startedAt:Date.now(),
+    mistakes:0,
+    maxMistakes:0,
+    levelId:0,
+    levelName:'',
+    failed:false,
+    stars:0
   };
 
   const titles={
@@ -2168,55 +2328,208 @@ function startLatinGame(type){
     sentence:'Build the Sentence',
     sprint:'Roman Sprint'
   };
-  const title=document.getElementById('gameTitle');
-  if(title) title.textContent=titles[type] || 'Latin Game';
 
-  show('gamePlay');
-  setNavActive('practice');
+  document.getElementById('gameTitle').textContent=titles[type];
+  showScreen('gamePlay');
   updateLatinGameStats();
 
   if(type==='match'){
-    gameSafeRender(renderLatinMatch);
+    gameSafeRender(renderMatchLevelSelect);
   }else if(type==='sentence'){
     gameSafeRender(renderLatinSentence);
+  }else if(type==='sprint'){
+    startSprintCountdown();
   }else{
-    if(type==='sprint'){
-      latinGame.timer=setInterval(()=>{
-        latinGame.seconds--;
-        updateLatinGameStats();
-        if(latinGame.seconds<=0) finishLatinGame();
-      },1000);
-    }
     gameSafeRender(renderLatinChallenge);
   }
 }
 
-function renderLatinMatch(){
-  const pairs=gameShuffle(latinVocabPairs()).slice(0,6);
-  latinGame.pairs=pairs;
-  latinGame.round=0;
 
-  if(pairs.length<3){
-    latinGameMessage('Not enough matching vocabulary was found in the source bank.');
+function startSprintCountdown(){
+  const area=document.getElementById('gameArea');
+  let n=3;
+  area.innerHTML='<div class="game-countdown"><div class="count-number">3</div><p>Roman Sprint starts in…</p></div>';
+  playTone('countdown');
+
+  const timer=setInterval(()=>{
+    n--;
+    const num=area.querySelector('.count-number');
+    if(n>0){
+      if(num) num.textContent=String(n);
+      playTone('countdown');
+      return;
+    }
+    clearInterval(timer);
+    if(num) num.textContent='GO!';
+    playTone('sprintStart');
+    setTimeout(()=>{
+      latinGame.timer=setInterval(()=>{
+        latinGame.seconds--;
+        if(latinGame.seconds<=10 && latinGame.seconds>0) playTone('tick');
+        updateLatinGameStats();
+        if(latinGame.seconds<=0) finishLatinGame();
+      },1000);
+      gameSafeRender(renderLatinChallenge);
+      updateLatinGameStats();
+    },300);
+  },650);
+}
+
+function gameBurst(text,kind='good'){
+  const area=document.getElementById('gameArea');
+  if(!area) return;
+  const burst=document.createElement('div');
+  burst.className='game-burst '+kind;
+  burst.textContent=text;
+  area.appendChild(burst);
+  setTimeout(()=>burst.remove(),650);
+}
+
+function gamePickQuestion(pool){
+  if(!pool.length) return null;
+  const unseen=pool.filter(q=>!latinGame.seen.includes(String(q.id||q.q)));
+  const source=unseen.length?unseen:pool;
+  const q=source[Math.floor(Math.random()*source.length)];
+  latinGame.seen.push(String(q.id||q.q));
+  if(latinGame.seen.length>Math.min(pool.length,30)) latinGame.seen.shift();
+  return q;
+}
+
+
+const MATCH_LEVELS=[
+  {id:1,name:'Novice I',pairs:4,hearts:3,flair:'Warm up with the core bank.'},
+  {id:2,name:'Novice II',pairs:5,hearts:3,flair:'A little fuller, still forgiving.'},
+  {id:3,name:'Scholar I',pairs:6,hearts:3,flair:'Steady memory and faster matching.'},
+  {id:4,name:'Scholar II',pairs:6,hearts:2,flair:'Less room for mistakes.'},
+  {id:5,name:'Magister I',pairs:7,hearts:2,flair:'Longer board, sharper focus.'},
+  {id:6,name:'Magister II',pairs:8,hearts:2,flair:'The full challenge board.'}
+];
+
+function ensureMatchCampaign(){
+  state.games=state.games||{};
+  state.games.verbumMatch=state.games.verbumMatch||{unlocked:1,best:{}};
+  if(typeof state.games.verbumMatch.unlocked!=='number') state.games.verbumMatch.unlocked=1;
+  state.games.verbumMatch.best=state.games.verbumMatch.best||{};
+  return state.games.verbumMatch;
+}
+
+function matchStarsForMistakes(m){
+  return m===0?3:(m===1?2:1);
+}
+
+function renderMatchLevelSelect(){
+  const area=document.getElementById('gameArea');
+  const progress=ensureMatchCampaign();
+  document.getElementById('gameTitle').textContent='Verbum Match';
+  latinGame.levelId=0;
+  latinGame.pairs=[];
+  latinGame.mistakes=0;
+  latinGame.maxMistakes=0;
+  updateLatinGameStats();
+
+  area.innerHTML=
+    '<div class="game-question">'+
+      '<div class="game-round-kicker">VERBUM MATCH CAMPAIGN</div>'+
+      '<h3>Choose a level</h3>'+
+      '<p>Clear every board before you run out of hearts. Pass a level to unlock the next one.</p>'+
+      '<div class="match-level-grid">'+
+      MATCH_LEVELS.map(level=>{
+        const locked=level.id>progress.unlocked;
+        const best=progress.best[level.id];
+        const stars=best?('★'.repeat(best.stars||0)+'☆'.repeat(3-(best.stars||0))):'☆☆☆';
+        return '<button type="button" class="match-level-card'+(locked?' locked':'')+'" data-match-level="'+level.id+'" '+(locked?'disabled':'')+'>'+
+          '<div class="match-level-top"><span class="match-level-pill">Level '+level.id+'</span><span class="match-level-stars">'+stars+'</span></div>'+
+          '<h4>'+gameEsc(level.name)+'</h4>'+
+          '<p>'+gameEsc(level.flair)+'</p>'+
+          '<div class="match-level-meta"><span>'+level.pairs+' pairs</span><span>'+level.hearts+' hearts</span></div>'+
+          '<strong class="match-level-cta">'+(locked?'Locked':'Start level →')+'</strong>'+
+        '</button>';
+      }).join('')+
+      '</div>'+
+      '<div class="match-level-note">Highest unlocked: Level '+progress.unlocked+' / '+MATCH_LEVELS.length+'</div>'+
+    '</div>';
+
+  area.querySelectorAll('[data-match-level]').forEach(button=>{
+    button.addEventListener('click',()=>prepareLatinMatchLevel(Number(button.dataset.matchLevel)));
+  });
+}
+
+function prepareLatinMatchLevel(levelId){
+  const level=MATCH_LEVELS.find(x=>x.id===levelId);
+  if(!level) return;
+  const campaign=ensureMatchCampaign();
+  if(level.id>campaign.unlocked) return;
+
+  const pool=(questionBank.vocab||[])
+    .filter(q=>q && q.q && q.answer)
+    .map((q,idx)=>({id:q.id||('v'+idx),english:String(q.q).trim(),latin:String(q.answer).trim()}));
+
+  const unique=[];
+  const seenLatin=new Set();
+  const seenEnglish=new Set();
+  shuffleArray(pool).forEach(item=>{
+    const l=item.latin.toLowerCase();
+    const e=item.english.toLowerCase();
+    if(!seenLatin.has(l) && !seenEnglish.has(e)){
+      seenLatin.add(l);
+      seenEnglish.add(e);
+      unique.push(item);
+    }
+  });
+
+  latinGame.type='match';
+  latinGame.score=0;
+  latinGame.combo=0;
+  latinGame.maxCombo=0;
+  latinGame.round=0;
+  latinGame.attempts=0;
+  latinGame.correct=0;
+  latinGame.mistakes=0;
+  latinGame.maxMistakes=level.hearts;
+  latinGame.levelId=level.id;
+  latinGame.levelName=level.name;
+  latinGame.failed=false;
+  latinGame.stars=0;
+  latinGame.selected=[];
+  latinGame.pairs=shuffleArray(unique).slice(0,level.pairs).map((q,index)=>({
+    id:index,
+    latin:q.latin,
+    english:q.english,
+    matched:false
+  }));
+
+  document.getElementById('gameTitle').textContent='Verbum Match · '+level.name;
+  updateLatinGameStats();
+  playTone('countdown');
+  gameSafeRender(renderLatinMatch);
+}
+
+function recomputeMatchScore(){
+  const total=latinGame.pairs.length||1;
+  const raw=Math.round((latinGame.correct/total)*100);
+  latinGame.score=Math.max(0,Math.min(100,raw-(latinGame.mistakes*5)));
+}
+
+function renderLatinMatch(){
+  const area=document.getElementById('gameArea');
+  if(!latinGame.pairs.length){
+    renderMatchLevelSelect();
     return;
   }
 
-  const tiles=gameShuffle(
-    pairs.flatMap((p,index)=>[
-      {pair:index,side:'latin',text:p.latin},
-      {pair:index,side:'english',text:p.english}
-    ])
-  );
+  const latinButtons=latinGame.pairs.map(p=>({side:'latin',value:p.latin,id:p.id,matched:p.matched}));
+  const englishButtons=shuffleArray(latinGame.pairs.map(p=>({side:'english',value:p.english,id:p.id,matched:p.matched})));
 
-  const area=document.getElementById('gameArea');
   area.innerHTML=
-    '<p>Match each Latin word with its English meaning.</p>'+
+    '<div class="game-question">'+
+      '<div class="game-round-kicker">LEVEL '+latinGame.levelId+' · '+gameEsc(latinGame.levelName.toUpperCase())+'</div>'+
+      '<h3>Match the Latin word to its English meaning.</h3>'+
+      '<p>Make the correct pairs before you lose all hearts.</p>'+
+    '</div>'+
+    '<div class="match-level-bar"><span>Level '+latinGame.levelId+'</span><span>'+'♥'.repeat(Math.max(0,latinGame.maxMistakes-latinGame.mistakes))+'</span></div>'+
     '<div class="match-grid">'+
-    tiles.map(x =>
-      '<button class="match-tile" type="button" data-pair="'+x.pair+'" data-side="'+x.side+'">'+
-      gameEsc(x.text)+
-      '</button>'
-    ).join('')+
+      '<div>'+latinButtons.map(b=>'<button class="match-tile'+(b.matched?' matched':'')+'" '+(b.matched?'disabled':'')+' data-side="'+b.side+'" data-id="'+b.id+'">'+gameEsc(b.value)+'</button>').join('')+'</div>'+
+      '<div>'+englishButtons.map(b=>'<button class="match-tile'+(b.matched?' matched':'')+'" '+(b.matched?'disabled':'')+' data-side="'+b.side+'" data-id="'+b.id+'">'+gameEsc(b.value)+'</button>').join('')+'</div>'+
     '</div>';
 
   area.querySelectorAll('.match-tile').forEach(button=>{
@@ -2225,41 +2538,72 @@ function renderLatinMatch(){
 }
 
 function pickLatinMatch(button){
-  if(button.classList.contains('matched')) return;
+  if(button.disabled || button.classList.contains('matched')) return;
+  if(latinGame.selected[0] && latinGame.selected[0]===button){
+    button.classList.remove('selected');
+    latinGame.selected=[];
+    return;
+  }
 
-  const selected=document.querySelector('.match-tile.selected');
-  if(!selected){
+  if(!latinGame.selected.length){
+    latinGame.selected=[button];
     button.classList.add('selected');
     playTone('tile');
     return;
   }
-  if(selected===button) return;
 
-  selected.classList.remove('selected');
-
-  const correct=
-    selected.dataset.pair===button.dataset.pair &&
-    selected.dataset.side!==button.dataset.side;
+  const selected=latinGame.selected[0];
+  if(selected.dataset.side===button.dataset.side){
+    selected.classList.remove('selected');
+    latinGame.selected=[button];
+    button.classList.add('selected');
+    playTone('tile');
+    return;
+  }
 
   latinGame.attempts++;
+  const correct=selected.dataset.id===button.dataset.id;
   if(correct){
-    selected.classList.add('matched');
-    button.classList.add('matched');
+    const pair=latinGame.pairs.find(p=>String(p.id)===button.dataset.id);
+    if(pair) pair.matched=true;
+    selected.disabled=true;
+    button.disabled=true;
+    selected.classList.remove('selected');
+    selected.classList.add('matched','pop');
+    button.classList.add('matched','pop');
+
     latinGame.correct++;
     latinGame.combo++;
+    latinGame.maxCombo=Math.max(latinGame.maxCombo,latinGame.combo);
     latinGame.round++;
-    latinGame.score=Math.round((latinGame.correct/Math.max(1,latinGame.attempts))*100);
+    recomputeMatchScore();
+    latinGame.selected=[];
     updateLatinGameStats();
     playTone(latinGame.combo>=3 ? 'combo' : 'match');
+    gameBurst(latinGame.combo>=3 ? 'COMBO ×'+latinGame.combo+' ✨' : 'Matched!','good');
 
     if(latinGame.round>=latinGame.pairs.length){
-      setTimeout(finishLatinGame,350);
+      finishLatinGame();
+    }else{
+      setTimeout(renderLatinMatch,260);
     }
   }else{
     latinGame.combo=0;
-    latinGame.score=Math.round((latinGame.correct/Math.max(1,latinGame.attempts))*100);
+    latinGame.mistakes++;
+    recomputeMatchScore();
+    selected.classList.remove('selected');
+    latinGame.selected=[];
     updateLatinGameStats();
     playTone('wrong');
+    selected.classList.add('shake');
+    button.classList.add('shake');
+    gameBurst('Mistake! Lost 1 heart','soft');
+    setTimeout(()=>{selected.classList.remove('shake');button.classList.remove('shake');},380);
+
+    if(latinGame.mistakes>=latinGame.maxMistakes){
+      latinGame.failed=true;
+      setTimeout(()=>finishLatinGame('fail'),320);
+    }
   }
 }
 
@@ -2275,7 +2619,7 @@ function renderLatinChallenge(){
     return;
   }
 
-  const q=pool[Math.floor(Math.random()*pool.length)];
+  const q=gamePickQuestion(pool);
   latinGame.answer=String(q.a);
 
   const area=document.getElementById('gameArea');
@@ -2284,7 +2628,8 @@ function renderLatinChallenge(){
   promptParts.push('<h2>'+gameEsc(String(q.q))+'</h2>');
 
   area.innerHTML=
-    '<div class="game-question">'+
+    '<div class="game-question '+(latinGame.type==='sprint'?'sprint-question':'gladiator-question')+'">'+
+    '<div class="game-round-kicker">'+(latinGame.type==='sprint'?'QUICK FIRE':'ARENA ROUND '+(latinGame.round+1))+'</div>'+
     '<p>'+gameEsc(String(q.topic||q.label||''))+'</p>'+
     promptParts.join('')+
     '<div class="game-options">'+
@@ -2310,21 +2655,34 @@ function answerLatinChallenge(answer){
     latinGame.correct++;
     latinGame.score += 10;
     latinGame.combo++;
+    latinGame.maxCombo=Math.max(latinGame.maxCombo,latinGame.combo);
+
+    if(latinGame.type==='sprint' && latinGame.combo>0 && latinGame.combo%5===0){
+      latinGame.seconds+=2;
+      latinGame.boosts++;
+      playTone('timeBoost');
+      gameBurst('+2 SECONDS ⚡','boost');
+    }else{
+      playTone(latinGame.type==='gladiator' ? 'shieldHit' : (latinGame.combo>=3 ? 'combo' : 'sprintStep'));
+    }
   }else{
     latinGame.combo=0;
+    playTone('wrong');
   }
 
   latinGame.round++;
   updateLatinGameStats();
-  playTone(correct ? (latinGame.combo>=3 ? 'combo' : 'correct') : 'wrong');
 
   const area=document.getElementById('gameArea');
   area.querySelectorAll('[data-game-answer]').forEach(b=>b.disabled=true);
 
   const feedback=document.createElement('p');
-  feedback.className='game-feedback';
-  feedback.textContent=correct ? 'Correct ♡' : 'Answer: '+latinGame.answer;
+  feedback.className='game-feedback '+(correct?'good':'bad');
+  feedback.textContent=correct
+    ? (latinGame.type==='gladiator'?'Arena point! ⚔︎':'Celeriter! Correct ✓')
+    : 'Answer: '+latinGame.answer;
   area.prepend(feedback);
+  gameBurst(correct ? (latinGame.combo>=3?'COMBO ×'+latinGame.combo+' 🔥':'Correct!') : 'Keep moving',''+(correct?'good':'soft'));
 
   setTimeout(()=>{
     if(latinGame.type==='sprint' && latinGame.seconds<=0) return;
@@ -2344,7 +2702,7 @@ function renderLatinSentence(){
     return;
   }
 
-  const q=pool[Math.floor(Math.random()*pool.length)];
+  const q=gamePickQuestion(pool);
   latinGame.answer=String(q.answerExample || q.accepted[0]).trim();
   latinGame.selected=[];
 
@@ -2355,7 +2713,8 @@ function renderLatinSentence(){
     '<div class="game-question">'+
     '<p>'+gameEsc(String(q.context||''))+'</p>'+
     '<h2>'+gameEsc(String(q.q||'Build the Latin sentence.'))+'</h2>'+
-    '<div class="sentence-build" id="sentenceBuild">Tap the words in order…</div>'+
+    '<div class="game-round-kicker">SCROLL '+(latinGame.round+1)+' OF 5</div>'+
+    '<div class="sentence-build" id="sentenceBuild"><span class="sentence-placeholder">Tap the words in order…</span></div>'+
     '<div class="game-options">'+
     words.map((word,index)=>
       '<button class="word-chip" type="button" data-game-word="'+index+'">'+
@@ -2363,7 +2722,8 @@ function renderLatinSentence(){
       '</button>'
     ).join('')+
     '</div>'+
-    '<p><button class="primaryButton" type="button" id="sentenceGameCheck">Check sentence</button> '+
+    '<p class="sentence-actions"><button class="primaryButton" type="button" id="sentenceGameCheck">Check sentence</button> '+
+    '<button class="secondaryButton" type="button" id="sentenceGameUndo">Undo</button> '+
     '<button class="secondaryButton" type="button" id="sentenceGameClear">Clear</button></p>'+
     '</div>';
 
@@ -2372,17 +2732,53 @@ function renderLatinSentence(){
       if(button.classList.contains('used')) return;
       button.classList.add('used');
       playTone('tile');
-      latinGame.selected.push(button.textContent);
-      document.getElementById('sentenceBuild').textContent=latinGame.selected.join(' ');
+      latinGame.selected.push({text:button.textContent,index:Number(button.dataset.gameWord)});
+      renderSentenceSelection();
     });
   });
 
-  document.getElementById('sentenceGameClear').addEventListener('click',renderLatinSentence);
+  document.getElementById('sentenceGameUndo').addEventListener('click',()=>{
+    const last=latinGame.selected.pop();
+    if(last){
+      const chip=area.querySelector('[data-game-word="'+last.index+'"]');
+      if(chip) chip.classList.remove('used');
+      playTone('tile');
+      renderSentenceSelection();
+    }
+  });
+  document.getElementById('sentenceGameClear').addEventListener('click',()=>{
+    latinGame.selected=[];
+    area.querySelectorAll('[data-game-word]').forEach(b=>b.classList.remove('used'));
+    playTone('paper');
+    renderSentenceSelection();
+  });
   document.getElementById('sentenceGameCheck').addEventListener('click',checkLatinSentence);
 }
 
+function renderSentenceSelection(){
+  const build=document.getElementById('sentenceBuild');
+  if(!build) return;
+  if(!latinGame.selected.length){
+    build.innerHTML='<span class="sentence-placeholder">Tap the words in order…</span>';
+    return;
+  }
+  build.innerHTML=latinGame.selected.map((item,index)=>
+    '<button type="button" class="built-word" data-built-index="'+index+'">'+gameEsc(item.text)+'</button>'
+  ).join(' ');
+  build.querySelectorAll('[data-built-index]').forEach(button=>{
+    button.addEventListener('click',()=>{
+      const index=Number(button.dataset.builtIndex);
+      const removed=latinGame.selected.splice(index,1)[0];
+      const chip=document.querySelector('[data-game-word="'+removed.index+'"]');
+      if(chip) chip.classList.remove('used');
+      playTone('tile');
+      renderSentenceSelection();
+    });
+  });
+}
+
 function checkLatinSentence(){
-  const made=latinGame.selected.join(' ').replace(/\s+/g,' ').trim().toLowerCase();
+  const made=latinGame.selected.map(x=>x.text).join(' ').replace(/\s+/g,' ').trim().toLowerCase();
   const correctAnswer=latinGame.answer.replace(/\s+/g,' ').trim().toLowerCase();
   const correct=made===correctAnswer;
 
@@ -2391,13 +2787,15 @@ function checkLatinSentence(){
     latinGame.correct++;
     latinGame.score += 20;
     latinGame.combo++;
+    latinGame.maxCombo=Math.max(latinGame.maxCombo,latinGame.combo);
   }else{
     latinGame.combo=0;
   }
 
   latinGame.round++;
   updateLatinGameStats();
-  playTone(correct ? (latinGame.combo>=3 ? 'combo' : 'correct') : 'wrong');
+  playTone(correct ? 'sentenceDone' : 'wrong');
+  gameBurst(correct ? 'Sentence complete! ✨' : 'Rebuild and remember',''+(correct?'good':'soft'));
 
   const area=document.getElementById('gameArea');
   const feedback=document.createElement('p');
@@ -2408,34 +2806,85 @@ function checkLatinSentence(){
   setTimeout(()=>gameSafeRender(renderLatinSentence),700);
 }
 
-function finishLatinGame(){
+function finishLatinGame(status){
   stopLatinGameTimer();
-  playTone('medal');
-
-  const score=latinGame.score;
-  const medal=latinGame.type==='sprint'
-    ? (score>=120 ? 'gold' : score>=60 ? 'silver' : 'bronze')
-    : (score>=85 ? 'gold' : score>=60 ? 'silver' : 'bronze');
-  let best=score;
-
-  try{
-    const key='latinGameBest_'+latinGame.type;
-    best=Math.max(score,Number(localStorage.getItem(key)||0));
-    localStorage.setItem(key,String(best));
-  }catch(e){}
 
   const area=document.getElementById('gameArea');
+  const bestState=state.gameBest || (state.gameBest={});
+  let score=latinGame.score;
+  let title='Game complete!';
+  let medal='Laurel earned';
+  let note='';
+  let extraAction='';
+  let bestDisplay=bestState[latinGame.type] || score;
+
+  if(latinGame.type==='match' && latinGame.levelId){
+    const campaign=ensureMatchCampaign();
+    const passed=!latinGame.failed && latinGame.correct>=latinGame.pairs.length && status!=='fail';
+
+    if(passed){
+      latinGame.stars=matchStarsForMistakes(latinGame.mistakes);
+      const prior=campaign.best[latinGame.levelId]||{stars:0,score:0};
+      if(latinGame.stars>prior.stars || (latinGame.stars===prior.stars && score>prior.score)){
+        campaign.best[latinGame.levelId]={stars:latinGame.stars,score:score};
+      }
+      campaign.unlocked=Math.min(MATCH_LEVELS.length,Math.max(campaign.unlocked,latinGame.levelId+1));
+      bestDisplay=campaign.best[latinGame.levelId].score;
+      title='Level cleared!';
+      medal='Level '+latinGame.levelId+' · '+'★'.repeat(latinGame.stars)+'☆'.repeat(3-latinGame.stars);
+      note='You unlocked up to Level '+campaign.unlocked+' of '+MATCH_LEVELS.length+'.';
+      if(latinGame.levelId<MATCH_LEVELS.length){
+        extraAction='<button class="secondaryButton" type="button" id="latinGameNextLevel">Next level</button>';
+      }
+      playTone('victory');
+    }else{
+      latinGame.stars=0;
+      bestDisplay=(campaign.best[latinGame.levelId]?.score)||0;
+      title='Level failed';
+      medal='Try again';
+      note='You need to clear every pair before losing all hearts.';
+      playTone('wrong');
+    }
+    saveState();
+  }else{
+    const currentBest=bestState[latinGame.type] || 0;
+    bestState[latinGame.type]=Math.max(currentBest,score);
+    bestDisplay=bestState[latinGame.type];
+    saveState();
+    playTone('victory');
+  }
+
   area.innerHTML=
     '<div class="game-result">'+
-    '<img src="'+LATIN_GAME_ART[medal]+'" alt="">'+
-    '<h2>'+medal.charAt(0).toUpperCase()+medal.slice(1)+'!</h2>'+
-    '<p>You scored <strong>'+score+(latinGame.type==='sprint' ? ' points' : '/100')+'</strong>.</p>'+
-    '<p class="game-best">Best: '+best+(latinGame.type==='sprint' ? ' points' : '/100')+'</p>'+
-    '<button class="primaryButton" type="button" id="latinGameAgain">Play again</button> '+
-    '<button class="secondaryButton" type="button" id="latinGameDone">Games</button>'+
-    '</div>';
+      '<div class="game-medal">'+medal+'</div>'+
+      '<h3>'+title+'</h3>'+
+      '<p class="game-score">'+score+(latinGame.type==='sprint' ? ' points' : '/100')+'</p>'+
+      '<p class="game-best">Best: '+bestDisplay+(latinGame.type==='sprint' ? ' points' : '/100')+'</p>'+
+      '<div class="result-stats">'+
+        '<span><strong>'+latinGame.correct+'</strong> correct</span>'+
+        '<span><strong>'+latinGame.maxCombo+'</strong> best combo</span>'+
+        '<span><strong>'+latinGame.attempts+'</strong> attempts</span>'+
+        (latinGame.type==='sprint'
+          ? '<span><strong>'+latinGame.boosts+'</strong> time boosts</span>'
+          : (latinGame.type==='match'
+              ? '<span><strong>'+Math.max(0,latinGame.maxMistakes-latinGame.mistakes)+'</strong> hearts left</span>'
+              : ''))+
+      '</div>'+
+      (note?'<p class="game-note">'+note+'</p>':'')+
+      '<div class="game-result-actions">'+
+        '<button class="primaryButton" type="button" id="latinGameAgain">'+(latinGame.type==='match'?'Replay level':'Play again')+'</button> '+
+        extraAction+
+        '<button class="secondaryButton" type="button" id="latinGameDone">Games</button>'+
+      '</div></div>';
 
-  document.getElementById('latinGameAgain').addEventListener('click',()=>startLatinGame(latinGame.type));
+  document.getElementById('latinGameAgain').addEventListener('click',()=>{
+    if(latinGame.type==='match' && latinGame.levelId) prepareLatinMatchLevel(latinGame.levelId);
+    else startLatinGame(latinGame.type);
+  });
+  const next=document.getElementById('latinGameNextLevel');
+  if(next){
+    next.addEventListener('click',()=>prepareLatinMatchLevel(Math.min(MATCH_LEVELS.length,latinGame.levelId+1)));
+  }
   document.getElementById('latinGameDone').addEventListener('click',openGames);
 }
 

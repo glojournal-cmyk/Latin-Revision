@@ -1,0 +1,11 @@
+LATIN REVISION V10.0.4 — VERBUM MATCH LEVELS QA
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+Match levels defined: PASS
+Level select render: PASS
+Match campaign persistence: PASS
+Match failure state: PASS
+Next level button: PASS
+Version 10.0.4: PASS

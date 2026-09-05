@@ -1,0 +1,32 @@
+LATIN REVISION V10.0.3 — GAMES FUN UPGRADE QA
+
+Gameplay changes
+- Verbum Match: animated match pop, wrong shake, combo celebration, accuracy /100.
+- Gladiator Challenge: 10-round HUD, no immediate question repeat, shield-hit SFX, combo feedback.
+- Build the Sentence: tap tiles, Undo, Clear, tap a built word to remove it, parchment/word-tile SFX.
+- Roman Sprint: 3-2-1 countdown, 60-second progress bar, last-10-second ticks, +2 seconds for each 5-answer combo, no immediate repeat.
+- Results: medal, score, correct answers, best combo, attempts, time boosts, Replay / Next Game / Games.
+- Game scores remain separate from formal mastery.
+
+Sound changes
+- Web Audio is unlocked directly on the Play tap for iPad/Safari.
+- Dedicated gameStart, countdown, sprintStart, tick, timeBoost, shieldHit, sprintStep, sentenceDone and victory cues.
+- Sounds use layered paper/wood/plucked/metal/noise synthesis rather than page-transition whooshes.
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+No duplicate IDs: PASS
+Game HUD present: PASS
+iPad audio unlock on Play: PASS
+Sprint 3-2-1 countdown: PASS
+Sprint final-ten-second ticks: PASS
+Sprint +2s combo boost: PASS
+Gladiator shield sound: PASS
+Sentence undo + tap-to-remove: PASS
+Question repeat guard: PASS
+Richer result stats: PASS
+Game-specific audio layers: PASS
+Formal mastery untouched: PASS
+39 artworks preserved: PASS
+V10.0.3 cache bust: PASS

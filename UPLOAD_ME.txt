@@ -1,13 +1,17 @@
-LUX ET LABOR — LATIN REVISION V10.0.2 FUNCTION FIX
+V10.0.4 — VERBUM MATCH LEVELS
 
-Upload/replace ALL files in this package at the repository ROOT.
+Upload and replace ALL files at the repository root.
 
-Main fixes:
-- AI explanation button after feedback (opens ChatGPT with current teacher-locked context).
-- Verbum Match / Gladiator / Build the Sentence now use a clear 100-point scale.
-- Roman Sprint remains unlimited points because it is a 60-second speed mode.
-- New natural-feeling paper/wood/plucked-string sound palette.
-- Existing V10.0.1 layout fix retained.
+What changed
+- Verbum Match now opens a level-select campaign
+- 6 levels with increasing board size and heart limits
+- Clear a level to unlock the next one
+- Stars are awarded based on mistakes
+- Replay current level or go straight to next level
+- Progress saves locally in the browser
 
-After deploy, reload once and confirm footer:
-Lux et Labor · Latin Revision V10.0.2
+After upload
+1. Hard refresh once
+2. Confirm footer says Lux et Labor · Latin Revision V10.0.4
+3. Open Games → Verbum Match
+4. Confirm level cards show and Level 1 is unlocked
