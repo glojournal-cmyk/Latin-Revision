@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — V9.1.3 Study Journal</title>
+  <title>Latin Revision — V9.1.4 Study Journal</title>
   <style>
     :root{
       --ink:#22284d;--body:#45425a;--muted:#7a758b;--line:#e8e0eb;--paper:#fffdfa;
@@ -189,7 +189,7 @@
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
   
-    /* V9.1.3 SVG hotfix: tap safety, full illustrations, real navigation pages */
+    /* V9.1.4 SVG hotfix: tap safety, full illustrations, real navigation pages */
     .decorative-art{pointer-events:none!important;user-select:none;-webkit-user-drag:none}
     .hero-art{object-fit:contain;object-position:right center;right:0;top:0;height:225px}
     .goal-box{overflow:hidden}
@@ -234,7 +234,7 @@
     }
 
   
-    /* V9.1.3 — transparent SVG artwork rebuild */
+    /* V9.1.4 — transparent SVG artwork rebuild */
     .decorative-art{
       pointer-events:none!important;
       user-select:none!important;
@@ -345,7 +345,7 @@
     }
 
 
-    /* V9.1.3 — transparent PNG artwork integration */
+    /* V9.1.4 — transparent PNG artwork integration */
     .decorative-art{
       pointer-events:none!important;
       user-select:none!important;
@@ -455,7 +455,7 @@
     }
 
   
-    /* V9.1.3 proportional polish — decisive final overrides */
+    /* V9.1.4 proportional polish — decisive final overrides */
     .wrap,
     .header-inner{width:min(1180px,calc(100% - 36px))!important}
 
@@ -702,7 +702,7 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
 @media(max-width:820px){.v9-topbar{grid-template-columns:46px 1fr auto 46px;padding:18px 14px}.v9-top-title>div{font-size:32px}.v9-top-title span{font-size:16px}.v9-streak strong{font-size:30px}.wrap{padding:0 14px 25px}.v9-hero{height:330px}.v9-hero-art{width:95%;height:300px;margin-top:10px}.v9-motto,.v9-note{display:none}.v9-banner{bottom:6px;min-width:280px;font-size:16px}.v9-today-grid,.v9-learn-grid{grid-template-columns:repeat(2,1fr)}.v9-feature-card,.v9-learn-card{min-height:245px}.v9-progress-strip{grid-template-columns:1fr}.v9-section-head h1{font-size:34px}.v9-inner-hero{grid-template-columns:120px 1fr}.v9-inner-hero img{width:115px;height:100px}.v9-learn-actions{grid-template-columns:1fr}}
 @media(max-width:480px){.v9-topbar{grid-template-columns:42px 1fr 42px}.v9-streak{display:none}.v9-top-title>div{font-size:27px}.v9-top-title span{font-size:14px}.v9-icon-btn{width:42px;height:42px;font-size:24px}.v9-hero{height:245px}.v9-hero-art{height:220px}.v9-banner{min-width:220px;padding:9px 16px;font-size:13px}.v9-section-head{align-items:center}.v9-section-head>div{display:block}.v9-section-head h1{font-size:30px}.v9-section-head span,.v9-section-head em{font-size:13px}.v9-feature-card,.v9-learn-card{min-height:215px;padding:10px}.v9-feature-card img,.v9-learn-card img{height:88px}.v9-feature-card strong,.v9-learn-card strong{font-size:20px}.v9-feature-card span,.v9-learn-card span{font-size:14px}.v9-feature-card b,.v9-learn-card b{width:38px;height:30px}.v9-inner-page{padding:16px}.v9-inner-hero{grid-template-columns:1fr;text-align:center}.v9-inner-hero img{margin:auto}.v9-inner-hero h1{font-size:31px}}
 
-/* ===== V9.1.3 embedded-artwork hotfix ===== */
+/* ===== V9.1.4 embedded-artwork hotfix ===== */
 .v9-hero{
   height:clamp(300px,34vw,390px)!important;
   margin:0 0 10px!important;
@@ -779,7 +779,7 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
 @media(max-width:620px){.learn-module-action{align-items:stretch;flex-direction:column}.learn-module-action button{width:100%}}
 
 
-/* V9.1.3 navigation + date picker hardening */
+/* V9.1.4 navigation + date picker hardening */
 .v9-streak{display:flex!important;flex-direction:column!important;align-items:center!important;gap:0!important;min-width:82px}
 .v9-streak strong{font:38px Georgia,serif!important;line-height:1!important}
 .v9-streak small{grid-column:auto!important;font:16px Georgia,serif!important;margin-top:4px}
@@ -851,9 +851,17 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
   .game-grid{grid-template-columns:1fr}
 }
 
-/* V9.1.3 pointer hotfix */
+/* V9.1.4 pointer hotfix */
 .games-entry,.game-card{position:relative;z-index:2;pointer-events:auto!important;touch-action:manipulation}
 .games-entry *,.game-card *{pointer-events:none}
+
+/* V9.1.4 game image/runtime repair */
+.game-card img,.games-entry img{background:transparent}
+.game-card img:not([src]),.games-entry img:not([src]){display:none}
+#gameArea:empty::before{
+  content:"Loading game…";
+  display:block;padding:24px;border:1px solid #ded6d0;border-radius:20px;background:#fffaf6;
+}
 </style>
 </head>
 <body>
@@ -906,7 +914,7 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
 
       
       <button class="games-entry" type="button" data-action="open-games" aria-label="Open Latin Games">
-  <img src="./assets/games/hero.png" alt="">
+  <img src="./assets/games/hero.png" alt="Latin Games">
   <div>
     <h3>Latin Games</h3>
     <p>Match, build, race and conquer — using the same teacher-locked Latin bank.</p>
@@ -1133,10 +1141,10 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
     <div><p class="eyebrow">PLAY &amp; PRACTISE</p><h1>Latin Games</h1><p>Game scores are for fun and stay separate from formal mastery.</p></div>
   </div>
   <div class="game-grid">
-    <button class="game-card" type="button" data-action="game-match"><img src="./assets/games/match.png" alt=""><h3>Verbum Match</h3><p>Match Latin words with their English meanings.</p></button>
-    <button class="game-card" type="button" data-action="game-gladiator"><img src="./assets/games/gladiator.png" alt=""><h3>Gladiator Challenge</h3><p>Ten source-bank questions. Build a winning combo.</p></button>
-    <button class="game-card" type="button" data-action="game-sentence"><img src="./assets/games/sentence.png" alt=""><h3>Build the Sentence</h3><p>Put a teacher-bank Latin sentence back in order.</p></button>
-    <button class="game-card" type="button" data-action="game-sprint"><img src="./assets/games/sprint.png" alt=""><h3>Roman Sprint</h3><p>Sixty seconds of quick vocabulary questions.</p></button>
+    <button class="game-card" type="button" data-action="game-match"><img src="./assets/games/match.png" alt="Verbum Match"><h3>Verbum Match</h3><p>Match Latin words with their English meanings.</p></button>
+    <button class="game-card" type="button" data-action="game-gladiator"><img src="./assets/games/gladiator.png" alt="Gladiator Challenge"><h3>Gladiator Challenge</h3><p>Ten source-bank questions. Build a winning combo.</p></button>
+    <button class="game-card" type="button" data-action="game-sentence"><img src="./assets/games/sentence.png" alt="Build the Sentence"><h3>Build the Sentence</h3><p>Put a teacher-bank Latin sentence back in order.</p></button>
+    <button class="game-card" type="button" data-action="game-sprint"><img src="./assets/games/sprint.png" alt="Roman Sprint"><h3>Roman Sprint</h3><p>Sixty seconds of quick vocabulary questions.</p></button>
   </div>
 </section>
 
@@ -1162,8 +1170,8 @@ body{background:linear-gradient(180deg,#fffdf9,#faf6f2);color:var(--v9-navy);pad
   <button class="nav-btn" id="navProgress" data-action="progress"><span class="nav-icon">▥</span><span>Progress</span></button>
 </nav>
 
-  <script src="question-bank.js?v=9.1.3"></script>
-  <script src="app.js?v=9.1.3"></script>
-<div id="buildMarker" hidden>V9.1.3-embedded-artwork</div>
+  <script src="question-bank.js?v=9.1.4"></script>
+  <script src="app.js?v=9.1.4"></script>
+<div id="buildMarker" hidden>V9.1.4-embedded-artwork</div>
 </body>
 </html>

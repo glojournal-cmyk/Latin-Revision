@@ -1,0 +1,18 @@
+LATIN REVISION V9.1.4 — GAMES REPAIR
+
+Bank questions: 1056
+Types: ['exact_any', 'mc', 'unordered_set', 'eng_auto', 'lat_auto']
+Directions: ['Latin → English', 'English → Latin', 'English clue → Latin form', 'Grammar clue → Latin form', 'Present cue → perfect cue', 'Short written answer', 'Sentence → finite verb', 'Latin verb → English']
+
+11 game assets included: PASS
+runtime error guard: PASS
+local HTML encoder: PASS
+match uses safe render: PASS
+sentence uses safe render: PASS
+challenge uses safe render: PASS
+cache bust 9.1.4: PASS
+app.js: PASS
+question-bank.js: PASS
+sw.js: PASS
+
+IMPORTANT: assets/games must exist in the GitHub repository with all 11 PNG files.

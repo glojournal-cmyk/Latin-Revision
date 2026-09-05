@@ -1880,6 +1880,24 @@ currentScreen = 'dashboard';
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
 
+
+/* ===== V9.1.4 Games runtime repair ===== */
+function gameEsc(value){
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[ch]));
+}
+function gameSafeRender(fn){
+  try { fn(); }
+  catch(error){
+    console.error('Latin Game render error:', error);
+    const area=document.getElementById('gameArea');
+    if(area) area.innerHTML='<div class="game-question"><h2>Game needs a refresh</h2><p>'+
+      gameEsc(error && error.message ? error.message : error)+'</p>'+
+      '<button type="button" class="secondaryButton" onclick="openGames()">Back to Games</button></div>';
+  }
+}
+
 /* ===== V9.1 Latin Games engine ===== */
 let latinGame = {type:null,score:0,combo:0,round:0,timer:null,seconds:0,answer:'',selected:[],pairs:[]};
 
@@ -2012,9 +2030,9 @@ function startLatinGame(type){
   updateLatinGameStats();
 
   if(type==='match'){
-    renderLatinMatch();
+    gameSafeRender(renderLatinMatch);
   }else if(type==='sentence'){
-    renderLatinSentence();
+    gameSafeRender(renderLatinSentence);
   }else{
     if(type==='sprint'){
       latinGame.timer=setInterval(()=>{
@@ -2023,7 +2041,7 @@ function startLatinGame(type){
         if(latinGame.seconds<=0) finishLatinGame();
       },1000);
     }
-    renderLatinChallenge();
+    gameSafeRender(renderLatinChallenge);
   }
 }
 
@@ -2050,7 +2068,7 @@ function renderLatinMatch(){
     '<div class="match-grid">'+
     tiles.map(x =>
       '<button class="match-tile" type="button" data-pair="'+x.pair+'" data-side="'+x.side+'">'+
-      escapeHtml(x.text)+
+      gameEsc(x.text)+
       '</button>'
     ).join('')+
     '</div>';
@@ -2110,17 +2128,17 @@ function renderLatinChallenge(){
 
   const area=document.getElementById('gameArea');
   const promptParts=[];
-  if(q.context) promptParts.push('<p>'+escapeHtml(String(q.context))+'</p>');
-  promptParts.push('<h2>'+escapeHtml(String(q.q))+'</h2>');
+  if(q.context) promptParts.push('<p>'+gameEsc(String(q.context))+'</p>');
+  promptParts.push('<h2>'+gameEsc(String(q.q))+'</h2>');
 
   area.innerHTML=
     '<div class="game-question">'+
-    '<p>'+escapeHtml(String(q.topic||q.label||''))+'</p>'+
+    '<p>'+gameEsc(String(q.topic||q.label||''))+'</p>'+
     promptParts.join('')+
     '<div class="game-options">'+
     gameShuffle(q.opts).map(option =>
-      '<button type="button" data-game-answer="'+escapeHtml(String(option))+'">'+
-      escapeHtml(String(option))+
+      '<button type="button" data-game-answer="'+gameEsc(String(option))+'">'+
+      gameEsc(String(option))+
       '</button>'
     ).join('')+
     '</div></div>';
@@ -2155,7 +2173,7 @@ function answerLatinChallenge(answer){
 
   setTimeout(()=>{
     if(latinGame.type==='sprint' && latinGame.seconds<=0) return;
-    renderLatinChallenge();
+    gameSafeRender(renderLatinChallenge);
   },450);
 }
 
@@ -2180,13 +2198,13 @@ function renderLatinSentence(){
 
   area.innerHTML=
     '<div class="game-question">'+
-    '<p>'+escapeHtml(String(q.context||''))+'</p>'+
-    '<h2>'+escapeHtml(String(q.q||'Build the Latin sentence.'))+'</h2>'+
+    '<p>'+gameEsc(String(q.context||''))+'</p>'+
+    '<h2>'+gameEsc(String(q.q||'Build the Latin sentence.'))+'</h2>'+
     '<div class="sentence-build" id="sentenceBuild">Tap the words in order…</div>'+
     '<div class="game-options">'+
     words.map((word,index)=>
       '<button class="word-chip" type="button" data-game-word="'+index+'">'+
-      escapeHtml(word)+
+      gameEsc(word)+
       '</button>'
     ).join('')+
     '</div>'+
@@ -2228,7 +2246,7 @@ function checkLatinSentence(){
   feedback.textContent=correct ? 'Correct ♡' : 'Answer: '+latinGame.answer;
   area.prepend(feedback);
 
-  setTimeout(renderLatinSentence,700);
+  setTimeout(()=>gameSafeRender(renderLatinSentence),700);
 }
 
 function finishLatinGame(){
@@ -2262,7 +2280,7 @@ function finishLatinGame(){
 function latinGameMessage(text){
   const area=document.getElementById('gameArea');
   area.innerHTML=
-    '<div class="game-question"><p>'+escapeHtml(text)+'</p>'+
+    '<div class="game-question"><p>'+gameEsc(text)+'</p>'+
     '<button class="secondaryButton" type="button" id="latinGameMessageBack">Back to games</button></div>';
   document.getElementById('latinGameMessageBack').addEventListener('click',openGames);
 }
