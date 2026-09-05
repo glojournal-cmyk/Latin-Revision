@@ -1,0 +1,45 @@
+LATIN REVISION V10.0.2 — FUNCTION FIX QA
+
+Fixes:
+- Added optional Ask AI to explain differently action after answer feedback.
+- Teacher-bank accepted answer remains authoritative and visibly labelled.
+- Verbum Match no longer tops out at 90; perfect accuracy = 100/100.
+- Gladiator Challenge = 10 points per correct answer, max 100/100.
+- Build the Sentence = 20 points per correct answer, max 100/100.
+- Roman Sprint remains an unlimited 60-second points mode and is labelled Points.
+- Replaced simple electronic tones with layered paper / wood / plucked-string feedback.
+- Added sound to vocabulary reveal/rating and mastery milestone.
+- Ordinary page navigation remains silent.
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+AI action route present: PASS
+Teacher explanation remains explicit: PASS
+Teacher answer locked warning present: PASS
+Match normalized to /100: PASS
+Gladiator scoring 10 per correct: PASS
+Sentence scoring 20 per correct: PASS
+Non-sprint score displays /100: PASS
+Sprint uses Points: PASS
+Natural audio layers present: PASS
+No navigation sound added: PASS
+39 artworks preserved: PASS
+V10.0.2 cache bust: PASS
+
+
+Browser interaction QA (Chromium DOM test)
+- Home renders: PASS
+- Quick Quiz opens: PASS
+- Teacher-bank explanation renders after answer: PASS
+- Ask AI button appears: PASS
+- Ask AI builds a ChatGPT prompt URL using the current question/user answer/teacher answer: PASS
+- Games hub opens: PASS
+- Verbum Match perfect result = 100/100: PASS
+- Gladiator Challenge perfect result = 100/100: PASS
+- Build the Sentence perfect result = 100/100: PASS
+- Roman Sprint uses Points rather than /100: PASS
+- tile/wrong/match/correct/combo/complete/medal/paper sound code paths execute without JavaScript errors: PASS
+
+QA environment note:
+The DOM interaction test uses an opaque sandbox origin because local HTTP/file navigation is blocked by the execution environment. This means browser localStorage is unavailable in that test harness and emits handled SecurityError messages when save() is exercised. GitHub Pages runs on a normal HTTPS origin, where the app's existing localStorage persistence is supported. No claim of physical iPad speaker/audio-quality testing is made.

@@ -1,0 +1,22 @@
+LATIN REVISION V10.0.1 — LAYOUT FIX QA
+
+Issue fixed:
+- Home KPI cards no longer overlap the hero.
+- Personalised greetings may wrap to two lines without pushing metadata under the KPI cards.
+- Date / streak / review metadata stays inside hero.
+- iPad-width rule added.
+- Mobile negative-margin overlap removed.
+- Other page heroes remain independent.
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+No duplicate HTML IDs: PASS
+No negative home KPI margin anywhere: PASS
+Final desktop overlap guard: PASS
+Final mobile overlap guard: PASS
+Desktop hero auto height: PASS
+Personalised heading wrap protection: PASS
+iPad width rule: PASS
+V10.0.1 cache: PASS
+39 artworks: PASS

@@ -1,23 +1,13 @@
-LUX ET LABOR — LATIN REVISION V10
+LUX ET LABOR — LATIN REVISION V10.0.2 FUNCTION FIX
 
-UPLOAD ALL FILES IN THIS PACKAGE TO THE ROOT OF THE GITHUB REPOSITORY.
+Upload/replace ALL files in this package at the repository ROOT.
 
-Replace:
-- index.html
-- styles.css
-- app.js
-- question-bank.js
-- sw.js
-- manifest.webmanifest
+Main fixes:
+- AI explanation button after feedback (opens ChatGPT with current teacher-locked context).
+- Verbum Match / Gladiator / Build the Sentence now use a clear 100-point scale.
+- Roman Sprint remains unlimited points because it is a 60-second speed mode.
+- New natural-feeling paper/wood/plucked-string sound palette.
+- Existing V10.0.1 layout fix retained.
 
-Also upload every .webp file beside index.html.
-The artwork is intentionally at repository root: there is NO assets/games folder dependency.
-
-After deployment:
-1. Wait for GitHub Pages to finish.
-2. Open the site and reload once.
-3. Confirm the footer says: Lux et Labor · Latin Revision V10
-4. Test:
-   Home → Lessons → Games → Vocabulary → Translation → Progress
-5. Open Daily Revision and confirm the 24-date picker appears.
-6. Existing progress should remain because latinSummerV8State is unchanged.
+After deploy, reload once and confirm footer:
+Lux et Labor · Latin Revision V10.0.2
