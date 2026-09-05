@@ -1,0 +1,38 @@
+LATIN REVISION V10.0.4.2 — ALL GAMES RUNTIME + SOUND FIX QA
+
+Runtime bugs fixed:
+- latinVocabPairs() restored from the teacher-locked LATIN_BANK.
+- latinMCBank() added for Gladiator Challenge.
+- latinSprintBank() added for Roman Sprint.
+- Build the Sentence continues to use the existing latinSentenceBank().
+- Entire Games engine scanned for bare helper calls: zero unresolved game helpers required.
+
+Verified source-bank pools:
+- Verbum Match Latin→English pairs: 292
+- Gladiator valid multiple-choice questions: 284
+- Roman Sprint quick multiple-choice questions: 227
+- Build the Sentence source sentences: 11
+
+Sound redesign:
+- removed metallic clash from Gladiator
+- removed recurring final-10-second ticking
+- removed rush/noise-style arcade cues from actual mappings
+- retained only very quiet paper, wood tap, soft pluck and short victory harmony
+- navigation remains silent
+- game control now says “Soft sound”
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+Verbum pool >= 8: PASS
+Gladiator MC pool > 0: PASS
+Sprint quick pool >= 12: PASS
+Sentence pool >= 5: PASS
+Game helper scan = 0 undefined: PASS
+No metallic sound mapping: PASS
+No repeated final 10s tick trigger: PASS
+Soft sound label: PASS
+39 artworks preserved: PASS
+V10.0.4.2 cache: PASS
+
+Undefined helper scan result: []

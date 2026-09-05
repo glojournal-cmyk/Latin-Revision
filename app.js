@@ -1875,105 +1875,85 @@ function playTone(kind){
   const audio=ensureAudio();
   if(!audio) return;
 
+  // V10.0.4.2: intentionally subtle. No page whooshes, alarms or metallic hits.
   if(kind==='gameStart'){
-    soundWood(audio,0,.018,210);
-    soundPluck(audio,392,.045,.020,.18);
+    soundPaper(audio,0,.006);
+    soundWood(audio,.015,.008,205);
     return;
   }
   if(kind==='countdown'){
-    soundWood(audio,0,.024,260);
+    soundWood(audio,0,.009,235);
     return;
   }
   if(kind==='sprintStart'){
-    soundRush(audio,0,.014);
-    soundPluck(audio,523.25,.02,.024,.18);
-    soundPluck(audio,783.99,.09,.026,.22);
+    soundPluck(audio,392,0,.012,.18);
+    soundPluck(audio,523.25,.075,.014,.22);
     return;
   }
   if(kind==='tick'){
-    soundWood(audio,0,.012,285);
+    // Deliberately silent: visual urgency is enough and repeated ticks get annoying.
     return;
   }
   if(kind==='timeBoost'){
-    soundRush(audio,0,.009);
-    soundPluck(audio,659.25,.02,.024,.18);
-    soundPluck(audio,880,.10,.026,.23);
+    soundPluck(audio,523.25,0,.012,.18);
+    soundPluck(audio,659.25,.07,.014,.21);
     return;
   }
   if(kind==='shieldHit'){
-    soundMetal(audio,0,.020);
-    soundWood(audio,.015,.012,130);
+    // Soft study-game confirmation instead of a metallic clash.
+    soundWood(audio,0,.010,190);
+    soundPluck(audio,392,.025,.011,.18);
     return;
   }
   if(kind==='sprintStep'){
-    soundWood(audio,0,.012,235);
-    soundPluck(audio,523.25,.025,.018,.14);
+    soundWood(audio,0,.007,225);
     return;
   }
   if(kind==='sentenceDone'){
-    soundPaper(audio,0,.014);
-    soundPluck(audio,329.63,.035,.022,.22);
-    soundPluck(audio,493.88,.12,.026,.28);
-    soundPluck(audio,659.25,.22,.025,.32);
+    soundPaper(audio,0,.008);
+    soundPluck(audio,329.63,.03,.011,.20);
+    soundPluck(audio,493.88,.11,.013,.25);
     return;
   }
-  if(kind==='victory'){
-    soundMetal(audio,0,.010);
-    soundPluck(audio,329.63,.03,.024,.30);
-    soundPluck(audio,440,.13,.027,.34);
-    soundPluck(audio,554.37,.24,.030,.38);
-    soundPluck(audio,659.25,.36,.031,.44);
-    soundPluck(audio,880,.50,.026,.52);
+  if(kind==='victory' || kind==='medal' || kind==='complete'){
+    soundPluck(audio,329.63,0,.012,.28);
+    soundPluck(audio,440,.10,.014,.32);
+    soundPluck(audio,554.37,.21,.015,.36);
+    soundPluck(audio,659.25,.34,.012,.42);
     return;
   }
-
   if(kind==='tile'){
-    soundPaper(audio,0,.012);
-    soundWood(audio,.008,.012,240);
+    soundPaper(audio,0,.006);
+    soundWood(audio,.008,.006,220);
     return;
   }
   if(kind==='wrong'){
-    soundWood(audio,0,.028,155);
-    soundWood(audio,.085,.018,122);
+    soundWood(audio,0,.010,145);
     return;
   }
   if(kind==='match'){
-    soundPaper(audio,0,.010);
-    soundPluck(audio,392,.018,.025,.20);
-    soundPluck(audio,523.25,.10,.026,.22);
+    soundPaper(audio,0,.005);
+    soundPluck(audio,392,.015,.010,.18);
+    soundPluck(audio,523.25,.085,.012,.20);
     return;
   }
   if(kind==='correct'){
-    soundPluck(audio,392,0,.027,.22);
-    soundPluck(audio,587.33,.095,.030,.26);
+    soundPluck(audio,392,0,.010,.18);
+    soundPluck(audio,523.25,.075,.012,.21);
     return;
   }
   if(kind==='combo'){
-    soundPluck(audio,392,0,.026,.24);
-    soundPluck(audio,523.25,.07,.029,.26);
-    soundPluck(audio,659.25,.14,.032,.32);
-    return;
-  }
-  if(kind==='complete'){
-    soundPluck(audio,329.63,0,.025,.30);
-    soundPluck(audio,440,.10,.027,.34);
-    soundPluck(audio,554.37,.21,.030,.38);
-    soundPluck(audio,659.25,.34,.031,.45);
-    return;
-  }
-  if(kind==='medal'){
-    soundWood(audio,0,.018,205);
-    soundPluck(audio,392,.03,.024,.34);
-    soundPluck(audio,493.88,.13,.027,.38);
-    soundPluck(audio,587.33,.23,.030,.42);
-    soundPluck(audio,783.99,.37,.032,.52);
+    soundPluck(audio,392,0,.010,.19);
+    soundPluck(audio,523.25,.065,.011,.21);
+    soundPluck(audio,659.25,.13,.012,.25);
     return;
   }
   if(kind==='paper'){
-    soundPaper(audio,0,.015);
+    soundPaper(audio,0,.007);
     return;
   }
-  soundPluck(audio,440,0,.024,.22);
+
+  soundWood(audio,0,.006,205);
 }
 
 function exportProgress() {
@@ -2145,6 +2125,51 @@ const LATIN_GAME_ART = {
 
 function gameBank(){ return window.LATIN_BANK || []; }
 
+
+function latinVocabPairs(){
+  const out=[];
+  const seen=new Set();
+
+  for(const q of gameBank()){
+    if(q.type!=='exact_any') continue;
+    if(String(q.direction||'')!=='Latin → English') continue;
+
+    const latin=String(q.context||'').trim();
+    const english=String((Array.isArray(q.accepted)&&q.accepted[0]) || q.answerExample || '').trim();
+    if(!latin || !english || latin.length>40 || english.length>60) continue;
+
+    const key=(latin+'|'+english).toLowerCase();
+    if(seen.has(key)) continue;
+    seen.add(key);
+    out.push({latin,english});
+  }
+  return out;
+}
+
+function latinMCBank(){
+  return gameBank().filter(q=>{
+    if(q.type!=='mc') return false;
+    if(!Array.isArray(q.opts) || q.opts.length<2) return false;
+    if(q.a===undefined || q.a===null) return false;
+    const answer=String(q.a).trim().toLowerCase();
+    return q.opts.some(option=>String(option).trim().toLowerCase()===answer);
+  });
+}
+
+function latinSprintBank(){
+  const all=latinMCBank();
+  const quick=all.filter(q=>{
+    const question=String(q.q||'');
+    const context=String(q.context||'');
+    return question.length<=90 &&
+      context.length<=70 &&
+      q.opts.length<=5 &&
+      q.opts.every(option=>String(option).length<=55);
+  });
+  return quick.length>=12 ? quick : all;
+}
+
+
 function gameShuffle(items){
   const x=[...items];
   for(let i=x.length-1;i>0;i--){
@@ -2213,7 +2238,7 @@ function updateLatinGameStats(){
       mood.textContent=latinGame.combo>=5?'🔥 Magna combo!':latinGame.combo>=3?'✨ '+latinGame.combo+' in a row!':latinGame.type==='sprint'&&latinGame.seconds<=10?'Final sprint!':'Keep going — small wins add up.';
     }
   }
-  if(sound) sound.textContent=(state.settings.sound===false?'♩ Sound off':'♪ Sound on');
+  if(sound) sound.textContent=(state.settings.sound===false?'♩ Sound off':'♪ Soft sound');
 }
 
 function latinSentenceBank(){
@@ -2268,7 +2293,6 @@ function startSprintCountdown(){
     setTimeout(()=>{
       latinGame.timer=setInterval(()=>{
         latinGame.seconds--;
-        if(latinGame.seconds<=10 && latinGame.seconds>0) playTone('tick');
         updateLatinGameStats();
         if(latinGame.seconds<=0) finishLatinGame();
       },1000);
@@ -2512,7 +2536,7 @@ function answerLatinChallenge(answer){
       latinGame.seconds+=2;
       latinGame.boosts++;
       playTone('timeBoost');
-      gameBurst('+2 SECONDS ⚡','boost');
+      gameBurst('+2 seconds','boost');
     }else{
       playTone(latinGame.type==='gladiator' ? 'shieldHit' : (latinGame.combo>=3 ? 'combo' : 'sprintStep'));
     }
@@ -2530,10 +2554,10 @@ function answerLatinChallenge(answer){
   const feedback=document.createElement('p');
   feedback.className='game-feedback '+(correct?'good':'bad');
   feedback.textContent=correct
-    ? (latinGame.type==='gladiator'?'Arena point! ⚔︎':'Celeriter! Correct ✓')
+    ? (latinGame.type==='gladiator'?'Correct ✓':'Correct ✓')
     : 'Answer: '+latinGame.answer;
   area.prepend(feedback);
-  gameBurst(correct ? (latinGame.combo>=3?'COMBO ×'+latinGame.combo+' 🔥':'Correct!') : 'Keep moving',''+(correct?'good':'soft'));
+  gameBurst(correct ? (latinGame.combo>=3?'Streak ×'+latinGame.combo+' ✨':'Correct!') : 'Keep moving',''+(correct?'good':'soft'));
 
   setTimeout(()=>{
     if(latinGame.type==='sprint' && latinGame.seconds<=0) return;
