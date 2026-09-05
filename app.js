@@ -2262,3 +2262,34 @@ function latinGameMessage(text){
     '<button class="secondaryButton" type="button" id="latinGameMessageBack">Back to games</button></div>';
   document.getElementById('latinGameMessageBack').addEventListener('click',openGames);
 }
+
+
+/* ===== V9.1.1 Games click/tap hotfix ===== */
+function bindLatinGameButtons(){
+  const bindings = [
+    ['[data-action="open-games"]', () => openGames()],
+    ['[data-action="game-match"]', () => startLatinGame('match')],
+    ['[data-action="game-gladiator"]', () => startLatinGame('gladiator')],
+    ['[data-action="game-sentence"]', () => startLatinGame('sentence')],
+    ['[data-action="game-sprint"]', () => startLatinGame('sprint')],
+    ['[data-action="games-back"]', () => endLatinGame()]
+  ];
+
+  bindings.forEach(([selector, handler]) => {
+    document.querySelectorAll(selector).forEach(el => {
+      if(el.dataset.gameBound === '1') return;
+      el.dataset.gameBound = '1';
+      el.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handler();
+      });
+    });
+  });
+}
+
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', bindLatinGameButtons);
+}else{
+  bindLatinGameButtons();
+}

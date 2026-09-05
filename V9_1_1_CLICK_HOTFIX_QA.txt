@@ -1,0 +1,15 @@
+LATIN REVISION V9.1.1 — CLICK/TAP HOTFIX
+
+app.js: PASS
+question-bank.js: PASS
+sw.js: PASS
+Home Games direct binding: PASS
+Verbum Match direct binding: PASS
+Gladiator direct binding: PASS
+Sentence direct binding: PASS
+Sprint direct binding: PASS
+Games hub exists: PASS
+Game play exists: PASS
+Pointer hotfix: PASS
+
+This hotfix binds Games buttons directly with addEventListener and bumps the service-worker cache.
