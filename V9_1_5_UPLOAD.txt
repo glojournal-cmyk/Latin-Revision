@@ -1,0 +1,17 @@
+LATIN REVISION V9.1.5
+
+Replace only these root files:
+- index.html
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
+
+No assets folder is needed for Latin Games artwork.
+All game artwork is embedded in compact WebP form.
+
+After deploy:
+1. Confirm tab/version shows V9.1.5.
+2. Hard refresh.
+3. Open Latin Games.
+4. Images should appear immediately.

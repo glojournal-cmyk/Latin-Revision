@@ -1,0 +1,10 @@
+LATIN REVISION V9.1.5 — SELF-CONTAINED GAME ART
+
+All Latin Games artwork is embedded as compact WebP data.
+No assets/games folder is required.
+
+No external game asset paths in HTML: PASS
+No external game asset paths in JS: PASS
+app.js syntax: PASS
+Games Hub exists: PASS
+Game Play exists: PASS
