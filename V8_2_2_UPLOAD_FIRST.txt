@@ -1,0 +1,23 @@
+LATIN REVISION V8.2.2 — SVG ARTWORK REBUILD
+
+Before upload:
+1. Use Parent controls -> Backup progress.
+
+Replace/upload to GitHub:
+• index.html
+• app.js
+• question-bank.js
+• sw.js
+• manifest.webmanifest
+• assets/  (upload the WHOLE folder)
+
+Keep:
+• icons/
+
+After GitHub Pages deploys:
+1. Open the website in Safari and refresh.
+2. Fully close the installed Home Screen app.
+3. Reopen it.
+4. Check the top-left label says V8.2.2.
+
+The small dashboard illustrations are now transparent SVG artwork rather than PNG blocks.

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 180">
+<g stroke="#5d477a" stroke-width="3" stroke-linejoin="round">
+<path d="M32 125h150l-12 30H42Z" fill="#d9c6e8"/><path d="M42 91h145l-10 30H32Z" fill="#a9c8b0"/><path d="M28 58h150l10 28H40Z" fill="#f2dce3"/><path d="M52 29h145l-12 24H40Z" fill="#f7efcf"/>
+</g>
+<g fill="#4c4160" font-family="Georgia,serif" font-size="13" font-style="italic"><text x="62" y="48">amo</text><text x="55" y="77">puella</text><text x="52" y="111">villa</text><text x="60" y="144">terra</text></g>
+<path d="M190 126c9-16 16-30 20-43" stroke="#7da086" stroke-width="3" fill="none"/>
+<g fill="#9b79b7"><circle cx="206" cy="88" r="5"/><circle cx="201" cy="99" r="5"/><circle cx="197" cy="110" r="5"/></g>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 180">
+<path d="M47 31h94c12 0 19 12 13 23l-5 9v77c0 8-6 14-14 14H51c-8 0-14-6-14-14V53c0-12 10-22 22-22Z" fill="#fff9ec" stroke="#7b628f" stroke-width="4"/>
+<path d="M47 31c-13 0-20 10-17 20 3 9 14 13 24 8M140 154c13 0 20-10 17-20-3-9-14-13-24-8" fill="#f0dfbd" stroke="#7b628f" stroke-width="4" stroke-linecap="round"/>
+<g stroke="#c7b9cc" stroke-width="2"><path d="M64 71h63"/><path d="M64 94h63"/><path d="M64 117h48"/></g>
+<text x="70" y="55" font-family="Georgia,serif" font-size="15" font-style="italic" fill="#57456c">SPQR</text>
+</svg>

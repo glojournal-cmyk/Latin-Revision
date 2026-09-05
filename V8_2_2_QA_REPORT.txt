@@ -1,0 +1,50 @@
+LATIN REVISION V8.2.2 — SVG ARTWORK REBUILD QA
+
+What changed
+------------
+• Replaced UI artwork PNGs with transparent SVGs:
+  - hourglass
+  - notebook
+  - books
+  - laurel
+  - scroll
+  - statue
+• Kept the Colosseum artwork only as the large hero illustration.
+• Rebuilt Today goal cards as a real illustration column + content column.
+• Removed absolute-positioned PNG artwork from the goal cards.
+• Added Safari-compatible hero fading using mask and -webkit-mask.
+• Decorative art cannot intercept taps (pointer-events:none).
+• Updated service-worker cache to V8.2.2.
+
+Automated checks
+----------------
+JavaScript syntax:
+• app.js — PASS
+• question-bank.js — PASS
+• sw.js — PASS
+
+HTML / assets:
+• Duplicate IDs — 0
+• Missing local image files — 0
+• Small UI PNG references — 0
+• Broken images in rendered QA — 0
+
+Rendered viewport QA:
+• 1366 × 1024 landscape — PASS
+• 820 × 1180 portrait — PASS
+• 430 × 932 narrow/mobile — PASS
+• Horizontal overflow — NO
+
+Interaction smoke test:
+• Today — PASS
+• Practice — PASS
+• Words — PASS
+• Progress — PASS
+• More — PASS
+• Continue revision -> Notes — PASS
+• Word Bank -> Reveal meaning — PASS
+• Word Bank -> Got it — PASS
+
+Important:
+Upload/replace the whole package, especially index.html, sw.js and assets/.
+Keep your existing icons/ folder.
