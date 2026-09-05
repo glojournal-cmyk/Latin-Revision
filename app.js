@@ -61,7 +61,7 @@ let sessionAnswers = [];
 
 function emptyState() {
   return {
-    version: 8.2,
+    version: 8.21,
     attempts: [],
     reviews: {},
     results: {},
@@ -449,7 +449,7 @@ function renderSaveStatus() {
 }
 
 function show(id) {
-  ['dashboard', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => document.getElementById(section).classList.add('hidden'));
+  ['dashboard', 'practiceHub', 'progressPage', 'morePage', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => { const el = document.getElementById(section); if (el) el.classList.add('hidden'); });
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -1211,21 +1211,71 @@ function continueToday() {
 }
 
 function showProgress() {
-  showDashboard();
+  renderDashboard();
+  renderProgressPage();
+  show('progressPage');
   setNavActive('progress');
+}
+
+function showPracticeHub() {
+  renderDashboard();
+  const due = dueQuestions().length;
+  const dueButton = document.getElementById('practiceDueButton');
+  const dueText = document.getElementById('practiceDueText');
+  if (dueButton) dueButton.disabled = !due;
+  if (dueText) dueText.textContent = due ? `${due} review question${due === 1 ? '' : 's'} ready today.` : 'Nothing due right now.';
+  const mixedButton = document.getElementById('practiceMixedButton');
+  if (mixedButton) mixedButton.disabled = !attemptedContentDays().length;
+  show('practiceHub');
+  setNavActive('practice');
+}
+
+function showRevisionPlan() {
+  showDashboard();
+  setNavActive('practice');
   setTimeout(() => {
-    const target = document.getElementById('overall');
-    if (target) target.closest('.summary-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const target = document.getElementById('daylist');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 20);
 }
 
+function renderProgressPage() {
+  const record = dailyRecord();
+  const completedCycles = blocks
+    .filter(block => !block.mode && focusPoolFor(block).length)
+    .map(block => cycleFor(block.day).completedPercent)
+    .filter(value => Number.isFinite(value));
+  const overall = completedCycles.length
+    ? Math.round(completedCycles.reduce((total, value) => total + value, 0) / completedCycles.length)
+    : 0;
+  const accuracy = record.questions ? Math.round(record.correct / record.questions * 100) : null;
+  const due = dueQuestions().length;
+  const words = wordBankReviewedCount();
+  const block = suggestedBlock();
+
+  const setText = (id, value) => { const el = document.getElementById(id); if (el) el.textContent = value; };
+  setText('progressOverall', `${overall}%`);
+  setText('progressTodayAccuracy', accuracy === null ? '—' : `${accuracy}%`);
+  setText('progressTodayLine', record.questions ? `${record.correct}/${record.questions} correct today` : 'No answers yet');
+  setText('progressDue', String(due));
+  setText('progressWords', `${words}/10`);
+
+  if (block) {
+    const focus = focusPoolFor(block);
+    const cycle = cycleFor(block.day);
+    const valid = new Set(focus.map(q => q.id));
+    const seen = cycle.seen.filter(id => valid.has(id)).length;
+    const completed = Number.isFinite(cycle.completedPercent) ? ` · last completed cycle ${cycle.completedPercent}%` : '';
+    setText('progressCycleLine', `${block.day} — ${seen}/${focus.length || 0} seen${completed}`);
+  } else {
+    setText('progressCycleLine', 'No focus cycle started yet.');
+  }
+}
+
 function showMore() {
-  showDashboard();
+  renderDashboard();
+  show('morePage');
   setNavActive('more');
-  setTimeout(() => {
-    const target = document.getElementById('parentControls');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 20);
 }
 
 function hashText(text) {

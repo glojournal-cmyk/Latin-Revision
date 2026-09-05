@@ -1,4 +1,4 @@
-const CACHE='latin-revision-study-journal-v8-2-20260905';
+const CACHE='latin-revision-study-journal-v8-2-1-20260905';
 const APP_PREFIX='latin-revision-';
 const ASSETS=["./","./index.html","./app.js","./question-bank.js","./manifest.webmanifest","./icons/icon-192.png","./icons/icon-512.png","./assets/colosseum.png","./assets/hourglass.png","./assets/notebook.png","./assets/books.png","./assets/scroll.png","./assets/statue.png","./assets/laurel.png"];
 

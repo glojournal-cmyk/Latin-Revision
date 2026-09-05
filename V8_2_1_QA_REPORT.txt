@@ -1,0 +1,52 @@
+LATIN REVISION V8.2.1 — RENDER / INTERACTION QA
+
+Hotfix scope
+------------
+1. Fixed decorative illustrations eating taps by applying pointer-events:none.
+2. Changed dashboard illustrations to object-fit:contain and safer positioning.
+3. Added illustrations to Word Bank, Notes, Quiz, Results, Practice, Progress and More pages.
+4. Changed asset references to explicit ./assets/... paths.
+5. Added real Practice, Progress and More pages.
+6. Practice navigation now opens a Practice hub instead of silently failing / alerting.
+7. Progress navigation now opens a dedicated progress page.
+8. More navigation now opens a dedicated Parent & App Controls page.
+9. Updated service-worker cache version to V8.2.1.
+
+Automated checks completed
+--------------------------
+JavaScript syntax:
+- app.js: PASS
+- question-bank.js: PASS
+- sw.js: PASS
+
+HTML integrity:
+- Duplicate IDs: 0
+- Missing onclick function targets: 0
+- Missing local image asset references: 0
+- Assets referenced by HTML but missing from service-worker cache: 0
+
+Rendered interaction smoke tests:
+- Landscape 1366 x 1024: PASS
+- Portrait 820 x 1180: PASS
+- Narrow 430 x 932: PASS
+- Horizontal page overflow at 430px: NO
+
+Bottom navigation:
+- Today -> dashboard: PASS
+- Practice -> Practice hub: PASS
+- Words -> Word Bank: PASS
+- Progress -> Progress page: PASS
+- More -> Parent/App controls: PASS
+
+Core flow:
+- Continue revision -> Revision Notes: PASS
+- Notes -> Start Practice -> Quiz: PASS
+- Word Bank -> Reveal meaning: PASS
+- Word Bank -> Got it -> advances card: PASS
+- Revision Plan button -> dashboard plan: PASS
+
+Image checks during render:
+- Broken <img> elements: 0 at tested viewports.
+
+Note:
+The automated browser test uses an isolated in-memory document. localStorage is intentionally unavailable in that isolated QA harness, so the save warning generated there is not a production-app defect. The deployed GitHub Pages app runs in a normal secure origin with localStorage available.

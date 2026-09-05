@@ -1,4 +1,4 @@
-LATIN REVISION — V8.2 STUDY JOURNAL
+LATIN REVISION — V8.2.1 STUDY JOURNAL HOTFIX
 
 WHAT IS NEW
 -----------
@@ -40,3 +40,14 @@ WORD BANK RULE
 • Tap Reveal meaning, then choose Got it or Again.
 • Word Bank study time counts toward the 20-minute active-study target.
 • Word cards do NOT count as answered quiz questions toward the 30-question target.
+
+
+V8.2.1 HOTFIX
+--------------
+This update fixes:
+- cropped / awkward illustrations
+- subpage illustration loading / presentation
+- main navigation buttons that appeared not to enter a page
+- Practice / Progress / More now have real separate pages
+
+Upload/replace ALL files in this package, including the full assets/ folder.

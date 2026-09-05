@@ -188,12 +188,57 @@
       .bottom-nav{height:64px}.nav-btn{font-size:9px}.nav-btn .nav-icon{font-size:18px}
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  
+    /* V8.2.1 hotfix: tap safety, full illustrations, real navigation pages */
+    .decorative-art{pointer-events:none!important;user-select:none;-webkit-user-drag:none}
+    .hero-art{object-fit:contain;object-position:right center;right:0;top:0;height:225px}
+    .goal-box{overflow:hidden}
+    .goal-box .art{left:18px;bottom:8px;width:112px;height:122px;object-fit:contain!important;object-position:center!important;border-radius:0}
+    .next-card img{object-fit:contain!important;object-position:center!important}
+    .illustrated-page{position:relative;overflow:hidden}
+    .page-art{position:absolute;right:24px;top:18px;width:150px;height:130px;object-fit:contain;opacity:.16;mix-blend-mode:multiply;z-index:0}
+    .illustrated-page>*:not(.page-art){position:relative;z-index:1}
+    .wordbank-art{width:175px;height:150px;opacity:.12}
+    .notes-art{width:145px;height:120px;opacity:.12}
+    .quiz-art{width:120px;height:100px;opacity:.10}
+    .results-art{width:135px;height:145px;opacity:.11}
+    .hub-art,.progress-art,.more-art{width:155px;height:135px;opacity:.11}
+    .practice-shell,.progress-shell,.more-shell{padding-top:12px}
+    .hub-page h1,.progress-shell h1,.more-shell h1{font-size:clamp(34px,5vw,46px);margin:8px 0 6px}
+    .hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:26px 0}
+    .hub-action{min-height:150px;text-align:left;border:1px solid var(--line);background:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;align-items:flex-start;gap:7px;color:var(--ink)}
+    .hub-action.recommended{background:linear-gradient(145deg,#fbf6fc,#f1f7f3);border-color:#dcd1e8}
+    .hub-action strong{font:700 24px var(--heading);color:var(--ink)}
+    .hub-action small{font-size:14px;line-height:1.45;color:var(--muted)}
+    .hub-kicker{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple)}
+    .hub-action:disabled{opacity:.48;cursor:not-allowed}
+    .progress-page-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:26px 0}
+    .progress-tile{border-radius:24px;padding:22px;background:#fbf7fc;border:1px solid var(--line);min-height:135px;display:flex;flex-direction:column}
+    .progress-tile:nth-child(2){background:#f1f7f3}.progress-tile:nth-child(3){background:#f7edf1}.progress-tile:nth-child(4){background:#fff5d9}
+    .progress-tile span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+    .progress-tile strong{font:700 34px var(--heading);color:var(--ink);margin:7px 0 2px}
+    .progress-tile small{color:var(--muted)}
+    .nav-btn,.primary,.secondary,.ghost,.hub-action{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .bottom-nav{isolation:isolate}
+    @media(max-width:800px){
+      .hero-art{object-fit:contain;object-position:right center;right:-25px}
+      .goal-box .art{left:12px;bottom:8px;width:105px;height:112px}
+      .goal-content{margin-left:118px}
+      .page-art{right:10px;top:10px;width:110px;height:95px}
+    }
+    @media(max-width:520px){
+      .hub-grid,.progress-page-grid{grid-template-columns:1fr}
+      .goal-box .art{width:82px;height:92px;left:8px;bottom:10px}
+      .goal-content{margin-left:82px}
+      .page-art{width:85px;height:75px;opacity:.08}
+    }
+
   </style>
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
-      <div class="brand">Latin<small>revision journal · V8.2</small></div>
+      <div class="brand">Latin<small>revision journal · V8.2.1</small></div>
       <div class="header-right">
         <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span id="soundLabel">Sound on</span></button>
       </div>
@@ -212,7 +257,7 @@
           <div class="hero-sub">Ready for a little Latin?</div>
           <div class="hero-quote" id="heroEncouragement">Small steps every day make brilliant progress.</div>
         </div>
-        <img class="hero-art" src="assets/colosseum.png" alt="" aria-hidden="true">
+        <img class="hero-art decorative-art" src="./assets/colosseum.png" alt="" aria-hidden="true">
       </section>
 
       <section class="card today-card" aria-labelledby="dailyGoalTitle">
@@ -227,7 +272,7 @@
 
         <div class="goal-grid">
           <div class="goal-box time">
-            <img src="assets/hourglass.png" class="art" alt="" aria-hidden="true">
+            <img src="./assets/hourglass.png" class="art decorative-art" alt="" aria-hidden="true">
             <div class="goal-content">
               <div class="metric-label">Focus time</div>
               <div class="metric-value"><span id="todayMinutes">0</span> <small>/ 20 min</small></div>
@@ -236,7 +281,7 @@
             </div>
           </div>
           <div class="goal-box questions">
-            <img src="assets/notebook.png" class="art" alt="" aria-hidden="true">
+            <img src="./assets/notebook.png" class="art decorative-art" alt="" aria-hidden="true">
             <div class="goal-content">
               <div class="metric-label">Questions</div>
               <div class="metric-value"><span id="todayQuestions">0</span> <small>/ 30</small></div>
@@ -277,7 +322,7 @@
 
       <div class="section-heading"><div><div class="eyebrow">Next up</div><h2>Your revision plan</h2></div><button class="secondary" onclick="startMixed()">Mixed practice</button></div>
       <section class="card next-card">
-        <img src="assets/books.png" alt="" aria-hidden="true">
+        <img src="./assets/books.png" class="decorative-art" alt="" aria-hidden="true">
         <div>
           <span class="stage-pill" id="nextUpDay">Next block</span>
           <div class="next-title" id="nextUpTitle">Vocabulary & translation</div>
@@ -298,8 +343,58 @@
         <div><div class="eyebrow">Exact dated plan</div><h3 style="margin:5px 0">Revision by learning date</h3><div class="small muted">Every card keeps its locked scope and no-repeat cycle.</div></div>
       </div>
       <div id="daylist"></div>
+    </section>
 
-      <section class="parent-panel" id="parentControls">
+
+    <section id="practiceHub" class="practice-shell hidden">
+      <article class="page-card illustrated-page hub-page">
+        <img class="page-art hub-art decorative-art" src="./assets/notebook.png" alt="" aria-hidden="true">
+        <div class="eyebrow">Practice</div>
+        <h1>Choose your next step ♡</h1>
+        <p class="muted">Pick the session that suits today. Your progress is saved automatically.</p>
+        <div class="hub-grid">
+          <button class="hub-action recommended" type="button" onclick="continueToday()">
+            <span class="hub-kicker">Recommended</span><strong>Continue today</strong><small>Due review first, then your next focus block.</small>
+          </button>
+          <button class="hub-action" id="practiceDueButton" type="button" onclick="startDue()">
+            <span class="hub-kicker">Spaced review</span><strong>Due reviews</strong><small id="practiceDueText">Nothing due right now.</small>
+          </button>
+          <button class="hub-action" id="practiceMixedButton" type="button" onclick="startMixed()">
+            <span class="hub-kicker">Cumulative</span><strong>Mixed practice</strong><small>Balanced questions from blocks you have already attempted.</small>
+          </button>
+          <button class="hub-action" type="button" onclick="showRevisionPlan()">
+            <span class="hub-kicker">Choose a block</span><strong>Revision plan</strong><small>Open the dated plan and choose exactly what to revise.</small>
+          </button>
+        </div>
+        <div class="action-row"><button class="secondary" type="button" onclick="showDashboard()">Back to Today</button></div>
+      </article>
+    </section>
+
+    <section id="progressPage" class="progress-shell hidden">
+      <article class="page-card illustrated-page">
+        <img class="page-art progress-art decorative-art" src="./assets/laurel.png" alt="" aria-hidden="true">
+        <div class="eyebrow">Progress</div>
+        <h1>Your progress, at a glance ♡</h1>
+        <p class="muted">Mastery only counts after a complete focus cycle reaches the target.</p>
+        <div class="progress-page-grid">
+          <div class="progress-tile"><span>Overall mastery</span><strong id="progressOverall">0%</strong><small>Completed focus cycles</small></div>
+          <div class="progress-tile"><span>Today’s accuracy</span><strong id="progressTodayAccuracy">—</strong><small id="progressTodayLine">No answers yet</small></div>
+          <div class="progress-tile"><span>Due reviews</span><strong id="progressDue">0</strong><small>Ready today</small></div>
+          <div class="progress-tile"><span>Word bank</span><strong id="progressWords">0/10</strong><small>Reviewed today</small></div>
+        </div>
+        <div class="exact-scope"><strong>Current focus cycle</strong><div id="progressCycleLine" class="small" style="margin-top:5px">No focus cycle started yet.</div></div>
+        <div class="action-row"><button class="primary" type="button" onclick="showRevisionPlan()">View revision plan</button><button class="secondary" type="button" onclick="showDashboard()">Back to Today</button></div>
+      </article>
+    </section>
+
+    <section id="morePage" class="more-shell hidden">
+      <article class="page-card illustrated-page">
+        <img class="page-art more-art decorative-art" src="./assets/scroll.png" alt="" aria-hidden="true">
+        <div class="eyebrow">More</div>
+        <h1>Parent & app controls</h1>
+        <p class="muted">Backup, restore and share today’s report from here.</p>
+
+        <section class="parent-panel" id="parentControls">
         <div class="between"><div><div class="eyebrow">Parent controls</div><h2 style="margin-top:5px">Progress stays on this iPad</h2></div><span class="cycle-badge">Auto-saved</span></div>
         <p class="muted">Export a backup before a major update or before clearing Safari website data.</p>
         <div class="storage-grid">
@@ -316,10 +411,14 @@
         <div class="file-note">Keep the same GitHub Pages address when updating.</div>
         <div id="saveWarning" class="save-warning">Progress could not be saved on this device. Export a backup before continuing.</div>
       </section>
+
+        <div class="action-row"><button class="secondary" type="button" onclick="showDashboard()">Back to Today</button></div>
+      </article>
     </section>
 
     <section id="wordbank" class="wordbank-shell hidden">
-      <article class="page-card wordbank-page">
+      <article class="page-card wordbank-page illustrated-page">
+        <img class="page-art wordbank-art decorative-art" src="./assets/books.png" alt="" aria-hidden="true">
         <div class="wordbank-top">
           <div><div class="eyebrow">Daily word bank</div><h1>Ten words for today ♡</h1><p class="muted">Tap reveal, say the meaning aloud, then rate how it felt.</p></div>
           <div id="wordBankCount" class="wb-count">1 / 10</div>
@@ -341,7 +440,8 @@
     </section>
 
     <section id="notes" class="notes-shell hidden">
-      <article class="page-card">
+      <article class="page-card illustrated-page">
+        <img class="page-art notes-art decorative-art" src="./assets/scroll.png" alt="" aria-hidden="true">
         <div class="notes-header">
           <div><div class="eyebrow">Revision notes</div><h1 id="notesTitle" style="font-size:38px"></h1><p id="notesIntro" class="muted"></p></div>
           <span class="cycle-badge">Read · recall · test</span>
@@ -354,7 +454,8 @@
     </section>
 
     <section id="quiz" class="quiz-shell hidden">
-      <article id="questionStage" class="page-card question-stage">
+      <article id="questionStage" class="page-card question-stage illustrated-page">
+        <img class="page-art quiz-art decorative-art" src="./assets/laurel.png" alt="" aria-hidden="true">
         <div class="quiz-top">
           <div class="quiz-meta"><div><div class="eyebrow" id="quizTitle"></div><h2 id="questionCounter" style="margin-top:5px"></h2></div><div class="quiz-badges"><span id="freshBadge" class="cycle-badge">Fresh questions first</span><span class="cycle-badge">Auto-saved</span></div></div>
           <div class="progress"><div id="quizBar" class="progress-bar"></div></div>
@@ -369,7 +470,8 @@
     </section>
 
     <section id="results" class="results-shell hidden">
-      <article class="page-card">
+      <article class="page-card illustrated-page">
+        <img class="page-art results-art decorative-art" src="./assets/statue.png" alt="" aria-hidden="true">
         <div class="eyebrow">Session complete</div>
         <h1>Lovely work — here’s what you achieved. ♡</h1>
         <div id="masteryCelebration" class="mastery-celebration hidden" aria-live="polite"></div>
@@ -393,7 +495,7 @@
 
   <nav class="bottom-nav" aria-label="Main navigation">
     <button class="nav-btn active" id="navToday" onclick="showDashboard()"><span class="nav-icon">⌂</span><span>Today</span></button>
-    <button class="nav-btn" id="navPractice" onclick="startMixed()"><span class="nav-icon">✎</span><span>Practice</span></button>
+    <button class="nav-btn" id="navPractice" onclick="showPracticeHub()"><span class="nav-icon">✎</span><span>Practice</span></button>
     <button class="nav-btn" id="navWords" onclick="openWordBank()"><span class="nav-icon">A·B</span><span>Words</span></button>
     <button class="nav-btn" id="navProgress" onclick="showProgress()"><span class="nav-icon">▥</span><span>Progress</span></button>
     <button class="nav-btn" id="navMore" onclick="showMore()"><span class="nav-icon">•••</span><span>More</span></button>
