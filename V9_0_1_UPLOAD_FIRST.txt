@@ -1,0 +1,51 @@
+LATIN REVISION V9.0.1 — EMBEDDED ARTWORK HOTFIX
+
+Why this release exists
+-----------------------
+The UI artwork is embedded directly inside index.html as WebP data URIs.
+Therefore GitHub Pages no longer needs assets/*.png paths for the app artwork.
+This removes the broken-image problem caused by missing/mis-cased asset uploads.
+
+Embedded artwork
+----------------
+./assets/books.png -> embedded 555x538 WebP (71 KB)
+./assets/bust.png -> embedded 557x560 WebP (58 KB)
+./assets/column.png -> embedded 447x524 WebP (51 KB)
+./assets/daily-revision.png -> embedded 650x647 WebP (64 KB)
+./assets/grammar.png -> embedded 605x650 WebP (106 KB)
+./assets/hero-colosseum.png -> embedded 1500x684 WebP (332 KB)
+./assets/ink.png -> embedded 493x567 WebP (57 KB)
+./assets/laurel.png -> embedded 646x650 WebP (105 KB)
+./assets/mistake-review.png -> embedded 622x650 WebP (83 KB)
+./assets/next-colosseum.png -> embedded 650x388 WebP (78 KB)
+./assets/quick-quiz.png -> embedded 650x646 WebP (96 KB)
+./assets/roman-world.png -> embedded 636x650 WebP (96 KB)
+./assets/scroll.png -> embedded 497x613 WebP (61 KB)
+./assets/translation.png -> embedded 623x650 WebP (58 KB)
+./assets/trophy.png -> embedded 634x650 WebP (117 KB)
+./assets/vocabulary.png -> embedded 650x650 WebP (102 KB)
+./assets/word-bank.png -> embedded 650x650 WebP (127 KB)
+
+Service worker
+--------------
+Install cache now depends only on the five core files.
+Artwork is already inside index.html.
+
+Upload these files to GitHub root
+---------------------------------
+index.html
+app.js
+question-bank.js
+sw.js
+manifest.webmanifest
+
+Keep your existing icons/ folder.
+You do NOT need to upload assets/ for V9.0.1.
+
+After deploy
+------------
+1. Wait for GitHub Pages Action to finish.
+2. Open the site in Safari and refresh.
+3. Fully close the Home Screen PWA.
+4. Reopen it.
+5. The artwork should load even if assets/ is absent.

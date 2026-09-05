@@ -1,9 +1,9 @@
-const CACHE='latin-revision-v9-20260905';
+const CACHE='latin-revision-v9-0-1-embedded-20260905';
 const APP_PREFIX='latin-revision-';
-const ASSETS=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest','./assets/hero-colosseum.png','./assets/daily-revision.png','./assets/word-bank.png','./assets/mistake-review.png','./assets/quick-quiz.png','./assets/grammar.png','./assets/vocabulary.png','./assets/translation.png','./assets/roman-world.png','./assets/laurel.png','./assets/trophy.png','./assets/next-colosseum.png','./icons/icon-192.png','./icons/icon-512.png'];
+const CORE=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest'];
 
 self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
 
 self.addEventListener('activate',event=>{
