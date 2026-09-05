@@ -1,0 +1,62 @@
+LATIN REVISION V8.2.3 — TRANSPARENT ARTWORK INTEGRATION QA
+
+Artwork
+-------
+• Replaced the previous SVG/UI artwork with the user's 9 transparent PNG illustrations.
+• Small artwork is trimmed and resized while preserving alpha transparency.
+• Colosseum is preserved as a wide transparent hero illustration.
+• No object-fit: cover is used for the artwork.
+• Decorative artwork has pointer-events:none so it cannot block taps.
+
+Artwork mapping
+---------------
+• Colosseum -> Home hero
+• Hourglass -> Focus time
+• Notebook -> Questions
+• Books -> Word Bank / Next up
+• Ink + quill -> Practice
+• Roman bust -> Progress
+• Roman column -> More
+• Scroll -> Notes
+• Laurel -> Quiz / mastery
+
+Automated JavaScript syntax
+---------------------------
+• app.js: PASS
+• question-bank.js: PASS
+• sw.js: PASS
+
+HTML / asset integrity
+----------------------
+• Duplicate IDs: 0
+• Missing local image files: 0
+• Missing onclick function targets: 0
+
+Rendered browser QA
+-------------------
+1366 x 1024 landscape:
+• Broken images: 0
+• Horizontal overflow: NO
+• JavaScript page errors: 0
+
+820 x 1180 portrait:
+• Broken images: 0
+• Horizontal overflow: NO
+• JavaScript page errors: 0
+
+430 x 932 mobile:
+• Broken images: 0
+• Horizontal overflow: NO
+• JavaScript page errors: 0
+
+Navigation smoke test
+---------------------
+• Today -> dashboard: PASS
+• Practice -> practiceHub: PASS
+• Words -> wordbank: PASS
+• Progress -> progressPage: PASS
+• More -> morePage: PASS
+
+Version
+-------
+revision journal · V8.2.3

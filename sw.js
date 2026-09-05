@@ -1,6 +1,6 @@
-const CACHE='latin-revision-study-journal-v8-2-2-20260905';
+const CACHE='latin-revision-study-journal-v8-2-3-20260905';
 const APP_PREFIX='latin-revision-';
-const ASSETS=["./","./index.html","./app.js","./question-bank.js","./manifest.webmanifest","./icons/icon-192.png","./icons/icon-512.png","./assets/colosseum.png","./assets/hourglass.svg","./assets/notebook.svg","./assets/books.svg","./assets/scroll.svg","./assets/statue.svg","./assets/laurel.svg"];
+const ASSETS=["./","./index.html","./app.js","./question-bank.js","./manifest.webmanifest","./icons/icon-192.png","./icons/icon-512.png","./assets/colosseum.png","./assets/hourglass.png","./assets/notebook.png","./assets/books.png","./assets/laurel.png","./assets/scroll.png","./assets/bust.png","./assets/ink.png","./assets/column.png"];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));

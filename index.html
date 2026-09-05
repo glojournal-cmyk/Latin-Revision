@@ -344,12 +344,122 @@
       .page-art{width:78px!important;height:70px!important;opacity:.08!important}
     }
 
+
+    /* V8.2.3 — transparent PNG artwork integration */
+    .decorative-art{
+      pointer-events:none!important;
+      user-select:none!important;
+      -webkit-user-drag:none!important;
+    }
+    .hero{
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr) minmax(360px,520px)!important;
+      gap:28px!important;
+      align-items:center!important;
+      min-height:270px!important;
+      padding:34px 32px 30px!important;
+      overflow:visible!important;
+    }
+    .hero-copy{max-width:640px!important;position:relative!important;z-index:2!important}
+    .hero-art{
+      position:static!important;
+      display:block!important;
+      justify-self:end!important;
+      align-self:center!important;
+      width:100%!important;
+      max-width:520px!important;
+      height:auto!important;
+      max-height:250px!important;
+      object-fit:contain!important;
+      object-position:center!important;
+      opacity:1!important;
+      mix-blend-mode:normal!important;
+      border-radius:0!important;
+      -webkit-mask-image:none!important;
+      mask-image:none!important;
+    }
+    .goal-box{
+      display:grid!important;
+      grid-template-columns:132px minmax(0,1fr)!important;
+      gap:22px!important;
+      align-items:center!important;
+      min-height:205px!important;
+      padding:22px 26px!important;
+      overflow:visible!important;
+    }
+    .goal-box .art{
+      position:static!important;
+      display:block!important;
+      width:122px!important;
+      height:150px!important;
+      max-width:100%!important;
+      object-fit:contain!important;
+      object-position:center!important;
+      opacity:1!important;
+      mix-blend-mode:normal!important;
+      border-radius:0!important;
+      align-self:center!important;
+      justify-self:center!important;
+    }
+    .goal-content{margin-left:0!important;min-width:0!important;position:relative!important;z-index:1!important}
+    .next-card img{
+      display:block!important;
+      width:130px!important;
+      height:120px!important;
+      object-fit:contain!important;
+      mix-blend-mode:normal!important;
+      border-radius:0!important;
+    }
+    .page-art{
+      object-fit:contain!important;
+      object-position:center!important;
+      mix-blend-mode:normal!important;
+      opacity:.16!important;
+      max-width:170px!important;
+      max-height:170px!important;
+    }
+    @media(max-width:900px){
+      .hero{
+        grid-template-columns:minmax(0,1fr) minmax(280px,40%)!important;
+        gap:18px!important;
+        padding:28px 20px 24px!important;
+      }
+      .hero-art{max-width:420px!important;max-height:220px!important}
+      .goal-box{grid-template-columns:112px minmax(0,1fr)!important;gap:16px!important;padding:20px!important}
+      .goal-box .art{width:104px!important;height:128px!important}
+    }
+    @media(max-width:620px){
+      .hero{
+        grid-template-columns:1fr!important;
+        gap:8px!important;
+        padding:22px 12px 14px!important;
+      }
+      .hero-copy{max-width:100%!important}
+      .hero-art{
+        display:block!important;
+        justify-self:center!important;
+        width:min(100%,440px)!important;
+        max-width:440px!important;
+        max-height:170px!important;
+        margin-top:2px!important;
+      }
+      .goal-box{
+        grid-template-columns:88px minmax(0,1fr)!important;
+        gap:12px!important;
+        min-height:168px!important;
+        padding:17px 15px!important;
+      }
+      .goal-box .art{display:block!important;width:82px!important;height:100px!important}
+      .next-card img{display:block!important;width:88px!important;height:88px!important}
+      .page-art{display:block!important;width:88px!important;height:88px!important;opacity:.10!important}
+    }
+
   </style>
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
-      <div class="brand">Latin<small>revision journal · V8.2.2</small></div>
+      <div class="brand">Latin<small>revision journal · V8.2.3</small></div>
       <div class="header-right">
         <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span id="soundLabel">Sound on</span></button>
       </div>
@@ -383,7 +493,7 @@
 
         <div class="goal-grid">
           <div class="goal-box time">
-            <img src="./assets/hourglass.svg" class="art decorative-art" alt="" aria-hidden="true">
+            <img src="./assets/hourglass.png" class="art decorative-art" alt="" aria-hidden="true">
             <div class="goal-content">
               <div class="metric-label">Focus time</div>
               <div class="metric-value"><span id="todayMinutes">0</span> <small>/ 20 min</small></div>
@@ -392,7 +502,7 @@
             </div>
           </div>
           <div class="goal-box questions">
-            <img src="./assets/notebook.svg" class="art decorative-art" alt="" aria-hidden="true">
+            <img src="./assets/notebook.png" class="art decorative-art" alt="" aria-hidden="true">
             <div class="goal-content">
               <div class="metric-label">Questions</div>
               <div class="metric-value"><span id="todayQuestions">0</span> <small>/ 30</small></div>
@@ -433,7 +543,7 @@
 
       <div class="section-heading"><div><div class="eyebrow">Next up</div><h2>Your revision plan</h2></div><button class="secondary" onclick="startMixed()">Mixed practice</button></div>
       <section class="card next-card">
-        <img src="./assets/books.svg" class="decorative-art" alt="" aria-hidden="true">
+        <img src="./assets/books.png" class="decorative-art" alt="" aria-hidden="true">
         <div>
           <span class="stage-pill" id="nextUpDay">Next block</span>
           <div class="next-title" id="nextUpTitle">Vocabulary & translation</div>
@@ -459,7 +569,7 @@
 
     <section id="practiceHub" class="practice-shell hidden">
       <article class="page-card illustrated-page hub-page">
-        <img class="page-art hub-art decorative-art" src="./assets/notebook.svg" alt="" aria-hidden="true">
+        <img class="page-art hub-art decorative-art" src="./assets/ink.png" alt="" aria-hidden="true">
         <div class="eyebrow">Practice</div>
         <h1>Choose your next step ♡</h1>
         <p class="muted">Pick the session that suits today. Your progress is saved automatically.</p>
@@ -483,7 +593,7 @@
 
     <section id="progressPage" class="progress-shell hidden">
       <article class="page-card illustrated-page">
-        <img class="page-art progress-art decorative-art" src="./assets/laurel.svg" alt="" aria-hidden="true">
+        <img class="page-art progress-art decorative-art" src="./assets/bust.png" alt="" aria-hidden="true">
         <div class="eyebrow">Progress</div>
         <h1>Your progress, at a glance ♡</h1>
         <p class="muted">Mastery only counts after a complete focus cycle reaches the target.</p>
@@ -500,7 +610,7 @@
 
     <section id="morePage" class="more-shell hidden">
       <article class="page-card illustrated-page">
-        <img class="page-art more-art decorative-art" src="./assets/scroll.svg" alt="" aria-hidden="true">
+        <img class="page-art more-art decorative-art" src="./assets/column.png" alt="" aria-hidden="true">
         <div class="eyebrow">More</div>
         <h1>Parent & app controls</h1>
         <p class="muted">Backup, restore and share today’s report from here.</p>
@@ -529,7 +639,7 @@
 
     <section id="wordbank" class="wordbank-shell hidden">
       <article class="page-card wordbank-page illustrated-page">
-        <img class="page-art wordbank-art decorative-art" src="./assets/books.svg" alt="" aria-hidden="true">
+        <img class="page-art wordbank-art decorative-art" src="./assets/books.png" alt="" aria-hidden="true">
         <div class="wordbank-top">
           <div><div class="eyebrow">Daily word bank</div><h1>Ten words for today ♡</h1><p class="muted">Tap reveal, say the meaning aloud, then rate how it felt.</p></div>
           <div id="wordBankCount" class="wb-count">1 / 10</div>
@@ -552,7 +662,7 @@
 
     <section id="notes" class="notes-shell hidden">
       <article class="page-card illustrated-page">
-        <img class="page-art notes-art decorative-art" src="./assets/scroll.svg" alt="" aria-hidden="true">
+        <img class="page-art notes-art decorative-art" src="./assets/scroll.png" alt="" aria-hidden="true">
         <div class="notes-header">
           <div><div class="eyebrow">Revision notes</div><h1 id="notesTitle" style="font-size:38px"></h1><p id="notesIntro" class="muted"></p></div>
           <span class="cycle-badge">Read · recall · test</span>
@@ -566,7 +676,7 @@
 
     <section id="quiz" class="quiz-shell hidden">
       <article id="questionStage" class="page-card question-stage illustrated-page">
-        <img class="page-art quiz-art decorative-art" src="./assets/laurel.svg" alt="" aria-hidden="true">
+        <img class="page-art quiz-art decorative-art" src="./assets/laurel.png" alt="" aria-hidden="true">
         <div class="quiz-top">
           <div class="quiz-meta"><div><div class="eyebrow" id="quizTitle"></div><h2 id="questionCounter" style="margin-top:5px"></h2></div><div class="quiz-badges"><span id="freshBadge" class="cycle-badge">Fresh questions first</span><span class="cycle-badge">Auto-saved</span></div></div>
           <div class="progress"><div id="quizBar" class="progress-bar"></div></div>
@@ -582,7 +692,7 @@
 
     <section id="results" class="results-shell hidden">
       <article class="page-card illustrated-page">
-        <img class="page-art results-art decorative-art" src="./assets/statue.svg" alt="" aria-hidden="true">
+        <img class="page-art results-art decorative-art" src="./assets/bust.png" alt="" aria-hidden="true">
         <div class="eyebrow">Session complete</div>
         <h1>Lovely work — here’s what you achieved. ♡</h1>
         <div id="masteryCelebration" class="mastery-celebration hidden" aria-live="polite"></div>

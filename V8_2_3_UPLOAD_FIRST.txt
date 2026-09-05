@@ -1,0 +1,26 @@
+LATIN REVISION V8.2.3
+
+Before updating GitHub Pages
+----------------------------
+Use Parent controls -> Backup progress.
+
+Upload / replace:
+• index.html
+• app.js
+• question-bank.js
+• sw.js
+• manifest.webmanifest
+• assets/  <-- upload the entire folder
+
+Keep your existing:
+• icons/
+
+After deploy
+------------
+1. Wait for GitHub Pages deployment to turn green.
+2. Open the site in Safari and refresh.
+3. Fully close the Home Screen app.
+4. Reopen it.
+5. Confirm top-left shows: revision journal · V8.2.3
+
+The 9 artwork files in assets/ are the transparent PNGs integrated for this release.
