@@ -3,6 +3,41 @@ const blocks = window.LATIN_BLOCKS || [];
 const notes = window.LATIN_NOTES || {};
 const byId = new Map(bank.map(question => [question.id, question]));
 
+const derivativeHints = {
+  custodit:'custody, custodian', epistula:'epistle', frustra:'frustrate', fugit:'fugitive',
+  credit:'credit, credible', convenit:'convene, convention', invitat:'invite, invitation',
+  procedit:'proceed, procedure', tradit:'tradition', imperium:'imperial, empire',
+  civis:'civic, civilisation', senator:'senate', audit:'audible, audience',
+  docet:'doctor, doctrine', trahit:'traction, tractor', portat:'transport, portable',
+  terra:'terrain, terrestrial', pax:'pacify, pacific'
+};
+
+const wordBankEntries = bank
+  .filter(question => {
+    if (question.direction !== 'Latin → English') return false;
+    const id = question.id || '';
+    const source = question.sourceRef || '';
+    return /^s(1[0-2]|[1-9])-\d+-l2e$/.test(id) || source.startsWith('Chapter 1–2');
+  })
+  .map(question => {
+    const stageMatch = (question.id || '').match(/^s(\d+)-/);
+    return {
+      id: question.id,
+      stage: stageMatch ? Number(stageMatch[1]) : null,
+      group: stageMatch ? `Stage ${stageMatch[1]}` : (question.topic || 'Chapter 1–2 word bank'),
+      latin: String(question.context || '').trim(),
+      english: String(question.answerExample || (question.accepted || [])[0] || '').trim(),
+      clue: String(question.explain || '').replace(/\s*Source:.*$/i, '').trim(),
+      memory: derivativeHints[String(question.context || '').trim()] || '',
+    };
+  })
+  .filter(entry => entry.latin && entry.english)
+  .filter((entry, index, entries) => entries.findIndex(other => normExact(other.latin) === normExact(entry.latin) && normExact(other.english) === normExact(entry.english)) === index);
+
+let wordBankQueue = [];
+let wordBankIndex = 0;
+let wordBankReviewMode = false;
+
 const masteryTarget = 85;
 const stateKey = 'latinSummerV8State';
 const dailyGoalMinutes = 20;
@@ -26,7 +61,7 @@ let sessionAnswers = [];
 
 function emptyState() {
   return {
-    version: 8.1,
+    version: 8.2,
     attempts: [],
     reviews: {},
     results: {},
@@ -41,7 +76,7 @@ function emptyState() {
 
 function mergeState(saved) {
   const output = Object.assign(emptyState(), saved || {});
-  output.version = 8.1;
+  output.version = 8.2;
   output.attempts = Array.isArray(output.attempts) ? output.attempts : [];
   output.reviews = output.reviews || {};
   output.results = output.results || {};
@@ -159,10 +194,19 @@ function dailyRecord(date = todayISO()) {
       wrong: 0,
       topics: {},
       sessionKinds: {},
+      wordBank: {},
       completedAt: null,
     };
   }
-  return state.daily[date];
+  const record = state.daily[date];
+  record.activeMs = Number(record.activeMs) || 0;
+  record.questions = Number(record.questions) || 0;
+  record.correct = Number(record.correct) || 0;
+  record.wrong = Number(record.wrong) || 0;
+  record.topics = record.topics && typeof record.topics === 'object' ? record.topics : {};
+  record.sessionKinds = record.sessionKinds && typeof record.sessionKinds === 'object' ? record.sessionKinds : {};
+  record.wordBank = record.wordBank && typeof record.wordBank === 'object' ? record.wordBank : {};
+  return record;
 }
 
 function dailyGoalComplete(record = dailyRecord()) {
@@ -193,9 +237,14 @@ function recordDailyAnswer(question, ok) {
 function isStudyViewActive() {
   const notesView = document.getElementById('notes');
   const quizView = document.getElementById('quiz');
+  const wordBankView = document.getElementById('wordbank');
   return Boolean(
     document.visibilityState === 'visible'
-    && ((notesView && !notesView.classList.contains('hidden')) || (quizView && !quizView.classList.contains('hidden')))
+    && (
+      (notesView && !notesView.classList.contains('hidden'))
+      || (quizView && !quizView.classList.contains('hidden'))
+      || (wordBankView && !wordBankView.classList.contains('hidden'))
+    )
   );
 }
 
@@ -223,6 +272,7 @@ function renderDailyGoal() {
   const accuracy = record.questions ? Math.round(record.correct / record.questions * 100) : null;
   const timePct = Math.min(100, record.activeMs / (dailyGoalMinutes * 60000) * 100);
   const questionPct = Math.min(100, record.questions / dailyGoalQuestions * 100);
+  const combinedPct = Math.round(Math.min(timePct, questionPct));
   const completed = dailyGoalComplete(record);
 
   const minutesEl = document.getElementById('todayMinutes');
@@ -237,33 +287,88 @@ function renderDailyGoal() {
   if (!minutesEl) return;
   minutesEl.textContent = minutes;
   questionsEl.textContent = record.questions;
-  accuracyEl.textContent = accuracy === null ? '—' : `${accuracy}%`;
-  correctLine.textContent = record.questions ? `${record.correct} correct · ${record.wrong} to review` : 'No answers yet';
+  if (accuracyEl) accuracyEl.textContent = accuracy === null ? '—' : `${accuracy}%`;
+  if (correctLine) correctLine.textContent = record.questions ? `${record.correct} correct · ${record.wrong} to review` : 'No answers yet';
   timeBar.style.width = `${timePct}%`;
   questionBar.style.width = `${questionPct}%`;
-  const combinedPct = Math.round(Math.min(timePct, questionPct));
-  const dailyRing = document.getElementById('dailyRing');
-  const dailyRingValue = document.getElementById('dailyRingValue');
-  if (dailyRing) {
-    dailyRing.style.setProperty('--p', combinedPct);
-    dailyRing.setAttribute('aria-label', `Daily goal ${combinedPct}% complete`);
-  }
-  if (dailyRingValue) dailyRingValue.textContent = `${combinedPct}%`;
 
-  if (completed) {
-    status.textContent = '✓ Daily goal complete';
-    status.classList.add('done');
-    remaining.textContent = `Completed today with ${record.questions} questions and ${Math.max(dailyGoalMinutes, minutes)} active minutes.`;
-  } else {
-    status.textContent = '○ Not complete yet';
-    status.classList.remove('done');
+  const prettyAccuracy = document.getElementById('prettyAccuracy');
+  const prettyAccuracyNote = document.getElementById('prettyAccuracyNote');
+  const accuracySummary = document.getElementById('todayAccuracySummary');
+  const correctSummary = document.getElementById('todayCorrectSummary');
+  if (prettyAccuracy) prettyAccuracy.textContent = accuracy === null ? '—' : `${accuracy}%`;
+  if (accuracySummary) accuracySummary.textContent = accuracy === null ? '—' : `${accuracy}%`;
+  if (prettyAccuracyNote) {
+    prettyAccuracyNote.textContent = accuracy === null ? 'Start today’s practice'
+      : accuracy >= 90 ? 'Brilliant work ✨'
+      : accuracy >= 85 ? 'Strong work ♡'
+      : accuracy >= 70 ? 'Keep building'
+      : 'Every mistake helps';
+  }
+  if (correctSummary) correctSummary.textContent = record.questions ? `${record.correct} correct · ${record.wrong} to review` : 'No answers yet';
+
+  const timeEncouragement = document.getElementById('timeEncouragement');
+  const questionEncouragement = document.getElementById('questionEncouragement');
+  if (timeEncouragement) {
+    const left = Math.max(0, dailyGoalMinutes - minutes);
+    timeEncouragement.textContent = completed ? 'Focus goal complete ✨'
+      : left === 0 ? 'Time goal complete — lovely focus ♡'
+      : minutes >= 15 ? `Nearly there — ${left} min left ♡`
+      : minutes >= 10 ? 'Halfway there — keep going!'
+      : minutes > 0 ? 'A lovely start ♡'
+      : 'Ready when you are ♡';
+  }
+  if (questionEncouragement) {
+    const left = Math.max(0, dailyGoalQuestions - record.questions);
+    questionEncouragement.textContent = completed ? 'Question goal complete ✨'
+      : left === 0 ? '30 questions done — amazing!'
+      : left <= 5 ? `Final push — ${left} to go!`
+      : left <= 12 ? `Only ${left} questions to go ♡`
+      : record.questions >= 15 ? 'Halfway there!'
+      : record.questions > 0 ? 'One question at a time ♡'
+      : 'Let’s get started ♡';
+  }
+
+  const reminder = document.getElementById('todayReminder');
+  if (reminder) {
     const minsLeft = Math.max(0, dailyGoalMinutes - minutes);
     const qsLeft = Math.max(0, dailyGoalQuestions - record.questions);
-    const parts = [];
-    if (minsLeft) parts.push(`${minsLeft} active minute${minsLeft === 1 ? '' : 's'}`);
-    if (qsLeft) parts.push(`${qsLeft} question${qsLeft === 1 ? '' : 's'}`);
-    remaining.textContent = parts.length ? `${parts.join(' + ')} remaining today.` : 'Daily goal complete.';
+    reminder.textContent = completed ? 'You did it! Today’s goal is complete ♡'
+      : !minsLeft && qsLeft ? `Great focus! Just ${qsLeft} question${qsLeft === 1 ? '' : 's'} left.`
+      : !qsLeft && minsLeft ? `30 questions done! Just ${minsLeft} active minute${minsLeft === 1 ? '' : 's'} left.`
+      : combinedPct >= 75 ? 'Almost there — you’re so close! ♡'
+      : combinedPct >= 50 ? 'You’re over halfway there ✨'
+      : combinedPct > 0 ? 'Great start — keep the momentum going ♡'
+      : 'You’ve got this. One question at a time ♡';
   }
+
+  if (status) {
+    status.textContent = completed ? '✓ Today complete' : `${combinedPct}% complete`;
+    status.classList.toggle('done', completed);
+  }
+  if (remaining) {
+    if (completed) {
+      remaining.textContent = `Amazing work — ${record.questions} questions and ${Math.max(dailyGoalMinutes, minutes)} active minutes completed today.`;
+    } else {
+      const minsLeft = Math.max(0, dailyGoalMinutes - minutes);
+      const qsLeft = Math.max(0, dailyGoalQuestions - record.questions);
+      const pieces = [];
+      if (minsLeft) pieces.push(`${minsLeft} min`);
+      if (qsLeft) pieces.push(`${qsLeft} question${qsLeft === 1 ? '' : 's'}`);
+      remaining.textContent = pieces.length ? `${pieces.join(' + ')} left to complete today’s goal.` : 'A little progress every day adds up.';
+    }
+  }
+
+  const dailyRing = document.getElementById('dailyRing');
+  const dailyRingValue = document.getElementById('dailyRingValue');
+  if (dailyRing) dailyRing.setAttribute('aria-label', `Daily goal ${combinedPct}% complete`);
+  if (dailyRingValue) dailyRingValue.textContent = `${combinedPct}%`;
+
+  const reviewed = wordBankReviewedCount();
+  const wbStat = document.getElementById('wordBankTodayStat');
+  const wbText = document.getElementById('wordBankProgressText');
+  if (wbStat) wbStat.textContent = `${reviewed}/10`;
+  if (wbText) wbText.textContent = `${reviewed} / 10`;
 }
 
 function parentReportText() {
@@ -287,6 +392,7 @@ function parentReportText() {
     `Incorrect: ${record.wrong}`,
     `Accuracy: ${record.questions ? `${accuracy}%` : '—'}`,
     `Due-review questions answered: ${record.sessionKinds.review || 0}`,
+    `Word bank reviewed: ${wordBankReviewedCount(date)} / 10`,
     `Needs attention: ${weak}`,
   ].join('\\n');
 }
@@ -343,7 +449,7 @@ function renderSaveStatus() {
 }
 
 function show(id) {
-  ['dashboard', 'notes', 'quiz', 'results'].forEach(section => document.getElementById(section).classList.add('hidden'));
+  ['dashboard', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => document.getElementById(section).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -351,6 +457,7 @@ function show(id) {
 function showDashboard() {
   renderDashboard();
   show('dashboard');
+  setNavActive('today');
 }
 
 function cycleFor(day) {
@@ -490,6 +597,7 @@ function renderDashboard() {
     card.querySelector('button').onclick = () => openNotes(block.day);
     list.appendChild(card);
   });
+  renderV82DashboardExtras();
   renderSaveStatus();
 }
 
@@ -669,6 +777,7 @@ function startQuiz(questions, title, day) {
   };
   save();
   show('quiz');
+  setNavActive('practice');
   renderQuestion();
 }
 
@@ -873,7 +982,7 @@ function checkAnswer() {
   playTone(result.ok ? 'correct' : 'wrong');
 
   const answer = question.a || question.answerExample || (question.accepted || [])[0] || '';
-  let html = `<div class="feedback-title"><span class="feedback-icon">${result.ok ? '✓' : '↺'}</span>${result.ok ? 'Correct' : 'Not quite — let’s fix it'}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
+  let html = `<div class="feedback-title"><span class="feedback-icon">${result.ok ? '✓' : '↺'}</span>${result.ok ? positiveAnswerMessage() : gentleCorrectionMessage()}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
   if (!result.ok && result.missing.length) {
     html += `<div><strong>Missing:</strong><ul class="feedback-list">${result.missing.map(item => `<li>${esc(item)}</li>`).join('')}</ul></div>`;
   }
@@ -989,12 +1098,12 @@ function finish() {
   let resultMessage;
   if (sessionInfo.cycleCompleted) {
     resultMessage = sessionInfo.cyclePercent >= masteryTarget
-      ? `Full focus cycle completed at ${sessionInfo.cyclePercent}% — this dated block is now Mastered.`
-      : `Full focus cycle completed at ${sessionInfo.cyclePercent}%. Start the next cycle after completing due reviews.`;
+      ? `Outstanding work ✨ Full focus cycle completed at ${sessionInfo.cyclePercent}% — this dated block is now Mastered.`
+      : `Good work completing the full focus cycle at ${sessionInfo.cyclePercent}%. Review the tricky ones, then come back stronger ♡`;
   } else if (percent >= masteryTarget) {
-    resultMessage = 'Strong session (85%+). The block becomes Mastered only after the full focus-question cycle is completed at 85% or above.';
+    resultMessage = 'Great session — 85%+! ♡ Keep going through the full focus cycle to turn this block into Mastered.';
   } else {
-    resultMessage = 'Below 85% for this session. Missed questions are held out of ordinary Practice and scheduled for review.';
+    resultMessage = 'Good effort — every tricky question is now helping plan your next review. Keep going ♡';
   }
   document.getElementById('resultMessage').textContent = resultMessage;
   if (sessionInfo.cycleCompleted && sessionInfo.cyclePercent >= masteryTarget) {
@@ -1011,6 +1120,284 @@ function finish() {
   }
   document.getElementById('cycleResult').innerHTML = cycleText;
   show('results');
+}
+
+
+function setNavActive(name) {
+  const map = { today: 'navToday', practice: 'navPractice', words: 'navWords', progress: 'navProgress', more: 'navMore' };
+  Object.values(map).forEach(id => {
+    const button = document.getElementById(id);
+    if (button) button.classList.remove('active');
+  });
+  const active = document.getElementById(map[name]);
+  if (active) active.classList.add('active');
+}
+
+function greetingForNow() {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning ♡';
+  if (hour < 18) return 'Good afternoon ♡';
+  return 'Good evening ♡';
+}
+
+function suggestedBlock() {
+  const regular = blocks.filter(block => !block.mode && block.day !== '30 Aug');
+  return regular.find(block => {
+    const focus = focusPoolFor(block);
+    const cycle = cycleFor(block.day);
+    return focus.length && !(Number.isFinite(cycle.completedPercent) && cycle.completedPercent >= masteryTarget);
+  }) || regular.find(block => focusPoolFor(block).length) || blocks[0] || null;
+}
+
+function renderV82DashboardExtras() {
+  const greeting = document.getElementById('greetingTitle');
+  if (greeting) greeting.textContent = greetingForNow();
+
+  const record = dailyRecord();
+  const combinedPct = Math.round(Math.min(
+    100,
+    Math.min(
+      record.activeMs / (dailyGoalMinutes * 60000) * 100,
+      record.questions / dailyGoalQuestions * 100
+    )
+  ));
+  const hero = document.getElementById('heroEncouragement');
+  if (hero) {
+    hero.textContent = dailyGoalComplete(record) ? 'Today’s goal is complete — beautiful work ✨'
+      : combinedPct >= 80 ? 'Almost there — one last little push ♡'
+      : combinedPct >= 50 ? 'You’re over halfway there. Keep going ✨'
+      : combinedPct > 0 ? 'Great start — every question is progress ♡'
+      : 'Small steps every day make brilliant progress.';
+  }
+
+  const block = suggestedBlock();
+  const nextDay = document.getElementById('nextUpDay');
+  const nextTitle = document.getElementById('nextUpTitle');
+  const nextMeta = document.getElementById('nextUpMeta');
+  const nextButton = document.getElementById('nextUpButton');
+  const prettyCycle = document.getElementById('prettyCycle');
+  const prettyCycleNote = document.getElementById('prettyCycleNote');
+  if (block) {
+    if (nextDay) nextDay.textContent = block.day;
+    if (nextTitle) nextTitle.textContent = block.label;
+    if (nextMeta) nextMeta.textContent = block.scope;
+    if (nextButton) {
+      nextButton.disabled = false;
+      nextButton.onclick = () => openNotes(block.day);
+    }
+    const focus = focusPoolFor(block);
+    const cycle = cycleFor(block.day);
+    const seen = cycle.seen.filter(id => focus.some(question => question.id === id)).length;
+    if (prettyCycle) prettyCycle.textContent = `${seen}/${focus.length || 0}`;
+    if (prettyCycleNote) prettyCycleNote.textContent = focus.length ? `${Math.max(0, focus.length - seen)} unseen in next focus` : 'Balanced review block';
+  } else if (nextButton) {
+    nextButton.disabled = true;
+  }
+
+  const wb = wordBankReviewedCount();
+  const wbStat = document.getElementById('wordBankTodayStat');
+  const wbText = document.getElementById('wordBankProgressText');
+  if (wbStat) wbStat.textContent = `${wb}/10`;
+  if (wbText) wbText.textContent = `${wb} / 10`;
+}
+
+function continueToday() {
+  if (state.activeSession) return resumeSession();
+  const due = dueQuestions();
+  if (due.length) return startDue();
+  const block = suggestedBlock();
+  if (block) return openNotes(block.day);
+  startMixed();
+}
+
+function showProgress() {
+  showDashboard();
+  setNavActive('progress');
+  setTimeout(() => {
+    const target = document.getElementById('overall');
+    if (target) target.closest('.summary-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 20);
+}
+
+function showMore() {
+  showDashboard();
+  setNavActive('more');
+  setTimeout(() => {
+    const target = document.getElementById('parentControls');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 20);
+}
+
+function hashText(text) {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededRandom(seed) {
+  let value = seed >>> 0;
+  return () => {
+    value += 0x6D2B79F5;
+    let t = value;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function dailyWordBankEntries(date = todayISO()) {
+  const items = [...wordBankEntries];
+  const random = seededRandom(hashText(`latin-v82-${date}`));
+  for (let i = items.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  const picked = [];
+  const stagesSeen = new Set();
+  for (const entry of items) {
+    if (picked.length >= 10) break;
+    if (!stagesSeen.has(entry.stage)) {
+      picked.push(entry);
+      stagesSeen.add(entry.stage);
+    }
+  }
+  for (const entry of items) {
+    if (picked.length >= 10) break;
+    if (!picked.some(item => item.id === entry.id)) picked.push(entry);
+  }
+  return picked;
+}
+
+function wordBankReviewedCount(date = todayISO()) {
+  const record = dailyRecord(date);
+  const todayIds = new Set(dailyWordBankEntries(date).map(entry => entry.id));
+  return Object.keys(record.wordBank || {}).filter(id => todayIds.has(id)).length;
+}
+
+function openWordBank() {
+  wordBankReviewMode = false;
+  wordBankQueue = dailyWordBankEntries();
+  const record = dailyRecord();
+  const firstUnrated = wordBankQueue.findIndex(entry => !record.wordBank[entry.id]);
+  wordBankIndex = firstUnrated >= 0 ? firstUnrated : wordBankQueue.length;
+  show('wordbank');
+  setNavActive('words');
+  noteStudyInteraction();
+  renderWordBankCard();
+}
+
+function renderWordBankCard() {
+  const summary = document.getElementById('wordBankSummary');
+  const card = document.getElementById('wordBankCard');
+  const revealActions = document.getElementById('wordBankRevealActions');
+  const rateActions = document.getElementById('wordBankRateActions');
+  const answer = document.getElementById('wordBankAnswer');
+
+  if (!wordBankQueue.length || wordBankIndex >= wordBankQueue.length) {
+    const record = dailyRecord();
+    const base = dailyWordBankEntries();
+    const ratings = base.map(entry => record.wordBank[entry.id]).filter(Boolean);
+    const known = ratings.filter(value => value === 'known').length;
+    const again = ratings.filter(value => value === 'again').length;
+    if (card) card.classList.add('hidden');
+    if (revealActions) revealActions.classList.add('hidden');
+    if (rateActions) rateActions.classList.add('hidden');
+    if (summary) {
+      summary.classList.remove('hidden');
+      summary.innerHTML = `
+        <div class="eyebrow">Today’s word bank complete</div>
+        <h2>${again ? 'Lovely work — let’s keep the tricky ones close ♡' : 'Amazing — all ten felt secure! ✨'}</h2>
+        <p class="muted">You reviewed ${ratings.length} teacher-covered words today.</p>
+        <div class="wb-kpis"><div class="wb-kpi"><strong>${known}</strong><div class="small muted">Got it</div></div><div class="wb-kpi"><strong>${again}</strong><div class="small muted">Again</div></div></div>
+        <div class="wb-actions">
+          ${again ? '<button class="primary" onclick="reviewAgainWords()">Review Again words</button>' : ''}
+          <button class="secondary" onclick="showDashboard()">Back to Today</button>
+        </div>`;
+    }
+    const count = document.getElementById('wordBankCount');
+    if (count) count.textContent = `${Math.min(ratings.length, 10)} / 10`;
+    renderDailyGoal();
+    save();
+    return;
+  }
+
+  if (summary) summary.classList.add('hidden');
+  if (card) card.classList.remove('hidden');
+  if (revealActions) revealActions.classList.remove('hidden');
+  if (rateActions) rateActions.classList.add('hidden');
+  if (answer) answer.classList.add('hidden');
+
+  const entry = wordBankQueue[wordBankIndex];
+  const stage = document.getElementById('wordBankStage');
+  const latin = document.getElementById('wordBankLatin');
+  const english = document.getElementById('wordBankEnglish');
+  const clue = document.getElementById('wordBankClue');
+  const memory = document.getElementById('wordBankMemory');
+  const count = document.getElementById('wordBankCount');
+
+  if (stage) stage.textContent = entry.group || (entry.stage ? `Stage ${entry.stage}` : 'Word bank');
+  if (latin) latin.textContent = entry.latin;
+  if (english) english.textContent = entry.english;
+  if (clue) clue.textContent = entry.clue || 'Say the Latin and English pair aloud once before moving on.';
+  if (memory) {
+    memory.textContent = entry.memory ? `Memory hook: ${entry.memory}` : '';
+    memory.classList.toggle('hidden', !entry.memory);
+  }
+  if (count) count.textContent = `${Math.min(wordBankIndex + 1, wordBankQueue.length)} / ${wordBankQueue.length}`;
+}
+
+function revealWordBank() {
+  const answer = document.getElementById('wordBankAnswer');
+  const revealActions = document.getElementById('wordBankRevealActions');
+  const rateActions = document.getElementById('wordBankRateActions');
+  if (answer) answer.classList.remove('hidden');
+  if (revealActions) revealActions.classList.add('hidden');
+  if (rateActions) rateActions.classList.remove('hidden');
+  noteStudyInteraction();
+}
+
+function rateWordBank(known) {
+  const entry = wordBankQueue[wordBankIndex];
+  if (!entry) return;
+  const record = dailyRecord();
+  record.wordBank[entry.id] = known ? 'known' : 'again';
+  save();
+  if (known) playTone('correct');
+  wordBankIndex += 1;
+  noteStudyInteraction();
+  renderWordBankCard();
+}
+
+function reviewAgainWords() {
+  const record = dailyRecord();
+  const againIds = new Set(Object.entries(record.wordBank).filter(([, rating]) => rating === 'again').map(([id]) => id));
+  wordBankQueue = dailyWordBankEntries().filter(entry => againIds.has(entry.id));
+  wordBankIndex = 0;
+  wordBankReviewMode = true;
+  renderWordBankCard();
+}
+
+function positiveAnswerMessage() {
+  const run = [...sessionAnswers].reverse().findIndex(answer => !answer.ok);
+  const streak = run === -1 ? sessionAnswers.length : run;
+  if (streak >= 5) return `Brilliant — ${streak} in a row! ✨`;
+  if (streak >= 3) return `You’re on a roll — ${streak} in a row! ♡`;
+  const messages = ['Great job! ✨', 'Well done! ♡', 'Beautifully done!', 'Yes — you’ve got it!', 'Optime! Great work!'];
+  return messages[(score + current) % messages.length];
+}
+
+function gentleCorrectionMessage() {
+  const messages = [
+    'Not quite — have another look ♡',
+    'Good try — here’s the key point.',
+    'Nearly — let’s fix this one together.',
+    'That one was tricky. You’ve got the next one.',
+  ];
+  return messages[(current + sessionAnswers.length) % messages.length];
 }
 
 function toggleSound() {
@@ -1049,7 +1436,7 @@ function exportProgress() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'Latin_Revision_V8_1_progress_backup.json';
+  link.download = 'Latin_Revision_V8_2_progress_backup.json';
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }

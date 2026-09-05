@@ -1,0 +1,77 @@
+Latin Revision — Reliable Practice V8.1
+
+What changed
+------------
+1. Added a daily target: 20 active study minutes + 30 answered questions.
+2. Active time counts only while the Notes or Practice screen is visible and the user is active.
+3. Added Today progress for minutes, questions and accuracy.
+4. Added a Parent Report with:
+   - active study time
+   - questions answered
+   - correct / incorrect
+   - accuracy
+   - due-review questions answered
+   - top weak topics
+5. Added iPad Share Sheet support for the Parent Report, with copy fallback.
+6. Kept the 1,056-question bank unchanged.
+7. Kept existing marking, focus-cycle mastery and 2-day / 7-day review logic unchanged.
+8. Removed the obsolete V7 script embedded in index.html.
+9. Improved local date handling for review dates.
+10. Added safer localStorage error handling.
+11. Reused the AudioContext instead of creating one for every sound.
+12. Updated the service-worker cache to V8.1 and made offline fallback safer.
+
+How to update GitHub Pages
+--------------------------
+Upload these files over the existing files in your repository:
+- index.html
+- app.js
+- sw.js
+- manifest.webmanifest
+
+question-bank.js is included only for completeness and is unchanged.
+
+Keep your existing icons/ folder.
+
+Before updating
+---------------
+Use Parent controls -> Backup progress first.
+
+After updating
+--------------
+1. Refresh the GitHub Pages URL in Safari.
+2. Fully close the installed Latin Revision app.
+3. Reopen it from the iPad Home Screen.
+4. The header should show Reliable Practice V8.1.
+
+Daily goal behaviour
+--------------------
+The app marks the day complete only when BOTH are met:
+- at least 20 active study minutes
+- at least 30 questions answered
+
+Closing or hiding the app pauses the active timer. Extended inactivity also pauses it.
+The goal does not stop extra practice after completion.
+
+Visual polish update
+--------------------
+13. Added a circular Today progress ring based on the stricter of time and question progress.
+14. Added subtle correct / incorrect answer animations with reduced-motion support.
+15. Added clearer feedback icons without changing marking.
+16. Redesigned the Results screen with an accuracy ring, correct / review counts and daily progress.
+17. Added per-session topic breakdown.
+18. Added a Mastered celebration only when a complete focus cycle reaches the mastery threshold.
+19. Added accessibility labels to the new progress rings.
+
+
+V8.2 Study Journal update
+-------------------------
+- Rebuilt the Today screen in the illustrated teen study-journal style.
+- Added clickable bottom navigation: Today, Practice, Words, Progress and More.
+- Added dynamic positive encouragement throughout daily progress and answer feedback.
+- Added a Daily Word Bank: 10 deterministic teacher-covered words per day, drawn from Stages 1-12 plus Chapter 1-2 vocabulary material.
+- Word cards reveal English plus the source grammar clue (including case/perfect cue where present).
+- Added Got it / Again self-rating and a same-day review of Again words.
+- Word Bank active study counts towards the 20-minute target, but self-rated word cards do not inflate the 30-question target.
+- Parent Report now includes Daily Word Bank completion.
+- Added illustrated local assets and updated the offline cache for V8.2.

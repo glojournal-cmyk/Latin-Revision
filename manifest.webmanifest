@@ -1,14 +1,24 @@
 {
-  "name": "Latin Revision — Reliable Practice V8.1",
+  "name": "Latin Revision — Study Journal V8.2",
   "short_name": "Latin Revision",
-  "description": "Source-locked Year 8 Latin summer revision with reliable marking, focus-first practice, detailed explanations and spaced repetition.",
+  "description": "Illustrated Year 8 Latin study journal with source-locked practice, daily word bank, positive feedback, mastery cycles and spaced repetition.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "background_color": "#f8f3fa",
+  "theme_color": "#f8f3fa",
   "icons": [
-    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
-    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

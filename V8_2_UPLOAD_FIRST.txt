@@ -1,0 +1,42 @@
+LATIN REVISION — V8.2 STUDY JOURNAL
+
+WHAT IS NEW
+-----------
+• New illustrated teen study-journal Today screen
+• Clickable bottom navigation
+• Dynamic positive encouragement
+• Daily Word Bank: 10 teacher-covered words per day
+• Got it / Again word self-rating
+• Parent Report includes Word Bank completion
+• Existing 1,056-question bank and marking/mastery/review rules are retained
+
+GITHUB PAGES UPDATE
+-------------------
+Upload/replace:
+  index.html
+  app.js
+  sw.js
+  manifest.webmanifest
+  question-bank.js
+  assets/   <-- NEW folder; upload the whole folder
+
+KEEP your existing:
+  icons/
+
+IMPORTANT
+---------
+Before updating, use Parent controls -> Backup progress.
+
+After GitHub Pages finishes deploying:
+1. Open the site in Safari and refresh.
+2. Fully close the installed Home Screen app.
+3. Reopen it.
+4. The header should show "revision journal · V8.2".
+
+WORD BANK RULE
+--------------
+• 10 words are fixed for each calendar day.
+• Words come from source-locked teacher-covered Stage 1-12 and Chapter 1-2 vocabulary.
+• Tap Reveal meaning, then choose Got it or Again.
+• Word Bank study time counts toward the 20-minute active-study target.
+• Word cards do NOT count as answered quiz questions toward the 30-question target.

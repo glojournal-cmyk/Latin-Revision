@@ -3,208 +3,200 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#f8f3fa">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — Reliable Practice V8.1</title>
+  <title>Latin Revision — V8.2 Study Journal</title>
   <style>
     :root{
-      --ink:#24312c;--muted:#708078;--line:#d9e6df;--paper:#fff;
-      --sage:#4e7c68;--sage-dark:#365d4c;--sage-soft:#eaf4ef;
-      --lav:#755b9e;--lav-soft:#f0eafb;--rose:#a45e67;--rose-soft:#faecef;
-      --gold:#9a6c38;--gold-soft:#fbf3e8;--track:#edf2ef;
+      --ink:#22284d;--body:#45425a;--muted:#7a758b;--line:#e8e0eb;--paper:#fffdfa;
+      --navy:#444c82;--navy-dark:#343965;--purple:#8d62b2;--purple-soft:#eee4f5;
+      --sage:#5b826b;--sage-soft:#e9f2ec;--blush:#f5e4e8;--cream:#fff5dd;
+      --gold:#d4a64f;--rose:#b76c87;--track:#ece7ef;--danger:#a45e67;
       --heading:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
-      --body:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
+      --bodyfont:"Avenir Next",Avenir,"Segoe UI",Arial,sans-serif;
     }
     *{box-sizing:border-box}
-    html{background:#fff}
-    body{margin:0;background:#fff;color:var(--ink);font-family:var(--body);line-height:1.5}
-    button,textarea,input{font:inherit}
-    button{cursor:pointer;min-height:44px}
-    button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid #bcaed6;outline-offset:2px}
+    html{background:#f8f3fa}
+    body{margin:0;color:var(--body);font-family:var(--bodyfont);line-height:1.5;background:
+      radial-gradient(circle at 8% 2%,#eee4f6 0,transparent 23rem),
+      radial-gradient(circle at 92% 6%,#f8e8ec 0,transparent 22rem),
+      radial-gradient(circle at 90% 92%,#eaf3ec 0,transparent 24rem),
+      #faf8fc;padding-bottom:92px}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    button:disabled{opacity:.45;cursor:not-allowed}
     .hidden{display:none!important}
-    .muted{color:var(--muted)}
-    .small{font-size:13px}
-    .eyebrow{color:var(--lav);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-    h1,h2,h3{font-family:var(--heading);font-weight:600;line-height:1.18}
-    h1{font-size:clamp(29px,5vw,43px);margin:6px 0 8px}
-    h2{font-size:24px;margin:0 0 8px}
-    h3{font-size:18px;margin:0 0 7px}
-    p{margin:8px 0}
-    .app-header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px max(16px,env(safe-area-inset-left))}
-    .header-inner{max-width:1120px;margin:auto;display:flex;align-items:center;gap:12px}
-    .brand{display:flex;align-items:center;gap:10px;margin-right:auto;font-family:var(--heading);font-size:20px;font-weight:600}
-    .brand-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:14px;background:var(--sage);color:#fff;box-shadow:3px 3px 0 var(--lav-soft);font-family:var(--heading);font-size:22px}
-    .header-tag{display:none;color:var(--muted);font-size:13px}
-    .sound-button{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);padding:8px 13px;display:flex;align-items:center;gap:7px}
-    .sound-dot{width:9px;height:9px;border-radius:50%;background:var(--sage)}
-    .sound-button[aria-pressed="false"] .sound-dot{background:#b8c0bc}
-    .wrap{max-width:1120px;margin:auto;padding:24px max(16px,env(safe-area-inset-left)) 38px}
-    .hero{position:relative;overflow:hidden;padding:15px 2px 22px}
-    .hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-85px;top:-95px;background:var(--lav-soft);z-index:-1}
-    .hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-    .hero p{max-width:650px;color:var(--muted)}
-    .streak{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:var(--gold-soft);color:var(--gold);white-space:nowrap}
-    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-    .summary{background:#fff;border:1px solid var(--line);border-radius:18px;padding:17px;min-width:0}
-    .summary:nth-child(1){border-top:4px solid var(--sage)}
-    .summary:nth-child(2){border-top:4px solid var(--lav)}
-    .summary:nth-child(3){border-top:4px solid var(--gold)}
-    .summary:nth-child(4){border-top:4px solid var(--rose)}
-    .summary-label{color:var(--muted);font-size:13px}
-    .summary-value{font-family:var(--heading);font-size:31px;font-weight:600;margin:3px 0}
-    .progress{height:8px;border-radius:999px;background:var(--track);overflow:hidden;margin-top:9px}
-    .progress-bar{height:100%;width:0;background:var(--sage);border-radius:999px;transition:width .2s ease}
-    .primary,.secondary,.ghost{border-radius:999px;padding:10px 16px}
-    .primary{border:1px solid var(--sage);background:var(--sage);color:#fff;box-shadow:0 7px 16px rgba(78,124,104,.16)}
-    .primary:hover{background:var(--sage-dark)}
-    .secondary{border:1px solid var(--line);background:#fff;color:var(--ink)}
-    .ghost{border:0;background:var(--sage-soft);color:var(--sage-dark)}
-    button:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
-    .action-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-    .between{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-    .dashboard-actions{border:1px solid var(--line);border-radius:19px;padding:16px;margin:17px 0;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
-    .phase{margin:28px 2px 11px;color:var(--lav);font-size:12px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
-    .day-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#fff;padding:18px;margin-bottom:12px;box-shadow:0 8px 22px rgba(61,94,79,.055)}
-    .day-card:after{content:"";position:absolute;width:80px;height:80px;border-radius:50%;right:-42px;bottom:-46px;background:var(--sage-soft)}
-    .day-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:15px;align-items:center;position:relative;z-index:1}
-    .day-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-    .day-title h2{margin:0;font-size:22px}
-    .status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
-    .status.mastered{background:var(--sage-soft);color:var(--sage-dark)}
-    .status.started{background:var(--gold-soft);color:var(--gold)}
-    .status.new{background:var(--rose-soft);color:var(--rose)}
-    .scope{border-top:1px solid var(--line);margin-top:12px;padding-top:11px;color:var(--muted);font-size:13px;position:relative;z-index:1}
-    .cycle-line{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin-top:6px;flex-wrap:wrap}
-    .cycle-badge{display:inline-flex;padding:4px 8px;border-radius:999px;background:var(--lav-soft);color:var(--lav)}
-    .notice{border:1px solid #ead7b9;border-left:5px solid var(--gold);border-radius:15px;background:var(--gold-soft);padding:14px;margin-bottom:15px}
-    .parent-panel{border:1px solid var(--line);border-radius:20px;padding:18px;margin-top:22px;background:#fff}
-    .storage-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 15px}
-    .storage-item{background:var(--sage-soft);border-radius:14px;padding:12px}
-    .storage-item:nth-child(2){background:var(--lav-soft)}
-    .fileinput{display:none}
-    .notes-shell,.quiz-shell,.results-shell{max-width:880px;margin:auto}
-    .page-card{border:1px solid var(--line);border-radius:24px;background:#fff;padding:clamp(18px,4vw,30px);box-shadow:0 12px 32px rgba(61,94,79,.07)}
-    .notes-header{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:17px;margin-bottom:17px}
-    .must-box{background:var(--lav-soft);border-radius:20px;padding:18px;margin:15px 0}
-    .must-box h3{color:var(--lav)}
-    .must-box ul,.note-section ul,.feedback-list{margin:7px 0 0;padding-left:22px}
-    .must-box li,.note-section li,.feedback-list li{margin:7px 0}
-    .notes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
-    .note-section{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}
-    .note-section:nth-child(2n){border-color:#e3dbef}
-    .exact-scope{border-left:4px solid var(--sage);background:var(--sage-soft);border-radius:0 14px 14px 0;padding:13px 15px;margin:15px 0}
-    .quiz-top{margin-bottom:17px}
-    .quiz-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
-    .quiz-badges{display:flex;gap:7px;flex-wrap:wrap}
-    .question-context{white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid #e3dbef;border-radius:18px;background:var(--lav-soft);padding:16px;margin:15px 0;font-family:var(--heading);font-size:19px}
-    .direction{display:inline-flex;padding:5px 9px;border-radius:999px;background:var(--sage-soft);color:var(--sage-dark);font-size:12px;font-weight:700}
-    .question-text{font-family:var(--heading);font-size:23px;line-height:1.35;margin:15px 0}
-    .answers{display:grid;gap:9px}
-    .answer-button{border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);text-align:left;padding:12px 14px;min-height:48px}
-    .answer-button:hover{border-color:#bcaed6;background:#fbf9fe}
-    .answer-button.selected{border:2px solid var(--lav);background:var(--lav-soft)}
-    textarea{width:100%;min-height:140px;border:1px solid #b8c9c0;border-radius:17px;padding:14px;background:#fff;color:var(--ink);font-size:17px;resize:vertical}
-    .feedback{margin-top:17px;border-radius:20px;padding:18px;border:1px solid var(--line)}
-    .feedback.good{background:var(--sage-soft);border-color:#c6dfd2}
-    .feedback.bad{background:var(--rose-soft);border-color:#efcbd1}
-    .feedback-title{font-family:var(--heading);font-size:22px;margin-bottom:8px}
-    .your-answer{padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.75);margin:9px 0}
-    .answer-example{background:#fff;border-left:4px solid var(--lav);border-radius:0 13px 13px 0;padding:12px 14px;margin:11px 0}
-    .explanation-box{background:#fff;border-radius:15px;padding:14px;margin-top:11px}
-    .memory-box{background:var(--gold-soft);border-radius:14px;padding:12px 14px;margin-top:11px;color:#6f4d29}
-    .review-schedule{font-size:13px;margin-top:11px;color:var(--rose)}
-    .result-score{font-family:var(--heading);font-size:44px;margin:8px 0}
-    .result-message{font-size:17px}
-    .file-note{font-size:12px;color:var(--muted);margin-top:9px}
-
-    .daily-goal{border:1px solid var(--line);border-radius:22px;padding:18px;margin:0 0 20px;background:linear-gradient(135deg,#fff 0%,var(--sage-soft) 100%)}
-    .daily-goal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
-    .daily-status{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700}
-    .daily-status.done{background:var(--sage);color:#fff;border-color:var(--sage)}
-    .daily-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:15px}
-    .daily-metric{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:16px;padding:14px}
-    .daily-metric strong{font-family:var(--heading);font-size:25px;font-weight:600}
-    .daily-track{height:9px;background:var(--track);border-radius:999px;overflow:hidden;margin-top:8px}
-    .daily-track>span{display:block;height:100%;background:var(--sage);border-radius:999px;transition:width .25s ease}
-    .daily-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:14px}
-    .daily-note{font-size:12px;color:var(--muted);margin-top:8px}
-    .save-warning{display:none;margin-top:8px;color:var(--rose);font-size:12px;font-weight:700}
+    .wrap{width:min(1120px,calc(100% - 30px));margin:0 auto}
+    .app-header{padding:24px 0 5px}
+    .header-inner{width:min(1120px,calc(100% - 30px));margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}
+    .brand{font-family:var(--heading);font-size:21px;font-weight:700;color:var(--ink)}
+    .brand small{display:block;font:500 11px var(--bodyfont);letter-spacing:.04em;color:var(--muted)}
+    .header-right{display:flex;gap:8px;align-items:center}
+    .sound-button,.icon-button{min-width:44px;min-height:44px;border:1px solid rgba(255,255,255,.7);background:rgba(255,255,255,.75);border-radius:999px;color:var(--purple);padding:0 14px;box-shadow:0 6px 24px rgba(50,39,72,.05)}
+    #soundLabel{font-size:12px}
+    .hero{position:relative;min-height:240px;padding:34px 32px 24px;overflow:hidden}
+    .hero-copy{position:relative;z-index:2;max-width:620px}
+    .eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--purple)}
+    h1,h2,h3{font-family:var(--heading);color:var(--ink);line-height:1.15}
+    h1{font-size:clamp(38px,7vw,64px);margin:8px 0 8px;letter-spacing:-.035em}
+    h2{font-size:27px;margin:0}
+    h3{font-size:20px}
+    p{margin:0}
+    .hero-sub{font:italic 21px var(--heading);color:var(--ink)}
+    .hero-quote{margin-top:18px;color:var(--muted);font-size:14px}
+    .hero-art{position:absolute;right:5px;top:0;width:43%;max-width:440px;height:225px;object-fit:cover;object-position:center;mix-blend-mode:multiply;opacity:.92;border-radius:28px;mask-image:linear-gradient(to left,#000 60%,transparent 100%)}
+    .card{background:rgba(255,255,255,.91);border:1px solid rgba(230,221,235,.9);border-radius:30px;box-shadow:0 14px 44px rgba(57,43,73,.08)}
+    .today-card{padding:30px;margin-bottom:18px}
+    .today-head{display:flex;justify-content:space-between;gap:20px;align-items:start}
+    .today-head h2{font-size:34px;margin:8px 0 5px}
+    .today-head p{color:var(--muted)}
+    .percent-pill{padding:10px 16px;border-radius:999px;background:var(--purple-soft);color:var(--navy-dark);font-weight:700;white-space:nowrap}
+    .goal-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0}
+    .goal-box{position:relative;min-height:190px;padding:22px 24px;border-radius:24px;overflow:hidden}
+    .goal-box.time{background:#fbf5fb}.goal-box.questions{background:#f1f7f3}
+    .goal-box .art{position:absolute;left:16px;bottom:-18px;width:125px;height:145px;object-fit:cover;mix-blend-mode:multiply;opacity:.82;border-radius:18px}
+    .goal-content{margin-left:132px;position:relative;z-index:1}
+    .metric-label{font-size:13px;color:var(--muted);font-weight:700}
+    .metric-value{font:700 34px var(--heading);color:var(--ink);margin:9px 0 11px}
+    .metric-value small{font:500 17px var(--bodyfont);color:var(--muted)}
+    .progress{height:11px;border-radius:999px;background:var(--track);overflow:hidden}
+    .progress-bar{height:100%;background:linear-gradient(90deg,var(--purple),#a988c8);border-radius:inherit;transition:width .35s ease}
+    .goal-box.questions .progress-bar{background:linear-gradient(90deg,var(--sage),#86aa91)}
+    .tiny-encourage{font:italic 15px var(--heading);margin-top:11px;color:var(--navy-dark)}
+    .today-actions{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .primary,.secondary,.ghost{border-radius:16px;min-height:46px;padding:11px 18px;font-weight:800;border:0}
+    .primary{background:linear-gradient(90deg,var(--navy-dark),#56558b);color:#fff;box-shadow:0 7px 18px rgba(58,59,104,.17)}
+    .secondary{background:#fff;color:var(--navy-dark);border:1px solid var(--line)}
+    .ghost{background:transparent;color:var(--purple);border:1px solid var(--line)}
+    .continue-wide{min-width:250px}
+    .reminder{padding:13px 18px;background:var(--cream);border-radius:16px;font:italic 16px var(--heading);color:var(--ink);transform:rotate(-.6deg)}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .stat{position:relative;min-height:130px;padding:21px;border-radius:25px;overflow:hidden}
+    .stat:nth-child(1){background:#f8e8ed}.stat:nth-child(2){background:#eee6f6}.stat:nth-child(3){background:#eaf3ec}.stat:nth-child(4){background:#fff3d9}
+    .stat-label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+    .stat-value{font:700 34px var(--heading);color:var(--ink);margin-top:5px}
+    .stat-note{font-size:13px;color:var(--muted)}
+    .stat-art{position:absolute;right:-8px;bottom:-15px;width:95px;height:100px;object-fit:cover;opacity:.45;mix-blend-mode:multiply}
+    .section-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:28px 5px 12px}
+    .section-heading h2{font-size:29px}
+    .next-card{display:grid;grid-template-columns:130px 1fr auto;gap:22px;align-items:center;padding:24px 28px;margin-bottom:18px}
+    .next-card img{width:120px;height:125px;object-fit:cover;border-radius:20px;mix-blend-mode:multiply}
+    .stage-pill{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--purple-soft);color:var(--purple);font-size:11px;font-weight:800}
+    .next-title{font:700 27px var(--heading);color:var(--ink);margin:8px 0 4px}
+    .next-meta{color:var(--muted);font-size:14px}
+    .wordbank-card{display:grid;grid-template-columns:1fr 260px;gap:22px;padding:26px 30px;align-items:center;background:linear-gradient(135deg,#fff 0,#f9f1fb 58%,#f1f7f2)}
+    .wordbank-card h2{font-size:32px;margin:6px 0}
+    .wordbank-card p{color:var(--muted);max-width:680px}
+    .word-sample{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+    .word-chip{padding:7px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);font:italic 14px var(--heading);color:var(--navy-dark)}
+    .wordbank-side{display:flex;flex-direction:column;gap:10px}
+    .wordbank-progress{font:700 30px var(--heading);color:var(--ink)}
+    .phase{margin:28px 0 10px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--purple)}
+    .day-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:19px 21px;margin:10px 0}
+    .day-main{display:flex;justify-content:space-between;gap:15px;align-items:center}
+    .day-title{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .day-title h2{font-size:20px}.day-title strong{color:var(--ink)}
+    .status,.cycle-badge{font-size:11px;padding:5px 9px;border-radius:999px;background:var(--purple-soft);color:var(--purple)}
+    .status.mastered{background:var(--sage-soft);color:var(--sage)}
+    .cycle-line{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:7px}
+    .scope{font-size:12px;color:var(--muted);margin-top:10px}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .summary{background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+    .summary-label{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:800}
+    .summary-value{font:700 27px var(--heading);color:var(--ink);margin:4px 0}
+    .dashboard-actions{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-top:24px}
+    .parent-panel{margin:28px 0 30px;padding:26px;background:#fff;border:1px solid var(--line);border-radius:25px}
+    .between{display:flex;justify-content:space-between;gap:15px;align-items:center}
+    .storage-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+    .storage-item{padding:12px;border-radius:14px;background:#faf8fc}
+    .action-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .fileinput{display:none}.file-note,.small{font-size:12px}.muted{color:var(--muted)}
+    .notice{padding:15px 18px;background:#fff7dc;border:1px solid #ead8a3;border-radius:16px;margin:10px 0}
+    .save-warning{display:none;color:var(--danger);font-weight:700;margin-top:10px}
     .save-warning.show{display:block}
-    @media(max-width:620px){.daily-grid{grid-template-columns:1fr}.daily-goal{padding:15px}}
-
-
-    /* V8.1 visual polish */
-    .daily-goal{position:relative;overflow:hidden}
-    .daily-goal:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-70px;bottom:-85px;background:var(--lav-soft);opacity:.75;pointer-events:none}
-    .daily-goal-head,.daily-grid,.daily-actions{position:relative;z-index:1}
-    .daily-visual{display:flex;align-items:center;gap:16px}
-    .goal-ring{--p:0;position:relative;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sage) calc(var(--p)*1%),var(--track) 0);flex:0 0 auto}
-    .goal-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}
-    .goal-ring-inner{position:relative;z-index:1;text-align:center;line-height:1.05}
-    .goal-ring-value{font-family:var(--heading);font-size:23px;font-weight:600}
-    .goal-ring-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
-    .today-cta{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .today-cta .primary{min-width:170px}
-    .question-stage{transition:transform .22s ease,box-shadow .22s ease}
-    .question-stage.answer-correct{animation:answerPop .42s ease}
-    .question-stage.answer-wrong{animation:answerNudge .34s ease}
-    @keyframes answerPop{0%{transform:scale(1)}45%{transform:scale(1.012)}100%{transform:scale(1)}}
-    @keyframes answerNudge{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}65%{transform:translateX(4px)}}
-    .feedback-icon{width:38px;height:38px;border-radius:50%;display:inline-grid;place-items:center;margin-right:8px;font-weight:800;vertical-align:middle}
-    .good .feedback-icon{background:#fff;color:var(--sage-dark)}
-    .bad .feedback-icon{background:#fff;color:var(--rose)}
-    .results-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin:17px 0}
-    .score-ring{--p:0;position:relative;width:126px;height:126px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sage) calc(var(--p)*1%),var(--track) 0)}
-    .score-ring:before{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
-    .score-ring-content{position:relative;z-index:1;text-align:center}
-    .score-ring-content strong{display:block;font-family:var(--heading);font-size:30px;line-height:1}
-    .score-ring-content span{font-size:12px;color:var(--muted)}
-    .result-score{font-family:var(--heading);font-size:26px;font-weight:600;margin:4px 0}
-    .result-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-    .result-kpi{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff}
-    .result-kpi span{display:block;color:var(--muted);font-size:12px}
-    .result-kpi strong{font-family:var(--heading);font-size:23px}
-    .topic-breakdown{border:1px solid var(--line);border-radius:18px;padding:15px;margin:15px 0;background:#fff}
-    .topic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
-    .topic-row:last-child{border-bottom:0}
-    .mastery-celebration{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--sage-soft),#fff 55%,var(--gold-soft));border:1px solid #c8dfd3;border-radius:21px;padding:18px;margin:15px 0}
-    .mastery-celebration h2{color:var(--sage-dark);margin:2px 0 5px}
-    .celebration-particle{position:absolute;width:8px;height:12px;border-radius:2px;opacity:.7;animation:floatDown 1.25s ease-out forwards}
-    @keyframes floatDown{from{transform:translateY(-25px) rotate(0);opacity:0}20%{opacity:.75}to{transform:translateY(150px) rotate(210deg);opacity:0}}
-    @media(prefers-reduced-motion:reduce){
-      .question-stage.answer-correct,.question-stage.answer-wrong,.celebration-particle{animation:none!important}
-      .progress-bar,.daily-track>span{transition:none}
+    .page-card{background:#fff;border:1px solid var(--line);border-radius:30px;padding:30px;box-shadow:0 14px 44px rgba(57,43,73,.07);margin:20px 0}
+    .notes-header,.quiz-meta{display:flex;justify-content:space-between;gap:18px}
+    .must-box{background:#fff7dc;border-radius:18px;padding:18px;margin:18px 0}
+    .notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .note-section{padding:16px;border-radius:18px;background:#faf8fc;border:1px solid var(--line)}
+    .exact-scope{margin:16px 0;padding:14px;border-radius:14px;background:var(--sage-soft)}
+    .question-context{font:italic 21px var(--heading);color:var(--navy-dark);margin-top:22px}
+    .direction{display:inline-block;margin-top:13px;padding:6px 10px;border-radius:999px;background:var(--purple-soft);color:var(--purple);font-size:12px;font-weight:800}
+    .question-text{font:700 27px var(--heading);color:var(--ink);margin:16px 0}
+    .answer-button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:16px;padding:13px 15px;margin:8px 0}
+    .answer-button[data-selected="1"]{border-color:var(--purple);background:var(--purple-soft)}
+    textarea,input[type=text]{width:100%;min-height:48px;border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:16px}
+    .feedback{margin-top:16px;padding:17px;border-radius:18px}
+    .feedback.good{background:var(--sage-soft);border:1px solid #bad2c1}.feedback.bad{background:#fff0f1;border:1px solid #e2bec3}
+    .feedback-title{font:700 21px var(--heading);color:var(--ink);margin-bottom:8px}
+    .feedback-icon{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--sage);color:#fff;margin-right:8px}
+    .feedback-list{margin:7px 0 0;padding-left:22px}
+    .answer-example,.explanation-box,.memory-box,.review-schedule{margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,.6)}
+    .results-hero{display:flex;gap:25px;align-items:center;margin:20px 0}
+    .score-ring{--p:0;width:140px;height:140px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--purple) calc(var(--p)*1%),var(--purple-soft) 0)}
+    .score-ring:before{content:"";position:absolute}
+    .score-ring-content{width:108px;height:108px;background:#fff;border-radius:50%;display:grid;place-items:center;align-content:center;text-align:center}
+    .score-ring-content strong{font:700 29px var(--heading);color:var(--ink)}
+    .score-ring-content span{font-size:11px;color:var(--muted)}
+    .result-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .result-kpi{padding:15px;border-radius:16px;background:#faf8fc}.result-kpi span{font-size:12px;color:var(--muted)}.result-kpi strong{display:block;font:700 27px var(--heading)}
+    .mastery-celebration{padding:22px;border-radius:22px;background:linear-gradient(135deg,#fff4cb,#efe5f7);text-align:center}
+    .topic-breakdown{margin:15px 0}
+    .bottom-nav{position:fixed;z-index:40;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(760px,calc(100% - 24px));height:68px;background:rgba(255,255,255,.93);backdrop-filter:blur(18px);border:1px solid rgba(225,216,231,.9);border-radius:24px;display:grid;grid-template-columns:repeat(5,1fr);padding:6px;box-shadow:0 14px 40px rgba(51,40,66,.13)}
+    .nav-btn{border:0;background:transparent;border-radius:18px;color:var(--muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:0}
+    .nav-btn .nav-icon{font-size:20px;line-height:1}.nav-btn.active{background:var(--purple-soft);color:var(--purple)}
+    /* Word bank */
+    .wordbank-shell{padding-top:12px}
+    .wordbank-page{position:relative;overflow:hidden}
+    .wordbank-top{display:flex;justify-content:space-between;gap:20px;align-items:start}
+    .wordbank-top h1{font-size:44px}
+    .wb-count{padding:9px 14px;border-radius:999px;background:var(--purple-soft);color:var(--purple);font-weight:800}
+    .flashcard{margin:25px auto 15px;max-width:720px;min-height:360px;border:1px solid var(--line);border-radius:32px;background:linear-gradient(150deg,#fff 0,#fcf7fb 55%,#f0f7f2);padding:30px;display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative;box-shadow:0 18px 45px rgba(52,40,70,.08)}
+    .flash-stage{position:absolute;top:22px;left:24px;font-size:11px;font-weight:800;color:var(--purple);background:var(--purple-soft);border-radius:999px;padding:6px 10px}
+    .flash-latin{font:700 clamp(38px,7vw,62px) var(--heading);color:var(--ink);margin:15px 0 9px}
+    .flash-prompt{font:italic 18px var(--heading);color:var(--muted)}
+    .flash-answer{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+    .flash-english{font:700 30px var(--heading);color:var(--sage)}
+    .flash-clue{max-width:560px;margin:10px auto 0;color:var(--muted);font-size:14px}
+    .flash-memory{display:inline-block;margin-top:12px;padding:8px 12px;background:var(--cream);border-radius:12px;font-size:13px;color:#725f35}
+    .wb-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .wb-actions .again{background:#fff0f1;color:var(--danger);border:1px solid #e6c0c5}.wb-actions .known{background:var(--sage);color:#fff}
+    .wb-summary{text-align:center;padding:40px 20px}
+    .wb-summary h2{font-size:37px}
+    .wb-kpis{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:20px 0}.wb-kpi{min-width:130px;padding:15px;border-radius:18px;background:#faf8fc}
+    @keyframes pop{0%{transform:scale(.985)}55%{transform:scale(1.01)}100%{transform:scale(1)}}
+    .answer-correct{animation:pop .3s ease}.answer-wrong{animation:pop .3s ease}
+    @media(max-width:800px){
+      .hero{min-height:260px;padding:24px 10px}.hero-art{width:54%;opacity:.42;right:-70px}.hero-copy{max-width:78%}
+      .today-card{padding:22px}.today-head{flex-direction:column}.goal-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}
+      .next-card{grid-template-columns:90px 1fr}.next-card img{width:85px;height:95px}.next-card>button{grid-column:1/-1}
+      .wordbank-card{grid-template-columns:1fr}.wordbank-side{flex-direction:row;align-items:center;justify-content:space-between}
+      .summary-grid{grid-template-columns:1fr 1fr}.notes-grid{grid-template-columns:1fr}
     }
-    @media(max-width:620px){
-      .daily-visual{align-items:flex-start}
-      .goal-ring{width:78px;height:78px}
-      .goal-ring-value{font-size:20px}
-      .results-hero{grid-template-columns:1fr;text-align:center}
-      .score-ring{margin:auto}
-      .result-kpis{grid-template-columns:1fr 1fr}
-      .result-kpi:last-child{grid-column:1/-1}
+    @media(max-width:520px){
+      .wrap,.header-inner{width:min(100% - 18px,1120px)}.hero-copy{max-width:100%}.hero-art{display:none}
+      h1{font-size:39px}.today-head h2{font-size:28px}.goal-content{margin-left:100px}.goal-box .art{width:100px}
+      .stat-grid{grid-template-columns:1fr 1fr}.stat{min-height:115px}.stat-value{font-size:29px}
+      .next-card{grid-template-columns:1fr}.next-card img{display:none}.wordbank-card{padding:22px}
+      .summary-grid{grid-template-columns:1fr}.day-main{align-items:flex-start;flex-direction:column}.dashboard-actions{align-items:flex-start;flex-direction:column}
+      .storage-grid{grid-template-columns:1fr}.page-card{padding:20px;border-radius:24px}.results-hero{align-items:flex-start;flex-direction:column}
+      .result-kpis{grid-template-columns:1fr 1fr}.wordbank-top{flex-direction:column}.flashcard{padding:22px;min-height:330px}
+      .bottom-nav{height:64px}.nav-btn{font-size:9px}.nav-btn .nav-icon{font-size:18px}
     }
-
-    @media(min-width:760px){.header-tag{display:block}}
-    @media(max-width:880px){.summary-grid{grid-template-columns:repeat(2,1fr)}.notes-grid{grid-template-columns:1fr}}
-    @media(max-width:620px){
-      .wrap{padding-top:17px}.hero-row{align-items:flex-start;flex-direction:column}.streak{align-self:flex-start}
-      .summary-grid{grid-template-columns:1fr 1fr;gap:9px}.summary{padding:14px}.summary-value{font-size:27px}
-      .day-main{grid-template-columns:1fr}.day-main .primary{width:100%}.storage-grid{grid-template-columns:1fr}
-      .notes-header{flex-direction:column}.question-text{font-size:21px}.page-card{border-radius:20px}
-    }
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
   </style>
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
-      <div class="brand"><span class="brand-mark">L</span><span>Latin Revision</span></div>
-      <span class="header-tag">Reliable Practice V8.1 · Summer source-locked</span>
-      <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span class="sound-dot"></span><span id="soundLabel">Sound on</span></button>
+      <div class="brand">Latin<small>revision journal · V8.2</small></div>
+      <div class="header-right">
+        <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span id="soundLabel">Sound on</span></button>
+      </div>
     </div>
   </header>
 
@@ -212,68 +204,104 @@
     <section id="dashboard">
       <div id="migration" class="notice hidden"></div>
       <div id="resumePanel" class="notice hidden"><div class="between"><div><strong>Practice paused</strong><div id="resumeText" class="small">Your place is saved on this iPad.</div></div><button class="primary" onclick="resumeSession()">Continue practice</button></div></div>
-      <div class="hero">
-        <div class="hero-row">
-          <div><div class="eyebrow">Today · Summer revision</div><h1>Small steps make strong memory.</h1><p>Choose one exact dated block. Fresh practice uses unseen questions first; mistakes return through the separate 2-day and 7-day review schedule.</p></div>
-          <div class="streak">✦ <span>Focused practice, not endless papers</span></div>
-        </div>
-      </div>
 
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Latin revision journal</div>
+          <h1 id="greetingTitle">Good afternoon ♡</h1>
+          <div class="hero-sub">Ready for a little Latin?</div>
+          <div class="hero-quote" id="heroEncouragement">Small steps every day make brilliant progress.</div>
+        </div>
+        <img class="hero-art" src="assets/colosseum.png" alt="" aria-hidden="true">
+      </section>
 
-      <section class="daily-goal" aria-labelledby="dailyGoalTitle">
-        <div class="daily-goal-head">
-          <div class="daily-visual">
-            <div id="dailyRing" class="goal-ring" role="img" aria-label="Daily goal progress">
-              <div class="goal-ring-inner"><div id="dailyRingValue" class="goal-ring-value">0%</div><div class="goal-ring-label">today</div></div>
-            </div>
-            <div>
-              <div class="eyebrow">Today’s goal</div>
-              <h2 id="dailyGoalTitle" style="margin-top:4px">20 active minutes + 30 questions</h2>
-              <div class="small muted" id="dailyRemaining">Start today’s revision to build your progress.</div>
-            </div>
+      <section class="card today-card" aria-labelledby="dailyGoalTitle">
+        <div class="today-head">
+          <div>
+            <div class="eyebrow">Today</div>
+            <h2 id="dailyGoalTitle">You’re doing beautifully! ♡</h2>
+            <p id="dailyRemaining">A little progress every day adds up.</p>
           </div>
-          <div id="dailyStatus" class="daily-status">○ Not complete yet</div>
+          <div id="dailyStatus" class="percent-pill">0% complete</div>
         </div>
-        <div class="daily-grid">
-          <div class="daily-metric">
-            <div class="small muted">Active study</div>
-            <strong><span id="todayMinutes">0</span> / 20 min</strong>
-            <div class="daily-track" aria-hidden="true"><span id="dailyTimeBar" style="width:0%"></span></div>
+
+        <div class="goal-grid">
+          <div class="goal-box time">
+            <img src="assets/hourglass.png" class="art" alt="" aria-hidden="true">
+            <div class="goal-content">
+              <div class="metric-label">Focus time</div>
+              <div class="metric-value"><span id="todayMinutes">0</span> <small>/ 20 min</small></div>
+              <div class="progress"><div id="dailyTimeBar" class="progress-bar" style="width:0%"></div></div>
+              <div class="tiny-encourage" id="timeEncouragement">A lovely start ♡</div>
+            </div>
           </div>
-          <div class="daily-metric">
-            <div class="small muted">Questions answered</div>
-            <strong><span id="todayQuestions">0</span> / 30</strong>
-            <div class="daily-track" aria-hidden="true"><span id="dailyQuestionsBar" style="width:0%"></span></div>
-          </div>
-          <div class="daily-metric">
-            <div class="small muted">Today’s accuracy</div>
-            <strong id="todayAccuracy">—</strong>
-            <div class="small muted" id="todayCorrectLine">No answers yet</div>
+          <div class="goal-box questions">
+            <img src="assets/notebook.png" class="art" alt="" aria-hidden="true">
+            <div class="goal-content">
+              <div class="metric-label">Questions</div>
+              <div class="metric-value"><span id="todayQuestions">0</span> <small>/ 30</small></div>
+              <div class="progress"><div id="dailyQuestionsBar" class="progress-bar" style="width:0%"></div></div>
+              <div class="tiny-encourage" id="questionEncouragement">One question at a time ♡</div>
+            </div>
           </div>
         </div>
-        <div class="daily-actions">
-          <button id="shareReportButton" class="secondary" type="button" onclick="shareParentReport()">Share parent report</button>
-          <span class="small muted">The timer counts active work in Notes or Practice and pauses when the app is hidden or idle.</span>
+
+        <div class="today-actions">
+          <div class="reminder" id="todayReminder">You’ve got this. One question at a time ♡</div>
+          <button class="primary continue-wide" onclick="continueToday()">Continue revision →</button>
+        </div>
+        <div class="hidden" aria-hidden="true">
+          <div id="dailyRing"></div><div id="dailyRingValue"></div><div id="todayAccuracy"></div><div id="todayCorrectLine"></div>
         </div>
       </section>
 
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Accuracy</div><div class="stat-value" id="prettyAccuracy">—</div><div class="stat-note" id="prettyAccuracyNote">Start today’s practice</div></div>
+        <div class="stat"><div class="stat-label">Reviews</div><div class="stat-value" id="duecount">0</div><div class="stat-note">Due today</div></div>
+        <div class="stat"><div class="stat-label">Cycle</div><div class="stat-value" id="prettyCycle">0/0</div><div class="stat-note" id="prettyCycleNote">Your next focus cycle</div></div>
+        <div class="stat"><div class="stat-label">Word bank</div><div class="stat-value" id="wordBankTodayStat">0/10</div><div class="stat-note">Daily words reviewed</div></div>
+      </div>
+
+      <section class="card wordbank-card">
+        <div>
+          <div class="eyebrow">Daily word bank</div>
+          <h2>Ten words. A few minutes. Big memory gains. ♡</h2>
+          <p>Tap to reveal the meaning, then check the grammar clue. Nouns keep their genitive/case clue; verbs keep their perfect cue.</p>
+          <div class="word-sample"><span class="word-chip">canis</span><span class="word-chip">servus</span><span class="word-chip">tacet</span><span class="word-chip">semper</span></div>
+        </div>
+        <div class="wordbank-side">
+          <div><div class="metric-label">Today</div><div class="wordbank-progress" id="wordBankProgressText">0 / 10</div></div>
+          <button class="primary" onclick="openWordBank()">Review today’s words →</button>
+        </div>
+      </section>
+
+      <div class="section-heading"><div><div class="eyebrow">Next up</div><h2>Your revision plan</h2></div><button class="secondary" onclick="startMixed()">Mixed practice</button></div>
+      <section class="card next-card">
+        <img src="assets/books.png" alt="" aria-hidden="true">
+        <div>
+          <span class="stage-pill" id="nextUpDay">Next block</span>
+          <div class="next-title" id="nextUpTitle">Vocabulary & translation</div>
+          <div class="next-meta" id="nextUpMeta">A focused set chosen from your revision plan.</div>
+        </div>
+        <button id="nextUpButton" class="primary">Start →</button>
+      </section>
+
+      <div class="section-heading"><div><div class="eyebrow">All progress</div><h2>Mastery & review</h2></div><button id="duebtn" class="secondary" onclick="startDue()">Do due reviews</button></div>
       <div class="summary-grid">
         <div class="summary"><div class="summary-label">Overall mastery</div><div class="summary-value" id="overall">0%</div><div class="progress"><div class="progress-bar" id="overallbar"></div></div></div>
-        <div class="summary"><div class="summary-label">Questions in bank</div><div class="summary-value" id="totalcount">0</div><div class="small muted">Summer content only</div></div>
-        <div class="summary"><div class="summary-label">Due today</div><div class="summary-value" id="duecount">0</div><button id="duebtn" class="ghost" onclick="startDue()">Review due questions</button></div>
+        <div class="summary"><div class="summary-label">Questions in bank</div><div class="summary-value" id="totalcount">0</div><div class="small muted">Source-locked</div></div>
         <div class="summary"><div class="summary-label">Scheduled reviews</div><div class="summary-value" id="weakcount">0</div><div class="small muted" id="weakSummary">Held out of normal practice</div></div>
+        <div class="summary"><div class="summary-label">Today’s accuracy</div><div class="summary-value" id="todayAccuracySummary">—</div><div class="small muted" id="todayCorrectSummary">No answers yet</div></div>
       </div>
 
       <div class="dashboard-actions">
-        <div><h3 style="margin-bottom:3px">Revision by exact learning date</h3><div class="small muted">Each card has its own locked scope and no-repeat question cycle.</div></div>
-        <button class="secondary" onclick="startMixed()">Mixed test from attempted blocks</button>
+        <div><div class="eyebrow">Exact dated plan</div><h3 style="margin:5px 0">Revision by learning date</h3><div class="small muted">Every card keeps its locked scope and no-repeat cycle.</div></div>
       </div>
-
       <div id="daylist"></div>
 
-      <section class="parent-panel">
-        <div class="between"><div><div class="eyebrow">Parent controls</div><h2 style="margin-top:5px">Progress stays on this iPad</h2></div><span class="cycle-badge">Auto-saved after every answer</span></div>
-        <p class="muted">Closing the app, closing Safari or restarting the iPad does not normally remove progress. Export a backup before a major update or before clearing Safari website data.</p>
+      <section class="parent-panel" id="parentControls">
+        <div class="between"><div><div class="eyebrow">Parent controls</div><h2 style="margin-top:5px">Progress stays on this iPad</h2></div><span class="cycle-badge">Auto-saved</span></div>
+        <p class="muted">Export a backup before a major update or before clearing Safari website data.</p>
         <div class="storage-grid">
           <div class="storage-item"><strong>Last saved</strong><br><span id="lastSaved" class="small">Not yet</span></div>
           <div class="storage-item"><strong>Last backup</strong><br><span id="lastBackup" class="small">No backup exported yet</span></div>
@@ -282,23 +310,46 @@
           <button class="primary" onclick="exportProgress()">Backup progress</button>
           <button class="secondary" onclick="document.getElementById('importfile').click()">Restore backup</button>
           <input id="importfile" class="fileinput" type="file" accept="application/json" onchange="importProgress(event)">
+          <button class="secondary" onclick="shareParentReport()">Share parent report</button>
           <button class="secondary" onclick="resetProgress()">Reset progress</button>
         </div>
-        <div class="file-note">Do not use Private Browsing for the installed app. Keep the same GitHub Pages address when updating.</div>
+        <div class="file-note">Keep the same GitHub Pages address when updating.</div>
         <div id="saveWarning" class="save-warning">Progress could not be saved on this device. Export a backup before continuing.</div>
       </section>
+    </section>
+
+    <section id="wordbank" class="wordbank-shell hidden">
+      <article class="page-card wordbank-page">
+        <div class="wordbank-top">
+          <div><div class="eyebrow">Daily word bank</div><h1>Ten words for today ♡</h1><p class="muted">Tap reveal, say the meaning aloud, then rate how it felt.</p></div>
+          <div id="wordBankCount" class="wb-count">1 / 10</div>
+        </div>
+        <div id="wordBankCard" class="flashcard">
+          <div id="wordBankStage" class="flash-stage">Stage 1</div>
+          <div id="wordBankLatin" class="flash-latin">canis</div>
+          <div class="flash-prompt">What does this mean?</div>
+          <div id="wordBankAnswer" class="flash-answer hidden">
+            <div id="wordBankEnglish" class="flash-english">dog</div>
+            <div id="wordBankClue" class="flash-clue"></div>
+            <div id="wordBankMemory" class="flash-memory hidden"></div>
+          </div>
+        </div>
+        <div id="wordBankRevealActions" class="wb-actions"><button class="primary" onclick="revealWordBank()">Reveal meaning</button><button class="secondary" onclick="showDashboard()">Back to Today</button></div>
+        <div id="wordBankRateActions" class="wb-actions hidden"><button class="primary again" onclick="rateWordBank(false)">Again</button><button class="primary known" onclick="rateWordBank(true)">Got it ✓</button></div>
+        <div id="wordBankSummary" class="wb-summary hidden"></div>
+      </article>
     </section>
 
     <section id="notes" class="notes-shell hidden">
       <article class="page-card">
         <div class="notes-header">
-          <div><div class="eyebrow">Essentials + detailed revision</div><h1 id="notesTitle" style="font-size:34px"></h1><p id="notesIntro" class="muted"></p></div>
-          <span class="cycle-badge">Read, recall, then test</span>
+          <div><div class="eyebrow">Revision notes</div><h1 id="notesTitle" style="font-size:38px"></h1><p id="notesIntro" class="muted"></p></div>
+          <span class="cycle-badge">Read · recall · test</span>
         </div>
         <div class="must-box"><h3>Must memorise</h3><ul id="mustList"></ul></div>
         <div id="notesSections" class="notes-grid"></div>
         <div class="exact-scope"><strong>Exact scope today</strong><div id="notesScope" class="small" style="margin-top:4px"></div></div>
-        <div class="action-row"><button id="notesStartButton" class="primary">I’ve reviewed this — start practice</button><button class="secondary" onclick="showDashboard()">Back to dates</button></div>
+        <div class="action-row"><button id="notesStartButton" class="primary">I’ve reviewed this — start practice</button><button class="secondary" onclick="showDashboard()">Back to Today</button></div>
       </article>
     </section>
 
@@ -320,16 +371,13 @@
     <section id="results" class="results-shell hidden">
       <article class="page-card">
         <div class="eyebrow">Session complete</div>
-        <h1>Good work — here’s what you achieved.</h1>
+        <h1>Lovely work — here’s what you achieved. ♡</h1>
         <div id="masteryCelebration" class="mastery-celebration hidden" aria-live="polite"></div>
         <div class="results-hero">
           <div id="resultRing" class="score-ring" role="img" aria-label="Session accuracy">
             <div class="score-ring-content"><strong id="resultPercent">0%</strong><span>accuracy</span></div>
           </div>
-          <div>
-            <div id="resultScore" class="result-score"></div>
-            <p id="resultMessage" class="result-message"></p>
-          </div>
+          <div><div id="resultScore" class="result-score"></div><p id="resultMessage" class="result-message"></p></div>
         </div>
         <div class="result-kpis">
           <div class="result-kpi"><span>Correct</span><strong id="resultCorrect">0</strong></div>
@@ -338,10 +386,18 @@
         </div>
         <div id="topicBreakdown" class="topic-breakdown"></div>
         <div id="cycleResult" class="exact-scope"></div>
-        <div class="action-row"><button class="primary" onclick="showDashboard()">Back to dated plan</button><button id="resultDueButton" class="secondary" onclick="startDue()">Do due reviews</button></div>
+        <div class="action-row"><button class="primary" onclick="showDashboard()">Back to Today</button><button id="resultDueButton" class="secondary" onclick="startDue()">Do due reviews</button></div>
       </article>
     </section>
   </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button class="nav-btn active" id="navToday" onclick="showDashboard()"><span class="nav-icon">⌂</span><span>Today</span></button>
+    <button class="nav-btn" id="navPractice" onclick="startMixed()"><span class="nav-icon">✎</span><span>Practice</span></button>
+    <button class="nav-btn" id="navWords" onclick="openWordBank()"><span class="nav-icon">A·B</span><span>Words</span></button>
+    <button class="nav-btn" id="navProgress" onclick="showProgress()"><span class="nav-icon">▥</span><span>Progress</span></button>
+    <button class="nav-btn" id="navMore" onclick="showMore()"><span class="nav-icon">•••</span><span>More</span></button>
+  </nav>
 
   <script src="question-bank.js"></script>
   <script src="app.js"></script>
