@@ -1,0 +1,29 @@
+LATIN REVISION V9.0.2
+
+Before update:
+• Parent controls -> Backup progress.
+
+Upload/replace these five files in GitHub root:
+• index.html
+• app.js
+• question-bank.js
+• sw.js
+• manifest.webmanifest
+
+No assets/ upload is required for this embedded-artwork build.
+Keep your existing icons/ folder.
+
+After GitHub Pages deploys:
+1. Refresh once in Safari.
+2. Fully close the Home Screen app.
+3. Reopen it.
+4. Test in this order:
+   Home -> Daily Revision
+   Home -> Word Bank -> Back
+   Home -> Mistake Review
+   Home -> Quick Quiz
+   Home -> Grammar -> Start focused practice
+   Home -> Vocabulary -> Start focused practice
+   Home -> Translation -> Start focused practice
+   Home -> Roman World -> Start focused practice
+   Bottom nav -> Home / Learn / Practice / Words / Progress

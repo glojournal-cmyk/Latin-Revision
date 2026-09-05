@@ -1,4 +1,4 @@
-const CACHE='latin-revision-v9-0-1-embedded-20260905';
+const CACHE='latin-revision-v9-0-2-functional-20260905';
 const APP_PREFIX='latin-revision-';
 const CORE=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest'];
 

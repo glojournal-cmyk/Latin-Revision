@@ -448,32 +448,182 @@ function renderSaveStatus() {
   document.getElementById('soundLabel').textContent = sound ? 'Sound on' : 'Sound off';
 }
 
-function show(id) {
-  ['dashboard', 'learnPage', 'practiceHub', 'progressPage', 'morePage', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => { const el = document.getElementById(section); if (el) el.classList.add('hidden'); });
-  document.getElementById(id).classList.remove('hidden');
+const APP_SCREENS = ['dashboard','learnPage','practiceHub','progressPage','morePage','wordbank','notes','quiz','results'];
+let currentScreen = 'dashboard';
+let screenHistory = [];
+
+function show(id, options = {}) {
+  const target = document.getElementById(id);
+  if (!target) {
+    console.error(`Unknown screen: ${id}`);
+    id = 'dashboard';
+  }
+  if (!options.noHistory && currentScreen && currentScreen !== id && APP_SCREENS.includes(currentScreen)) {
+    screenHistory.push(currentScreen);
+    if (screenHistory.length > 30) screenHistory.shift();
+  }
+  APP_SCREENS.forEach(section => {
+    const el = document.getElementById(section);
+    if (el) el.classList.add('hidden');
+  });
+  const next = document.getElementById(id) || document.getElementById('dashboard');
+  next.classList.remove('hidden');
+  currentScreen = next.id;
   window.scrollTo(0, 0);
 }
 
+function goBack() {
+  while (screenHistory.length) {
+    const id = screenHistory.pop();
+    if (id && id !== currentScreen && document.getElementById(id)) {
+      show(id, { noHistory: true });
+      if (id === 'dashboard') setNavActive('today');
+      else if (id === 'learnPage') setNavActive('learn');
+      else if (id === 'practiceHub' || id === 'quiz') setNavActive('practice');
+      else if (id === 'wordbank') setNavActive('words');
+      else if (id === 'progressPage') setNavActive('progress');
+      return;
+    }
+  }
+  showDashboard();
+}
+
+const LEARN_MODULES = {
+  grammar: {
+    title: 'Grammar',
+    intro: 'Cases, verbs, sentence patterns and grammar control from the teacher-covered course.',
+    matches(question) {
+      const t = String(question.topic || '').toLowerCase();
+      return /(case|declension|genitive|vocative|adjective|pronoun|possessive|tense|person and number|finite verb|perfect cue|perfect pattern|grammar role)/.test(t);
+    }
+  },
+  vocabulary: {
+    title: 'Vocabulary',
+    intro: 'Build secure vocabulary in both directions, including dictionary clues and core forms.',
+    matches(question) {
+      const t = String(question.topic || '').toLowerCase();
+      return /(vocabulary|nouns|preposition|core verbs|miscellaneous words)/.test(t);
+    }
+  },
+  translation: {
+    title: 'Translation',
+    intro: 'Practise accurate Latin and natural English using translation and sentence-control questions.',
+    matches(question) {
+      const t = String(question.topic || '').toLowerCase();
+      return /(translation|set-text|comprehension|restore the sentence|production|whole-passage|choose the complete translation)/.test(t);
+    }
+  },
+  roman: {
+    title: 'Roman World & Culture',
+    intro: 'Use the culture, place and research questions already present in the teacher-covered bank.',
+    matches(question) {
+      const t = String(question.topic || '').toLowerCase();
+      return /(map locations|why each place matters|research questions)/.test(t);
+    }
+  }
+};
+
+let currentLearnKind = '';
+
+function learnModulePool(kind) {
+  const module = LEARN_MODULES[kind];
+  if (!module) return [];
+  return bank.filter(question => module.matches(question));
+}
+
+function startCategoryPractice(kind = currentLearnKind) {
+  const module = LEARN_MODULES[kind];
+  if (!module) return showLearn();
+  const pool = learnModulePool(kind);
+  if (!pool.length) {
+    alert(`There are no ${module.title.toLowerCase()} questions in the current teacher-covered bank.`);
+    return showLearn(kind);
+  }
+  const pending = new Set(Object.keys(state.reviews || {}));
+  const available = pool.filter(question => !pending.has(question.id));
+  const source = available.length ? available : pool;
+  reviewMode = false;
+  sessionInfo = { kind: `module-${kind}`, advanceReview: true };
+  const sample = kind === 'roman' ? Math.min(10, source.length) : Math.min(15, source.length);
+  startQuiz(balancedTake(source, sample), `${module.title} focused practice`, module.title);
+}
+
+function startDailyRevision() {
+  if (state.activeSession) return resumeSession();
+  const due = dueQuestions();
+  if (due.length) return startDue();
+  const block = suggestedBlock();
+  if (block) return startBlock(block);
+  return startQuickQuiz();
+}
+
+function openMistakeReview() {
+  const due = dueQuestions();
+  if (due.length) return startDue();
+  showPracticeHub();
+  const line = document.getElementById('practiceDueText');
+  if (line) line.textContent = 'No mistakes are due today — you are caught up ♡';
+}
+
+function startQuickQuiz() {
+  const pending = new Set(Object.keys(state.reviews || {}));
+  const attempted = attemptedContentDays();
+  let pool = attempted.length
+    ? bank.filter(question => attempted.includes(question.day) && !pending.has(question.id))
+    : [];
+  if (!pool.length) {
+    const block = suggestedBlock();
+    if (block) pool = focusPoolFor(block).filter(question => !pending.has(question.id));
+  }
+  if (!pool.length) pool = bank.filter(question => !pending.has(question.id)).slice(0, 80);
+  if (!pool.length) return void alert('No quiz questions are currently available.');
+  reviewMode = false;
+  sessionInfo = { kind: 'quick', advanceReview: true };
+  startQuiz(balancedTake(pool, Math.min(10, pool.length)), 'Quick Quiz — 10 questions', 'Quick Quiz');
+}
+
+
 function showDashboard() {
   renderDashboard();
-  show('dashboard');
+  show('dashboard', { noHistory: true });
+  currentScreen = 'dashboard';
+  screenHistory = [];
   setNavActive('today');
 }
 
 function showLearn(kind = '') {
   renderDashboard();
+  currentLearnKind = LEARN_MODULES[kind] ? kind : '';
   const title = document.getElementById('learnPageTitle');
   const intro = document.getElementById('learnPageIntro');
-  const copy = {
-    grammar: ['Grammar', 'Cases, verbs and sentence patterns from the exact teacher-locked revision plan.'],
-    translation: ['Translation', 'Build accurate Latin and natural English using the same source-locked material.'],
-    roman: ['Roman World & Source Material', 'Open the dated revision plan and source material linked to your course.'],
-  };
-  if (title && intro) {
-    const chosen = copy[kind] || ['Your revision library', 'Choose a dated block or continue with your current focus.'];
-    title.textContent = chosen[0];
-    intro.textContent = chosen[1];
+  const count = document.getElementById('learnModuleCount');
+  const hint = document.getElementById('learnModuleHint');
+  const start = document.getElementById('learnStartButton');
+
+  if (currentLearnKind) {
+    const module = LEARN_MODULES[currentLearnKind];
+    const pool = learnModulePool(currentLearnKind);
+    if (title) title.textContent = module.title;
+    if (intro) intro.textContent = module.intro;
+    if (count) count.textContent = `${pool.length} matching questions available`;
+    if (hint) hint.textContent = 'Start focused practice, or choose a dated block below.';
+    if (start) {
+      start.disabled = !pool.length;
+      start.textContent = `Start ${module.title} practice`;
+      start.onclick = () => startCategoryPractice(currentLearnKind);
+    }
+  } else {
+    if (title) title.textContent = 'Your revision library';
+    if (intro) intro.textContent = 'Choose a topic above or open the teacher-locked dated revision plan.';
+    if (count) count.textContent = 'Choose Grammar, Vocabulary, Translation or Roman World.';
+    if (hint) hint.textContent = 'Every topic button now opens a real matching question pool.';
+    if (start) {
+      start.disabled = true;
+      start.textContent = 'Choose a topic first';
+      start.onclick = null;
+    }
   }
+
   show('learnPage');
   setNavActive('learn');
 }
@@ -621,14 +771,19 @@ function renderDashboard() {
 
 function openNotes(day) {
   const block = blocks.find(item => item.day === day);
-  const note = notes[day] || { title: day, intro: 'Review the exact scope before practice.', must: [], sections: [] };
-  document.getElementById('notesTitle').textContent = note.title;
+  if (!block) {
+    alert('That revision block is no longer available.');
+    return showLearn();
+  }
+  const note = notes[day] || { title: block.label || day, intro: 'Review the exact scope before practice.', must: [], sections: [] };
+  document.getElementById('notesTitle').textContent = note.title || block.label || day;
   document.getElementById('notesIntro').textContent = note.intro || '';
-  document.getElementById('notesScope').textContent = block.scope;
+  document.getElementById('notesScope').textContent = block.scope || '';
   document.getElementById('mustList').innerHTML = (note.must || note.items || []).map(item => `<li>${esc(item)}</li>`).join('');
   document.getElementById('notesSections').innerHTML = (note.sections || []).map(section => `<section class="note-section"><h3>${esc(section.title)}</h3><ul>${(section.items || []).map(item => `<li>${esc(item)}</li>`).join('')}</ul></section>`).join('');
   document.getElementById('notesStartButton').onclick = () => startBlock(block);
   show('notes');
+  setNavActive('learn');
 }
 
 function balancedTake(pool, count) {
@@ -765,10 +920,10 @@ function attemptedContentDays() {
 
 function startMixed() {
   const days = attemptedContentDays();
-  if (!days.length) return void alert('Complete at least one dated block first.');
+  if (!days.length) return startQuickQuiz();
   const pending = new Set(Object.keys(state.reviews));
   const pool = bank.filter(question => days.includes(question.day) && !pending.has(question.id));
-  if (!pool.length) return void alert('No mixed questions are currently available.');
+  if (!pool.length) return startQuickQuiz();
   reviewMode = false;
   sessionInfo = { kind: 'mixed', advanceReview: true };
   startQuiz(stratifiedSample(pool, Math.min(15, pool.length)), 'Balanced mixed test — attempted blocks', 'Mixed');
@@ -776,7 +931,7 @@ function startMixed() {
 
 function startDue() {
   const pool = dueQuestions();
-  if (!pool.length) return void alert('No reviews are due today.');
+  if (!pool.length) return openMistakeReview();
   reviewMode = true;
   sessionInfo = { kind: 'review', advanceReview: true };
   startQuiz(balancedTake(pool, Math.min(20, pool.length)), 'Due spaced-repetition review', 'Due');
@@ -821,12 +976,13 @@ function resumeSession() {
   }
   current = active.current || 0;
   show('quiz');
+  setNavActive('practice');
   renderQuestion();
 }
 
 function pauseQuiz() {
-  if (!confirm('Pause this practice? Your place and score will be saved, and you can continue from the home screen.')) return;
-  showDashboard();
+  if (!confirm('Pause this practice? Your place and score will be saved, and you can continue later.')) return;
+  showPracticeHub();
 }
 
 function renderQuestion() {
@@ -1259,12 +1415,7 @@ function renderV82DashboardExtras() {
 }
 
 function continueToday() {
-  if (state.activeSession) return resumeSession();
-  const due = dueQuestions();
-  if (due.length) return startDue();
-  const block = suggestedBlock();
-  if (block) return openNotes(block.day);
-  startMixed();
+  return startDailyRevision();
 }
 
 function showProgress() {
@@ -1288,8 +1439,7 @@ function showPracticeHub() {
 }
 
 function showRevisionPlan() {
-  showLearn();
-  setNavActive('learn');
+  showLearn('');
   setTimeout(() => {
     const target = document.getElementById('daylist');
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });

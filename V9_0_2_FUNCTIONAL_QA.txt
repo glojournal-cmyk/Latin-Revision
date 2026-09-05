@@ -1,0 +1,41 @@
+LATIN REVISION V9.0.2 — FUNCTIONAL MAPPING / NAVIGATION REBUILD
+
+Main fixes
+----------
+• Home navigation is now an explicit reset-to-Home action.
+• Added screen history and a real goBack() function.
+• Revision Notes and Word Bank now have a real Back action.
+• Daily Revision no longer opens the old 18 Jul notes page by default:
+  due review -> next suitable focus practice -> Quick Quiz fallback.
+• Mistake Review no longer dead-ends when nothing is due.
+• Quick Quiz works even before any dated block has been attempted.
+• Grammar, Vocabulary, Translation and Roman World now map to real filtered question pools.
+• Learn pages show the real number of matching questions and a Start focused practice button.
+• Vocabulary Learn no longer duplicates the Daily Word Bank button.
+• Pause returns to Practice hub while preserving the resumable session.
+• Invalid dated-note routes return safely to Learn instead of crashing.
+
+Static QA
+---------
+JavaScript syntax:
+• app.js: PASS
+• question-bank.js: PASS
+• sw.js: PASS
+
+Eight main card mappings:
+• startDailyRevision(): PASS
+• openWordBank(): PASS
+• openMistakeReview(): PASS
+• startQuickQuiz(): PASS
+• showLearn('grammar'): PASS
+• showLearn('vocabulary'): PASS
+• showLearn('translation'): PASS
+• showLearn('roman'): PASS
+
+Missing inline click-handler functions: 0
+None
+
+Important
+---------
+This release prioritises reliable navigation and real content mapping over further visual changes.
+Existing question-bank, marking, mastery, review, Word Bank and progress data are retained.
