@@ -1,0 +1,39 @@
+LATIN REVISION V9 — UPLOAD GUIDE
+
+Before updating
+---------------
+In the current app:
+More / Parent controls -> Backup progress
+
+Upload / replace on GitHub Pages
+--------------------------------
+index.html
+app.js
+question-bank.js
+sw.js
+manifest.webmanifest
+assets/   (upload the WHOLE folder)
+
+Keep your existing:
+icons/
+
+After deployment
+----------------
+1. Wait for GitHub Pages Actions to turn green.
+2. Open the site in Safari and refresh.
+3. Fully close the Home Screen app.
+4. Reopen it.
+5. The new screen should show the illustrated V9 Home layout.
+
+First things to test
+--------------------
+• Home -> Daily Revision
+• Home -> Word Bank
+• Home -> Mistake Review
+• Home -> Quick Quiz
+• Bottom Learn
+• Bottom Practice
+• Bottom Words
+• Bottom Progress
+• Top-left menu -> Parent controls
+• Backup / Parent Report

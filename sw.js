@@ -1,6 +1,6 @@
-const CACHE='latin-revision-reliable-practice-v824-20260905';
+const CACHE='latin-revision-v9-20260905';
 const APP_PREFIX='latin-revision-';
-const ASSETS=["./","./index.html","./app.js","./question-bank.js","./manifest.webmanifest","./icons/icon-192.png","./icons/icon-512.png","./assets/colosseum.png","./assets/hourglass.png","./assets/notebook.png","./assets/books.png","./assets/laurel.png","./assets/scroll.png","./assets/bust.png","./assets/ink.png","./assets/column.png"];
+const ASSETS=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest','./assets/hero-colosseum.png','./assets/daily-revision.png','./assets/word-bank.png','./assets/mistake-review.png','./assets/quick-quiz.png','./assets/grammar.png','./assets/vocabulary.png','./assets/translation.png','./assets/roman-world.png','./assets/laurel.png','./assets/trophy.png','./assets/next-colosseum.png','./icons/icon-192.png','./icons/icon-512.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting()));

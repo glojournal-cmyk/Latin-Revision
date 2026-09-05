@@ -1,0 +1,44 @@
+LATIN REVISION V9 — BUILD QA
+
+Architecture
+------------
+• New V9 Home architecture based on the supplied iPad reference.
+• Hero + Today four-card grid.
+• Learn four-card grid.
+• Weekly progress / achievement / next-up strip.
+• Bottom navigation: Home / Learn / Practice / Words / Progress.
+• Parent controls moved behind the top-left menu button.
+• Existing learning engine retained.
+
+Learning logic retained
+-----------------------
+• Existing 1,056-question source-locked bank
+• Existing marking
+• Complete-cycle mastery logic
+• Scheduled review logic
+• 20 active minutes + 30 questions daily target
+• Daily Word Bank
+• Parent Report / backup / restore
+
+Build checks
+------------
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+Duplicate HTML IDs: 0
+Missing local image paths: 0
+Missing inline click-handler functions: 0
+
+Artwork
+-------
+The new V9 assets are the transparent artwork supplied in the conversation:
+hero Colosseum, Daily Revision notebook, Word Bank books, Mistake Review scrolls,
+Quick Quiz target, Grammar column, Vocabulary book, Translation quill,
+Roman bust, laurel, trophy and Next Up Colosseum.
+
+Note
+----
+The local browser sandbox used for this build blocks normal local-origin navigation,
+so the release has syntax/static-integrity QA rather than a claim of full automated
+browser interaction QA. Please verify the first deployment on the actual GitHub Pages
+origin before treating V9 as final.

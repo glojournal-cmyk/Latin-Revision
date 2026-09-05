@@ -449,7 +449,7 @@ function renderSaveStatus() {
 }
 
 function show(id) {
-  ['dashboard', 'practiceHub', 'progressPage', 'morePage', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => { const el = document.getElementById(section); if (el) el.classList.add('hidden'); });
+  ['dashboard', 'learnPage', 'practiceHub', 'progressPage', 'morePage', 'wordbank', 'notes', 'quiz', 'results'].forEach(section => { const el = document.getElementById(section); if (el) el.classList.add('hidden'); });
   document.getElementById(id).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -458,6 +458,24 @@ function showDashboard() {
   renderDashboard();
   show('dashboard');
   setNavActive('today');
+}
+
+function showLearn(kind = '') {
+  renderDashboard();
+  const title = document.getElementById('learnPageTitle');
+  const intro = document.getElementById('learnPageIntro');
+  const copy = {
+    grammar: ['Grammar', 'Cases, verbs and sentence patterns from the exact teacher-locked revision plan.'],
+    translation: ['Translation', 'Build accurate Latin and natural English using the same source-locked material.'],
+    roman: ['Roman World & Source Material', 'Open the dated revision plan and source material linked to your course.'],
+  };
+  if (title && intro) {
+    const chosen = copy[kind] || ['Your revision library', 'Choose a dated block or continue with your current focus.'];
+    title.textContent = chosen[0];
+    intro.textContent = chosen[1];
+  }
+  show('learnPage');
+  setNavActive('learn');
 }
 
 function cycleFor(day) {
@@ -1124,7 +1142,7 @@ function finish() {
 
 
 function setNavActive(name) {
-  const map = { today: 'navToday', practice: 'navPractice', words: 'navWords', progress: 'navProgress', more: 'navMore' };
+  const map = { today: 'navToday', learn: 'navLearn', practice: 'navPractice', words: 'navWords', progress: 'navProgress' };
   Object.values(map).forEach(id => {
     const button = document.getElementById(id);
     if (button) button.classList.remove('active');
@@ -1133,11 +1151,7 @@ function setNavActive(name) {
   if (active) active.classList.add('active');
 }
 
-function greetingForNow() {
-  const hour = new Date().getHours();
-  if (hour < 12) return 'Good morning ♡';
-  if (hour < 18) return 'Good afternoon ♡';
-  return 'Good evening ♡';
+function greetingForNow() { return 'Salve, Psyche!';
 }
 
 function suggestedBlock() {
@@ -1149,6 +1163,48 @@ function suggestedBlock() {
   }) || regular.find(block => focusPoolFor(block).length) || blocks[0] || null;
 }
 
+
+function v9CurrentStreak() {
+  const dates = Object.keys(state.daily || {}).sort().reverse();
+  let streak = 0;
+  const cursor = new Date();
+  cursor.setHours(12,0,0,0);
+  for (let i = 0; i < 366; i += 1) {
+    const key = localISODate(cursor);
+    const rec = state.daily && state.daily[key];
+    if (rec && dailyGoalComplete(rec)) {
+      streak += 1;
+      cursor.setDate(cursor.getDate() - 1);
+      continue;
+    }
+    if (i === 0) {
+      cursor.setDate(cursor.getDate() - 1);
+      continue;
+    }
+    break;
+  }
+  return streak;
+}
+
+function renderV9Extras() {
+  setText('v9Streak', v9CurrentStreak());
+  const now = new Date();
+  const dateText = now.toLocaleDateString(undefined, { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  setText('v9Date', dateText);
+  const due = dueQuestions().length;
+  setText('v9ReviewText', due ? `${due} review${due===1?'':'s'} ready today.` : 'Turn mistakes into mastery.');
+  const completed = blocks
+    .filter(block => !block.mode && Number.isFinite(cycleFor(block.day).completedPercent))
+    .map(block => ({block, pct: cycleFor(block.day).completedPercent, round: cycleFor(block.day).completedRound || 1}));
+  if (completed.length) {
+    const last = completed[completed.length - 1];
+    setText('v9Achievement', `${last.block.label} complete`);
+    setText('v9AchievementNote', `${last.pct}% on the completed focus cycle.`);
+  } else {
+    setText('v9Achievement', 'Your first milestone');
+    setText('v9AchievementNote', 'Complete a full focus cycle to earn it.');
+  }
+}
 function renderV82DashboardExtras() {
   const greeting = document.getElementById('greetingTitle');
   if (greeting) greeting.textContent = greetingForNow();
@@ -1199,6 +1255,7 @@ function renderV82DashboardExtras() {
   const wbText = document.getElementById('wordBankProgressText');
   if (wbStat) wbStat.textContent = `${wb}/10`;
   if (wbText) wbText.textContent = `${wb} / 10`;
+  renderV9Extras();
 }
 
 function continueToday() {
@@ -1231,8 +1288,8 @@ function showPracticeHub() {
 }
 
 function showRevisionPlan() {
-  showDashboard();
-  setNavActive('practice');
+  showLearn();
+  setNavActive('learn');
   setTimeout(() => {
     const target = document.getElementById('daylist');
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
