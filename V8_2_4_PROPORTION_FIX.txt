@@ -1,0 +1,41 @@
+LATIN REVISION V8.2.4 — PROPORTION / TYPOGRAPHY POLISH
+
+This release focuses on visual proportion rather than changing the learning logic.
+
+Main changes
+------------
+• Reduced the oversized desktop-dashboard feeling.
+• Shortened the Today card and reduced excess vertical whitespace.
+• Enlarged the hourglass and notebook relative to their cards.
+• Rebalanced illustration column vs. text column.
+• Reduced oversized card padding and border radii.
+• Tightened the hero height while keeping the Colosseum complete.
+• Rebalanced heading, metric and secondary text sizes.
+• Reduced button height/width to match the rest of the UI.
+• Reduced stat-card height and tightened spacing.
+• Improved portrait/mobile scaling separately.
+
+Learning behaviour retained
+---------------------------
+• Existing question bank
+• Existing marking
+• Mastery / review logic
+• 20 active minutes + 30 questions daily target
+• Daily Word Bank
+• Parent reporting
+
+Upload
+------
+Replace:
+index.html
+app.js
+question-bank.js
+sw.js
+manifest.webmanifest
+assets/
+
+Keep:
+icons/
+
+Version label:
+revision journal · V8.2.4

@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — V8.2 Study Journal</title>
+  <title>Latin Revision — V8.2.4 Study Journal</title>
   <style>
     :root{
       --ink:#22284d;--body:#45425a;--muted:#7a758b;--line:#e8e0eb;--paper:#fffdfa;
@@ -189,7 +189,7 @@
     }
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
   
-    /* V8.2.2 SVG hotfix: tap safety, full illustrations, real navigation pages */
+    /* V8.2.4 SVG hotfix: tap safety, full illustrations, real navigation pages */
     .decorative-art{pointer-events:none!important;user-select:none;-webkit-user-drag:none}
     .hero-art{object-fit:contain;object-position:right center;right:0;top:0;height:225px}
     .goal-box{overflow:hidden}
@@ -234,7 +234,7 @@
     }
 
   
-    /* V8.2.2 — transparent SVG artwork rebuild */
+    /* V8.2.4 — transparent SVG artwork rebuild */
     .decorative-art{
       pointer-events:none!important;
       user-select:none!important;
@@ -345,7 +345,7 @@
     }
 
 
-    /* V8.2.3 — transparent PNG artwork integration */
+    /* V8.2.4 — transparent PNG artwork integration */
     .decorative-art{
       pointer-events:none!important;
       user-select:none!important;
@@ -454,12 +454,225 @@
       .page-art{display:block!important;width:88px!important;height:88px!important;opacity:.10!important}
     }
 
-  </style>
+  
+    /* V8.2.4 proportional polish — decisive final overrides */
+    .wrap,
+    .header-inner{width:min(1180px,calc(100% - 36px))!important}
+
+    .app-header{padding:14px 0 2px!important}
+    .brand{font-size:19px!important}
+    .brand small{font-size:10px!important}
+
+    .hero{
+      grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr)!important;
+      min-height:218px!important;
+      padding:22px 28px 18px!important;
+      gap:26px!important;
+      align-items:center!important;
+    }
+    .hero h1{
+      font-size:clamp(46px,4.4vw,68px)!important;
+      line-height:.98!important;
+      letter-spacing:-.035em!important;
+      margin:10px 0 10px!important;
+    }
+    .hero-sub{font-size:20px!important}
+    .hero-quote{font-size:14px!important;margin-top:16px!important}
+    .hero-art{
+      width:min(100%,480px)!important;
+      max-width:480px!important;
+      max-height:205px!important;
+      margin:0!important;
+    }
+
+    .card{border-radius:26px!important}
+    .today-card{
+      padding:24px 26px 22px!important;
+      margin-bottom:14px!important;
+    }
+    .today-head{align-items:flex-start!important}
+    .today-head h2{
+      font-size:clamp(30px,2.55vw,39px)!important;
+      line-height:1.04!important;
+      margin:7px 0 5px!important;
+    }
+    .today-head p{font-size:15px!important;margin:0!important}
+    .percent-pill{
+      font-size:14px!important;
+      padding:9px 14px!important;
+      margin-top:4px!important;
+    }
+
+    .goal-grid{
+      gap:16px!important;
+      margin:18px 0 14px!important;
+    }
+    .goal-box{
+      grid-template-columns:148px minmax(0,1fr)!important;
+      gap:18px!important;
+      min-height:158px!important;
+      padding:13px 20px!important;
+      border-radius:22px!important;
+      overflow:hidden!important;
+    }
+    .goal-box .art{
+      width:142px!important;
+      height:142px!important;
+      max-height:142px!important;
+      object-fit:contain!important;
+      justify-self:center!important;
+      align-self:center!important;
+    }
+    .metric-label{font-size:13px!important}
+    .metric-value{
+      font-size:35px!important;
+      line-height:1.05!important;
+      margin:7px 0 9px!important;
+    }
+    .metric-value small{
+      font-size:15px!important;
+      font-weight:600!important;
+    }
+    .progress{height:10px!important}
+    .tiny-encourage{
+      margin-top:9px!important;
+      font-size:14px!important;
+      line-height:1.25!important;
+    }
+    .today-actions{
+      margin-top:4px!important;
+      align-items:center!important;
+    }
+    .reminder{
+      font-size:14px!important;
+      padding:10px 15px!important;
+      border-radius:15px!important;
+    }
+    .continue-wide{
+      min-width:225px!important;
+      min-height:48px!important;
+      padding:12px 20px!important;
+      font-size:15px!important;
+    }
+
+    .stat-grid{
+      gap:12px!important;
+      margin-bottom:14px!important;
+    }
+    .stat{
+      min-height:106px!important;
+      padding:15px 17px!important;
+      border-radius:20px!important;
+    }
+    .stat-label{font-size:10px!important}
+    .stat-value{font-size:29px!important;margin-top:3px!important}
+    .stat-note{font-size:11px!important;line-height:1.25!important}
+
+    .wordbank-card{
+      grid-template-columns:minmax(0,1fr) 235px!important;
+      gap:20px!important;
+      padding:21px 24px!important;
+      border-radius:24px!important;
+    }
+    .wordbank-card h2{
+      font-size:28px!important;
+      line-height:1.08!important;
+      margin:5px 0 7px!important;
+    }
+    .wordbank-card p{font-size:14px!important;margin:0!important}
+    .word-sample{margin-top:11px!important}
+    .word-chip{font-size:12px!important;padding:5px 9px!important}
+    .wordbank-progress{font-size:27px!important}
+
+    .section-heading{margin-top:22px!important;margin-bottom:10px!important}
+    .section-heading h2{font-size:27px!important;margin-top:3px!important}
+    .next-card{
+      min-height:118px!important;
+      padding:18px 22px!important;
+      border-radius:22px!important;
+    }
+    .next-card>img{
+      width:120px!important;
+      height:105px!important;
+      object-fit:contain!important;
+      position:static!important;
+      opacity:1!important;
+      mix-blend-mode:normal!important;
+    }
+    .next-title{font-size:23px!important}
+    .next-meta{font-size:13px!important}
+
+    .summary{padding:14px!important;border-radius:16px!important}
+    .summary-value{font-size:24px!important}
+
+    .bottom-nav{
+      height:64px!important;
+      width:min(700px,calc(100% - 24px))!important;
+      border-radius:22px!important;
+    }
+    .nav-btn{font-size:10px!important}
+    .nav-icon{font-size:16px!important}
+
+    @media(max-width:900px){
+      .wrap,.header-inner{width:min(100% - 24px,860px)!important}
+      .hero{
+        grid-template-columns:minmax(0,1fr) minmax(250px,38%)!important;
+        min-height:198px!important;
+        padding:20px 18px 16px!important;
+        gap:14px!important;
+      }
+      .hero h1{font-size:clamp(43px,6vw,58px)!important}
+      .hero-art{max-width:360px!important;max-height:175px!important}
+      .today-card{padding:21px!important}
+      .goal-box{
+        grid-template-columns:118px minmax(0,1fr)!important;
+        min-height:148px!important;
+        padding:12px 16px!important;
+        gap:13px!important;
+      }
+      .goal-box .art{width:112px!important;height:120px!important}
+      .metric-value{font-size:31px!important}
+      .wordbank-card{grid-template-columns:1fr 210px!important}
+    }
+
+    @media(max-width:650px){
+      .hero{
+        grid-template-columns:1fr!important;
+        min-height:auto!important;
+        padding:18px 10px 12px!important;
+        text-align:left!important;
+      }
+      .hero h1{font-size:44px!important}
+      .hero-art{
+        width:min(100%,360px)!important;
+        max-width:360px!important;
+        max-height:145px!important;
+        justify-self:center!important;
+      }
+      .today-card{padding:18px 16px!important}
+      .today-head h2{font-size:30px!important}
+      .goal-grid{grid-template-columns:1fr!important;gap:12px!important}
+      .goal-box{
+        grid-template-columns:105px minmax(0,1fr)!important;
+        min-height:136px!important;
+        padding:10px 14px!important;
+      }
+      .goal-box .art{width:100px!important;height:108px!important}
+      .metric-value{font-size:29px!important}
+      .tiny-encourage{font-size:13px!important}
+      .today-actions{flex-direction:column!important;align-items:stretch!important}
+      .continue-wide{width:100%!important;min-width:0!important}
+      .stat-grid{grid-template-columns:1fr 1fr!important}
+      .wordbank-card{grid-template-columns:1fr!important;padding:18px!important}
+      .wordbank-card h2{font-size:25px!important}
+    }
+
+</style>
 </head>
 <body>
   <header class="app-header">
     <div class="header-inner">
-      <div class="brand">Latin<small>revision journal · V8.2.3</small></div>
+      <div class="brand">Latin<small>revision journal · V8.2.4</small></div>
       <div class="header-right">
         <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span id="soundLabel">Sound on</span></button>
       </div>
