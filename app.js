@@ -5,6 +5,12 @@ const byId = new Map(bank.map(question => [question.id, question]));
 
 const masteryTarget = 85;
 const stateKey = 'latinSummerV8State';
+const dailyGoalMinutes = 20;
+const dailyGoalQuestions = 30;
+const idleLimitMs = 90 * 1000;
+let lastStudyInteraction = Date.now();
+let lastActiveTick = Date.now();
+let audioContext = null;
 const olderStateKeys = ['latinSummerV7State', 'latinSummerV6State', 'latinV3State'];
 
 let state;
@@ -16,15 +22,17 @@ let quizTitle = '';
 let quizDay = '';
 let reviewMode = false;
 let sessionInfo = {};
+let sessionAnswers = [];
 
 function emptyState() {
   return {
-    version: 8,
+    version: 8.1,
     attempts: [],
     reviews: {},
     results: {},
     cycles: {},
     settings: { sound: true },
+    daily: {},
     activeSession: null,
     lastSaved: null,
     lastBackup: null,
@@ -33,12 +41,13 @@ function emptyState() {
 
 function mergeState(saved) {
   const output = Object.assign(emptyState(), saved || {});
-  output.version = 8;
+  output.version = 8.1;
   output.attempts = Array.isArray(output.attempts) ? output.attempts : [];
   output.reviews = output.reviews || {};
   output.results = output.results || {};
   output.cycles = output.cycles || {};
   output.settings = Object.assign({ sound: true }, output.settings || {});
+  output.daily = output.daily && typeof output.daily === 'object' ? output.daily : {};
   output.activeSession = output.activeSession || null;
   Object.values(output.cycles).forEach(cycle => {
     cycle.seen = Array.isArray(cycle.seen) ? cycle.seen : [];
@@ -117,18 +126,21 @@ function shuffle(values) {
   return output;
 }
 
-function todayISO() {
-  const date = new Date();
+function localISODate(date = new Date()) {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   return `${date.getFullYear()}-${month}-${day}`;
+}
+
+function todayISO() {
+  return localISODate(new Date());
 }
 
 function addDays(number) {
   const date = new Date();
   date.setHours(12, 0, 0, 0);
   date.setDate(date.getDate() + number);
-  return date.toISOString().slice(0, 10);
+  return localISODate(date);
 }
 
 function formatStamp(value) {
@@ -137,9 +149,186 @@ function formatStamp(value) {
   return Number.isNaN(date.getTime()) ? 'Not yet' : date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' });
 }
 
+
+function dailyRecord(date = todayISO()) {
+  if (!state.daily[date]) {
+    state.daily[date] = {
+      activeMs: 0,
+      questions: 0,
+      correct: 0,
+      wrong: 0,
+      topics: {},
+      sessionKinds: {},
+      completedAt: null,
+    };
+  }
+  return state.daily[date];
+}
+
+function dailyGoalComplete(record = dailyRecord()) {
+  return record.activeMs >= dailyGoalMinutes * 60 * 1000 && record.questions >= dailyGoalQuestions;
+}
+
+function markDailyCompletion(record = dailyRecord()) {
+  if (dailyGoalComplete(record) && !record.completedAt) {
+    record.completedAt = new Date().toISOString();
+    playTone('complete');
+  }
+}
+
+function recordDailyAnswer(question, ok) {
+  const record = dailyRecord();
+  record.questions += 1;
+  if (ok) record.correct += 1;
+  else record.wrong += 1;
+  const topic = question.topic || question.day || 'Other';
+  if (!record.topics[topic]) record.topics[topic] = { answered: 0, correct: 0 };
+  record.topics[topic].answered += 1;
+  if (ok) record.topics[topic].correct += 1;
+  const kind = sessionInfo.kind || 'practice';
+  record.sessionKinds[kind] = (record.sessionKinds[kind] || 0) + 1;
+  markDailyCompletion(record);
+}
+
+function isStudyViewActive() {
+  const notesView = document.getElementById('notes');
+  const quizView = document.getElementById('quiz');
+  return Boolean(
+    document.visibilityState === 'visible'
+    && ((notesView && !notesView.classList.contains('hidden')) || (quizView && !quizView.classList.contains('hidden')))
+  );
+}
+
+function noteStudyInteraction() {
+  lastStudyInteraction = Date.now();
+}
+
+function tickActiveStudy() {
+  const now = Date.now();
+  const delta = Math.min(20000, Math.max(0, now - lastActiveTick));
+  lastActiveTick = now;
+  if (!isStudyViewActive() || now - lastStudyInteraction > idleLimitMs || delta <= 0) return;
+  const record = dailyRecord();
+  record.activeMs += delta;
+  markDailyCompletion(record);
+  try {
+    localStorage.setItem(stateKey, JSON.stringify(state));
+  } catch (error) {}
+  renderDailyGoal();
+}
+
+function renderDailyGoal() {
+  const record = dailyRecord();
+  const minutes = Math.floor(record.activeMs / 60000);
+  const accuracy = record.questions ? Math.round(record.correct / record.questions * 100) : null;
+  const timePct = Math.min(100, record.activeMs / (dailyGoalMinutes * 60000) * 100);
+  const questionPct = Math.min(100, record.questions / dailyGoalQuestions * 100);
+  const completed = dailyGoalComplete(record);
+
+  const minutesEl = document.getElementById('todayMinutes');
+  const questionsEl = document.getElementById('todayQuestions');
+  const accuracyEl = document.getElementById('todayAccuracy');
+  const correctLine = document.getElementById('todayCorrectLine');
+  const timeBar = document.getElementById('dailyTimeBar');
+  const questionBar = document.getElementById('dailyQuestionsBar');
+  const status = document.getElementById('dailyStatus');
+  const remaining = document.getElementById('dailyRemaining');
+
+  if (!minutesEl) return;
+  minutesEl.textContent = minutes;
+  questionsEl.textContent = record.questions;
+  accuracyEl.textContent = accuracy === null ? '—' : `${accuracy}%`;
+  correctLine.textContent = record.questions ? `${record.correct} correct · ${record.wrong} to review` : 'No answers yet';
+  timeBar.style.width = `${timePct}%`;
+  questionBar.style.width = `${questionPct}%`;
+  const combinedPct = Math.round(Math.min(timePct, questionPct));
+  const dailyRing = document.getElementById('dailyRing');
+  const dailyRingValue = document.getElementById('dailyRingValue');
+  if (dailyRing) {
+    dailyRing.style.setProperty('--p', combinedPct);
+    dailyRing.setAttribute('aria-label', `Daily goal ${combinedPct}% complete`);
+  }
+  if (dailyRingValue) dailyRingValue.textContent = `${combinedPct}%`;
+
+  if (completed) {
+    status.textContent = '✓ Daily goal complete';
+    status.classList.add('done');
+    remaining.textContent = `Completed today with ${record.questions} questions and ${Math.max(dailyGoalMinutes, minutes)} active minutes.`;
+  } else {
+    status.textContent = '○ Not complete yet';
+    status.classList.remove('done');
+    const minsLeft = Math.max(0, dailyGoalMinutes - minutes);
+    const qsLeft = Math.max(0, dailyGoalQuestions - record.questions);
+    const parts = [];
+    if (minsLeft) parts.push(`${minsLeft} active minute${minsLeft === 1 ? '' : 's'}`);
+    if (qsLeft) parts.push(`${qsLeft} question${qsLeft === 1 ? '' : 's'}`);
+    remaining.textContent = parts.length ? `${parts.join(' + ')} remaining today.` : 'Daily goal complete.';
+  }
+}
+
+function parentReportText() {
+  const date = todayISO();
+  const record = dailyRecord(date);
+  const minutes = Math.floor(record.activeMs / 60000);
+  const accuracy = record.questions ? Math.round(record.correct / record.questions * 100) : 0;
+  const topicRows = Object.entries(record.topics || {})
+    .map(([topic, stats]) => ({ topic, wrong: Math.max(0, stats.answered - stats.correct), answered: stats.answered }))
+    .sort((a, b) => b.wrong - a.wrong || b.answered - a.answered)
+    .slice(0, 3)
+    .filter(item => item.wrong > 0);
+  const weak = topicRows.length ? topicRows.map(item => `${item.topic}: ${item.wrong} missed`).join('; ') : 'No repeated weak topic identified today.';
+  const status = dailyGoalComplete(record) ? '✅ Daily goal complete' : '⚠️ Daily goal not yet complete';
+  return [
+    `Latin Revision — ${date}`,
+    status,
+    `Active study: ${minutes} / ${dailyGoalMinutes} min`,
+    `Questions: ${record.questions} / ${dailyGoalQuestions}`,
+    `Correct: ${record.correct}`,
+    `Incorrect: ${record.wrong}`,
+    `Accuracy: ${record.questions ? `${accuracy}%` : '—'}`,
+    `Due-review questions answered: ${record.sessionKinds.review || 0}`,
+    `Needs attention: ${weak}`,
+  ].join('\\n');
+}
+
+async function shareParentReport() {
+  const text = parentReportText();
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Latin Revision daily report', text });
+      return;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      alert('Parent report copied. You can paste it into Messages, Mail or WhatsApp.');
+      return;
+    }
+  } catch (error) {
+    if (error && error.name === 'AbortError') return;
+  }
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  textarea.remove();
+  alert('Parent report copied. You can paste it into Messages, Mail or WhatsApp.');
+}
+
 function save() {
   state.lastSaved = new Date().toISOString();
-  localStorage.setItem(stateKey, JSON.stringify(state));
+  try {
+    localStorage.setItem(stateKey, JSON.stringify(state));
+    const warning = document.getElementById('saveWarning');
+    if (warning) warning.classList.remove('show');
+  } catch (error) {
+    const warning = document.getElementById('saveWarning');
+    if (warning) warning.classList.add('show');
+    console.error('Latin Revision progress could not be saved.', error);
+  }
   renderSaveStatus();
 }
 
@@ -217,6 +406,7 @@ function topicSummary() {
 }
 
 function renderDashboard() {
+  renderDailyGoal();
   const reviewEntries = Object.entries(state.reviews);
   const due = reviewEntries.filter(([, review]) => review.due <= todayISO()).length;
   document.getElementById('totalcount').textContent = bank.length;
@@ -470,11 +660,12 @@ function startQuiz(questions, title, day) {
   quizQuestions = questions;
   current = 0;
   score = 0;
+  sessionAnswers = [];
   quizTitle = title;
   quizDay = day;
   state.activeSession = {
     qids: questions.map(question => question.id), title, day, current: 0, score: 0,
-    reviewMode, sessionInfo: { ...sessionInfo },
+    reviewMode, sessionInfo: { ...sessionInfo }, sessionAnswers: [],
   };
   save();
   show('quiz');
@@ -496,6 +687,7 @@ function resumeSession() {
   score = active.score || 0;
   reviewMode = Boolean(active.reviewMode);
   sessionInfo = active.sessionInfo || {};
+  sessionAnswers = Array.isArray(active.sessionAnswers) ? active.sessionAnswers : [];
   if (active.current >= questions.length) {
     current = questions.length - 1;
     return finish();
@@ -512,6 +704,8 @@ function pauseQuiz() {
 
 function renderQuestion() {
   const question = quizQuestions[current];
+  const questionStage = document.getElementById('questionStage');
+  if (questionStage) questionStage.classList.remove('answer-correct', 'answer-wrong');
   document.getElementById('quizTitle').textContent = quizTitle;
   document.getElementById('questionCounter').textContent = `Question ${current + 1} of ${quizQuestions.length}`;
   document.getElementById('quizBar').style.width = `${current / quizQuestions.length * 100}%`;
@@ -662,17 +856,24 @@ function checkAnswer() {
   if (result.ok) score += 1;
   updateReview(question, result.ok);
   recordFocusResult(question, result.ok);
+  recordDailyAnswer(question, result.ok);
+  sessionAnswers.push({
+    id: question.id,
+    topic: question.topic || question.direction || question.day || 'Other',
+    ok: result.ok,
+  });
 
   if (state.activeSession) {
     state.activeSession.score = score;
     state.activeSession.current = current + 1;
     state.activeSession.sessionInfo = { ...sessionInfo };
+    state.activeSession.sessionAnswers = [...sessionAnswers];
   }
   save();
   playTone(result.ok ? 'correct' : 'wrong');
 
   const answer = question.a || question.answerExample || (question.accepted || [])[0] || '';
-  let html = `<div class="feedback-title">${result.ok ? '✓ Correct' : 'Not quite — let’s fix it'}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
+  let html = `<div class="feedback-title"><span class="feedback-icon">${result.ok ? '✓' : '↺'}</span>${result.ok ? 'Correct' : 'Not quite — let’s fix it'}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
   if (!result.ok && result.missing.length) {
     html += `<div><strong>Missing:</strong><ul class="feedback-list">${result.missing.map(item => `<li>${esc(item)}</li>`).join('')}</ul></div>`;
   }
@@ -689,6 +890,12 @@ function checkAnswer() {
   }
   feedback.innerHTML = html;
   feedback.className = `feedback ${result.ok ? 'good' : 'bad'}`;
+  const questionStage = document.getElementById('questionStage');
+  if (questionStage) {
+    questionStage.classList.remove('answer-correct', 'answer-wrong');
+    void questionStage.offsetWidth;
+    questionStage.classList.add(result.ok ? 'answer-correct' : 'answer-wrong');
+  }
   document.getElementById('checkButton').classList.add('hidden');
   document.getElementById('nextButton').classList.remove('hidden');
 }
@@ -704,6 +911,54 @@ function nextQuestion() {
   }
 }
 
+
+function sessionTopicSummary() {
+  const groups = {};
+  sessionAnswers.forEach(answer => {
+    const topic = answer.topic || 'Other';
+    if (!groups[topic]) groups[topic] = { answered: 0, correct: 0 };
+    groups[topic].answered += 1;
+    if (answer.ok) groups[topic].correct += 1;
+  });
+  return Object.entries(groups)
+    .map(([topic, stats]) => ({ topic, ...stats, percent: Math.round(stats.correct / Math.max(1, stats.answered) * 100) }))
+    .sort((a, b) => a.percent - b.percent || b.answered - a.answered)
+    .slice(0, 4);
+}
+
+function renderSessionBreakdown() {
+  const box = document.getElementById('topicBreakdown');
+  if (!box) return;
+  const rows = sessionTopicSummary();
+  if (!rows.length) {
+    box.innerHTML = '<strong>Topic breakdown</strong><div class="small muted" style="margin-top:6px">No topic data recorded for this session.</div>';
+    return;
+  }
+  box.innerHTML = `<strong>Topic breakdown</strong>${rows.map(row => `
+    <div class="topic-row">
+      <span>${esc(row.topic)}</span>
+      <strong>${row.correct}/${row.answered} · ${row.percent}%</strong>
+    </div>`).join('')}`;
+}
+
+function celebrateMastery(percent) {
+  const box = document.getElementById('masteryCelebration');
+  if (!box) return;
+  box.classList.remove('hidden');
+  box.innerHTML = `<div class="eyebrow">Milestone reached</div><h2>Mastered ✓</h2><div>Full focus cycle completed at <strong>${percent}%</strong>. This dated block is now mastered.</div>`;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const tones = ['var(--sage)', 'var(--lav)', 'var(--gold)', 'var(--rose)'];
+  for (let i = 0; i < 18; i += 1) {
+    const particle = document.createElement('span');
+    particle.className = 'celebration-particle';
+    particle.style.left = `${5 + Math.random() * 90}%`;
+    particle.style.top = `${-8 - Math.random() * 25}px`;
+    particle.style.background = tones[i % tones.length];
+    particle.style.animationDelay = `${Math.random() * 0.25}s`;
+    box.appendChild(particle);
+  }
+}
+
 function finish() {
   const percent = Math.round(score / Math.max(1, quizQuestions.length) * 100);
   state.attempts.push({
@@ -713,7 +968,23 @@ function finish() {
   state.activeSession = null;
   save();
   playTone('complete');
-  document.getElementById('resultScore').textContent = `${score}/${quizQuestions.length} — ${percent}%`;
+  document.getElementById('resultScore').textContent = `${score}/${quizQuestions.length} answered correctly`;
+  const resultRing = document.getElementById('resultRing');
+  if (resultRing) {
+    resultRing.style.setProperty('--p', percent);
+    resultRing.setAttribute('aria-label', `Session accuracy ${percent}%`);
+  }
+  document.getElementById('resultPercent').textContent = `${percent}%`;
+  document.getElementById('resultCorrect').textContent = score;
+  document.getElementById('resultWrong').textContent = Math.max(0, quizQuestions.length - score);
+  const today = dailyRecord();
+  document.getElementById('resultDailyProgress').textContent = `${today.questions}/${dailyGoalQuestions}`;
+  const celebration = document.getElementById('masteryCelebration');
+  if (celebration) {
+    celebration.classList.add('hidden');
+    celebration.innerHTML = '';
+  }
+  renderSessionBreakdown();
 
   let resultMessage;
   if (sessionInfo.cycleCompleted) {
@@ -726,6 +997,9 @@ function finish() {
     resultMessage = 'Below 85% for this session. Missed questions are held out of ordinary Practice and scheduled for review.';
   }
   document.getElementById('resultMessage').textContent = resultMessage;
+  if (sessionInfo.cycleCompleted && sessionInfo.cyclePercent >= masteryTarget) {
+    celebrateMastery(sessionInfo.cyclePercent);
+  }
 
   let cycleText = '<strong>Session complete.</strong>';
   if (sessionInfo.kind === 'fresh') {
@@ -749,7 +1023,9 @@ function playTone(kind) {
   if (state.settings.sound === false) return;
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   if (!AudioContext) return;
-  const audio = new AudioContext();
+  if (!audioContext) audioContext = new AudioContext();
+  const audio = audioContext;
+  if (audio.state === 'suspended') audio.resume().catch(() => {});
   const patterns = { correct: [392, 523], wrong: [294, 247], complete: [392, 523, 659] };
   const toneList = patterns[kind] || patterns.correct;
   toneList.forEach((frequency, index) => {
@@ -765,7 +1041,6 @@ function playTone(kind) {
     oscillator.start(start);
     oscillator.stop(start + 0.18);
   });
-  setTimeout(() => audio.close().catch(() => {}), toneList.length * 110 + 300);
 }
 
 function exportProgress() {
@@ -774,7 +1049,7 @@ function exportProgress() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = 'Latin_Revision_V8_progress_backup.json';
+  link.download = 'Latin_Revision_V8_1_progress_backup.json';
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 }
@@ -786,7 +1061,7 @@ function importProgress(event) {
   reader.onload = () => {
     try {
       const data = JSON.parse(reader.result);
-      if (!Array.isArray(data.attempts) || !data.reviews) throw new Error('Invalid backup');
+      if (!data || typeof data !== 'object' || !Array.isArray(data.attempts) || !data.reviews || typeof data.reviews !== 'object' || !data.cycles || typeof data.cycles !== 'object') throw new Error('Invalid backup');
       state = mergeState(data);
       save();
       migrationMessage = 'Progress backup restored successfully.';
@@ -807,6 +1082,15 @@ function resetProgress() {
   migrationMessage = '';
   showDashboard();
 }
+
+['pointerdown', 'keydown', 'touchstart'].forEach(eventName => {
+  document.addEventListener(eventName, noteStudyInteraction, { passive: true });
+});
+document.addEventListener('visibilitychange', () => {
+  lastActiveTick = Date.now();
+  if (document.visibilityState === 'visible') noteStudyInteraction();
+});
+setInterval(tickActiveStudy, 15000);
 
 renderDashboard();
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});

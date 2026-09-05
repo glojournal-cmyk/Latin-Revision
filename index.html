@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Latin Revision">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <title>Latin Revision — Reliable Practice V8</title>
+  <title>Latin Revision — Reliable Practice V8.1</title>
   <style>
     :root{
       --ink:#24312c;--muted:#708078;--line:#d9e6df;--paper:#fff;
@@ -120,6 +120,75 @@
     .result-score{font-family:var(--heading);font-size:44px;margin:8px 0}
     .result-message{font-size:17px}
     .file-note{font-size:12px;color:var(--muted);margin-top:9px}
+
+    .daily-goal{border:1px solid var(--line);border-radius:22px;padding:18px;margin:0 0 20px;background:linear-gradient(135deg,#fff 0%,var(--sage-soft) 100%)}
+    .daily-goal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+    .daily-status{display:inline-flex;align-items:center;gap:7px;padding:8px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:700}
+    .daily-status.done{background:var(--sage);color:#fff;border-color:var(--sage)}
+    .daily-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:15px}
+    .daily-metric{background:rgba(255,255,255,.88);border:1px solid var(--line);border-radius:16px;padding:14px}
+    .daily-metric strong{font-family:var(--heading);font-size:25px;font-weight:600}
+    .daily-track{height:9px;background:var(--track);border-radius:999px;overflow:hidden;margin-top:8px}
+    .daily-track>span{display:block;height:100%;background:var(--sage);border-radius:999px;transition:width .25s ease}
+    .daily-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:14px}
+    .daily-note{font-size:12px;color:var(--muted);margin-top:8px}
+    .save-warning{display:none;margin-top:8px;color:var(--rose);font-size:12px;font-weight:700}
+    .save-warning.show{display:block}
+    @media(max-width:620px){.daily-grid{grid-template-columns:1fr}.daily-goal{padding:15px}}
+
+
+    /* V8.1 visual polish */
+    .daily-goal{position:relative;overflow:hidden}
+    .daily-goal:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-70px;bottom:-85px;background:var(--lav-soft);opacity:.75;pointer-events:none}
+    .daily-goal-head,.daily-grid,.daily-actions{position:relative;z-index:1}
+    .daily-visual{display:flex;align-items:center;gap:16px}
+    .goal-ring{--p:0;position:relative;width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sage) calc(var(--p)*1%),var(--track) 0);flex:0 0 auto}
+    .goal-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}
+    .goal-ring-inner{position:relative;z-index:1;text-align:center;line-height:1.05}
+    .goal-ring-value{font-family:var(--heading);font-size:23px;font-weight:600}
+    .goal-ring-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+    .today-cta{margin-top:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .today-cta .primary{min-width:170px}
+    .question-stage{transition:transform .22s ease,box-shadow .22s ease}
+    .question-stage.answer-correct{animation:answerPop .42s ease}
+    .question-stage.answer-wrong{animation:answerNudge .34s ease}
+    @keyframes answerPop{0%{transform:scale(1)}45%{transform:scale(1.012)}100%{transform:scale(1)}}
+    @keyframes answerNudge{0%,100%{transform:translateX(0)}30%{transform:translateX(-4px)}65%{transform:translateX(4px)}}
+    .feedback-icon{width:38px;height:38px;border-radius:50%;display:inline-grid;place-items:center;margin-right:8px;font-weight:800;vertical-align:middle}
+    .good .feedback-icon{background:#fff;color:var(--sage-dark)}
+    .bad .feedback-icon{background:#fff;color:var(--rose)}
+    .results-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;margin:17px 0}
+    .score-ring{--p:0;position:relative;width:126px;height:126px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--sage) calc(var(--p)*1%),var(--track) 0)}
+    .score-ring:before{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
+    .score-ring-content{position:relative;z-index:1;text-align:center}
+    .score-ring-content strong{display:block;font-family:var(--heading);font-size:30px;line-height:1}
+    .score-ring-content span{font-size:12px;color:var(--muted)}
+    .result-score{font-family:var(--heading);font-size:26px;font-weight:600;margin:4px 0}
+    .result-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+    .result-kpi{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff}
+    .result-kpi span{display:block;color:var(--muted);font-size:12px}
+    .result-kpi strong{font-family:var(--heading);font-size:23px}
+    .topic-breakdown{border:1px solid var(--line);border-radius:18px;padding:15px;margin:15px 0;background:#fff}
+    .topic-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+    .topic-row:last-child{border-bottom:0}
+    .mastery-celebration{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--sage-soft),#fff 55%,var(--gold-soft));border:1px solid #c8dfd3;border-radius:21px;padding:18px;margin:15px 0}
+    .mastery-celebration h2{color:var(--sage-dark);margin:2px 0 5px}
+    .celebration-particle{position:absolute;width:8px;height:12px;border-radius:2px;opacity:.7;animation:floatDown 1.25s ease-out forwards}
+    @keyframes floatDown{from{transform:translateY(-25px) rotate(0);opacity:0}20%{opacity:.75}to{transform:translateY(150px) rotate(210deg);opacity:0}}
+    @media(prefers-reduced-motion:reduce){
+      .question-stage.answer-correct,.question-stage.answer-wrong,.celebration-particle{animation:none!important}
+      .progress-bar,.daily-track>span{transition:none}
+    }
+    @media(max-width:620px){
+      .daily-visual{align-items:flex-start}
+      .goal-ring{width:78px;height:78px}
+      .goal-ring-value{font-size:20px}
+      .results-hero{grid-template-columns:1fr;text-align:center}
+      .score-ring{margin:auto}
+      .result-kpis{grid-template-columns:1fr 1fr}
+      .result-kpi:last-child{grid-column:1/-1}
+    }
+
     @media(min-width:760px){.header-tag{display:block}}
     @media(max-width:880px){.summary-grid{grid-template-columns:repeat(2,1fr)}.notes-grid{grid-template-columns:1fr}}
     @media(max-width:620px){
@@ -134,7 +203,7 @@
   <header class="app-header">
     <div class="header-inner">
       <div class="brand"><span class="brand-mark">L</span><span>Latin Revision</span></div>
-      <span class="header-tag">Reliable Practice V8 · Summer source-locked</span>
+      <span class="header-tag">Reliable Practice V8.1 · Summer source-locked</span>
       <button id="soundButton" class="sound-button" type="button" aria-pressed="true" onclick="toggleSound()"><span class="sound-dot"></span><span id="soundLabel">Sound on</span></button>
     </div>
   </header>
@@ -149,6 +218,44 @@
           <div class="streak">✦ <span>Focused practice, not endless papers</span></div>
         </div>
       </div>
+
+
+      <section class="daily-goal" aria-labelledby="dailyGoalTitle">
+        <div class="daily-goal-head">
+          <div class="daily-visual">
+            <div id="dailyRing" class="goal-ring" role="img" aria-label="Daily goal progress">
+              <div class="goal-ring-inner"><div id="dailyRingValue" class="goal-ring-value">0%</div><div class="goal-ring-label">today</div></div>
+            </div>
+            <div>
+              <div class="eyebrow">Today’s goal</div>
+              <h2 id="dailyGoalTitle" style="margin-top:4px">20 active minutes + 30 questions</h2>
+              <div class="small muted" id="dailyRemaining">Start today’s revision to build your progress.</div>
+            </div>
+          </div>
+          <div id="dailyStatus" class="daily-status">○ Not complete yet</div>
+        </div>
+        <div class="daily-grid">
+          <div class="daily-metric">
+            <div class="small muted">Active study</div>
+            <strong><span id="todayMinutes">0</span> / 20 min</strong>
+            <div class="daily-track" aria-hidden="true"><span id="dailyTimeBar" style="width:0%"></span></div>
+          </div>
+          <div class="daily-metric">
+            <div class="small muted">Questions answered</div>
+            <strong><span id="todayQuestions">0</span> / 30</strong>
+            <div class="daily-track" aria-hidden="true"><span id="dailyQuestionsBar" style="width:0%"></span></div>
+          </div>
+          <div class="daily-metric">
+            <div class="small muted">Today’s accuracy</div>
+            <strong id="todayAccuracy">—</strong>
+            <div class="small muted" id="todayCorrectLine">No answers yet</div>
+          </div>
+        </div>
+        <div class="daily-actions">
+          <button id="shareReportButton" class="secondary" type="button" onclick="shareParentReport()">Share parent report</button>
+          <span class="small muted">The timer counts active work in Notes or Practice and pauses when the app is hidden or idle.</span>
+        </div>
+      </section>
 
       <div class="summary-grid">
         <div class="summary"><div class="summary-label">Overall mastery</div><div class="summary-value" id="overall">0%</div><div class="progress"><div class="progress-bar" id="overallbar"></div></div></div>
@@ -178,6 +285,7 @@
           <button class="secondary" onclick="resetProgress()">Reset progress</button>
         </div>
         <div class="file-note">Do not use Private Browsing for the installed app. Keep the same GitHub Pages address when updating.</div>
+        <div id="saveWarning" class="save-warning">Progress could not be saved on this device. Export a backup before continuing.</div>
       </section>
     </section>
 
@@ -195,7 +303,7 @@
     </section>
 
     <section id="quiz" class="quiz-shell hidden">
-      <article class="page-card">
+      <article id="questionStage" class="page-card question-stage">
         <div class="quiz-top">
           <div class="quiz-meta"><div><div class="eyebrow" id="quizTitle"></div><h2 id="questionCounter" style="margin-top:5px"></h2></div><div class="quiz-badges"><span id="freshBadge" class="cycle-badge">Fresh questions first</span><span class="cycle-badge">Auto-saved</span></div></div>
           <div class="progress"><div id="quizBar" class="progress-bar"></div></div>
@@ -210,104 +318,32 @@
     </section>
 
     <section id="results" class="results-shell hidden">
-      <article class="page-card"><div class="eyebrow">Session complete</div><h1>Well done for finishing.</h1><div id="resultScore" class="result-score"></div><p id="resultMessage" class="result-message"></p><div id="cycleResult" class="exact-scope"></div><div class="action-row"><button class="primary" onclick="showDashboard()">Back to dated plan</button><button id="resultDueButton" class="secondary" onclick="startDue()">Do due reviews</button></div></article>
+      <article class="page-card">
+        <div class="eyebrow">Session complete</div>
+        <h1>Good work — here’s what you achieved.</h1>
+        <div id="masteryCelebration" class="mastery-celebration hidden" aria-live="polite"></div>
+        <div class="results-hero">
+          <div id="resultRing" class="score-ring" role="img" aria-label="Session accuracy">
+            <div class="score-ring-content"><strong id="resultPercent">0%</strong><span>accuracy</span></div>
+          </div>
+          <div>
+            <div id="resultScore" class="result-score"></div>
+            <p id="resultMessage" class="result-message"></p>
+          </div>
+        </div>
+        <div class="result-kpis">
+          <div class="result-kpi"><span>Correct</span><strong id="resultCorrect">0</strong></div>
+          <div class="result-kpi"><span>To review</span><strong id="resultWrong">0</strong></div>
+          <div class="result-kpi"><span>Daily progress</span><strong id="resultDailyProgress">0/30</strong></div>
+        </div>
+        <div id="topicBreakdown" class="topic-breakdown"></div>
+        <div id="cycleResult" class="exact-scope"></div>
+        <div class="action-row"><button class="primary" onclick="showDashboard()">Back to dated plan</button><button id="resultDueButton" class="secondary" onclick="startDue()">Do due reviews</button></div>
+      </article>
     </section>
   </main>
 
   <script src="question-bank.js"></script>
-  <script type="text/plain" id="legacy-v7-script">
-    const bank=window.LATIN_BANK||[],blocks=window.LATIN_BLOCKS||[],notes=window.LATIN_NOTES||{},meta=window.LATIN_META||{};
-    const byId=new Map(bank.map(q=>[q.id,q]));
-    const masteryTarget=85,stateKey='latinSummerV7State',oldStateKey='latinSummerV6State';
-    let state,migrationMessage='',quizQuestions=[],current=0,score=0,quizTitle='',quizDay='',reviewMode=false,sessionInfo={};
-
-    function emptyState(){return{version:7,attempts:[],reviews:{},results:{},cycles:{},settings:{sound:true},lastSaved:null,lastBackup:null}}
-    function mergeState(saved){const base=emptyState(),out=Object.assign(base,saved||{});out.version=7;out.reviews=out.reviews||{};out.results=out.results||{};out.cycles=out.cycles||{};out.settings=Object.assign({sound:true},out.settings||{});out.attempts=Array.isArray(out.attempts)?out.attempts:[];return out}
-    function loadState(){
-      try{const saved=JSON.parse(localStorage.getItem(stateKey)||'null');if(saved)return mergeState(saved)}catch(e){}
-      try{const old=JSON.parse(localStorage.getItem(oldStateKey)||'null');if(old){migrationMessage='Your V6 scores and scheduled reviews were carried into V7. New no-repeat cycles start fresh.';return mergeState(old)}}catch(e){}
-      try{const older=JSON.parse(localStorage.getItem('latinV3State')||'null');if(older){migrationMessage='Your earlier score history was carried into V7. New question cycles start fresh.';return mergeState({attempts:older.attempts||[]})}}catch(e){}
-      return emptyState()
-    }
-    state=loadState();
-
-    function esc(value){return String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
-    function stripMarks(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
-    function norm(s){return stripMarks(s).toLowerCase().replace(/[“”‘’.,!?;:'"()\-]/g,' ').replace(/\s+/g,' ').trim()}
-    function normExact(s){return norm(s).replace(/^(the|a|an)\s+/,'')}
-    function tokens(s){return new Set(norm(s).split(' ').filter(Boolean))}
-    function phrase(answer,p){return(' '+norm(answer)+' ').includes(' '+norm(p)+' ')}
-    function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-    function todayISO(){const d=new Date(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return`${d.getFullYear()}-${m}-${day}`}
-    function addDays(n){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
-    function formatStamp(value){if(!value)return'Not yet';const d=new Date(value);return Number.isNaN(d.getTime())?'Not yet':d.toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}
-    function save(){state.lastSaved=new Date().toISOString();localStorage.setItem(stateKey,JSON.stringify(state));renderSaveStatus()}
-    function renderSaveStatus(){const a=document.getElementById('lastSaved'),b=document.getElementById('lastBackup');if(a)a.textContent=formatStamp(state.lastSaved);if(b)b.textContent=state.lastBackup?formatStamp(state.lastBackup):'No backup exported yet';const sound=state.settings.sound!==false;document.getElementById('soundButton').setAttribute('aria-pressed',String(sound));document.getElementById('soundLabel').textContent=sound?'Sound on':'Sound off'}
-    function show(id){['dashboard','notes','quiz','results'].forEach(x=>document.getElementById(x).classList.add('hidden'));document.getElementById(id).classList.remove('hidden');window.scrollTo(0,0)}
-    function showDashboard(){renderDashboard();show('dashboard')}
-
-    function poolFor(block){if(block.mode==='weak')return Object.keys(state.reviews).map(id=>byId.get(id)).filter(Boolean);if(block.mode==='due')return Object.entries(state.reviews).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);const days=block.sourceDays||[block.day];return bank.filter(q=>days.includes(q.day))}
-    function latestPct(day){const attempts=state.attempts.filter(x=>x.day===day);return attempts.length?attempts[attempts.length-1].percent:null}
-    function cycleFor(day){if(!state.cycles[day])state.cycles[day]={seen:[],lastSession:[],round:1};return state.cycles[day]}
-    function phaseFor(day){if(['18 Jul','19 Jul'].includes(day))return'Week 1 — diagnostic and foundations';if(['24 Jul','25 Jul','26 Jul','27 Jul','28 Jul','29 Jul','31 Jul'].includes(day))return'Week 2 — core content build';if(['9 Aug','11 Aug','12 Aug'].includes(day))return'Week 4 — retrieval and grammar';if(['15 Aug','16 Aug','18 Aug','19 Aug'].includes(day))return'Week 5 — stronger language';if(['22 Aug','23 Aug','24 Aug','25 Aug','28 Aug'].includes(day))return'Week 6 — higher skills and set texts';return'Week 7 — assess and consolidate'}
-    function renderDashboard(){
-      document.getElementById('totalcount').textContent=bank.length;const reviewEntries=Object.entries(state.reviews),due=reviewEntries.filter(([,r])=>r.due<=todayISO()).length;
-      document.getElementById('duecount').textContent=due;document.getElementById('weakcount').textContent=reviewEntries.length;document.getElementById('duebtn').disabled=!due;document.getElementById('resultDueButton').disabled=!due;
-      const scored=blocks.map(b=>latestPct(b.day)).filter(x=>x!==null),overall=scored.length?Math.round(scored.reduce((a,b)=>a+b,0)/scored.length):0;document.getElementById('overall').textContent=overall+'%';document.getElementById('overallbar').style.width=overall+'%';
-      const mig=document.getElementById('migration');if(migrationMessage){mig.textContent=migrationMessage;mig.classList.remove('hidden')}else mig.classList.add('hidden');
-      const list=document.getElementById('daylist');list.innerHTML='';let phase='';
-      blocks.forEach(block=>{
-        const nextPhase=phaseFor(block.day);if(nextPhase!==phase){phase=nextPhase;const h=document.createElement('div');h.className='phase';h.textContent=phase;list.appendChild(h)}
-        const fullPool=poolFor(block),pct=latestPct(block.day),status=pct===null?'Not started':pct>=masteryTarget?'Mastered':pct+'%',statusClass=pct===null?'new':pct>=masteryTarget?'mastered':'started';
-        const pendingIds=new Set(Object.keys(state.reviews)),eligible=block.mode?fullPool:fullPool.filter(q=>!pendingIds.has(q.id)),cycle=block.mode?{seen:[],round:1}:cycleFor(block.day),validSeen=new Set(cycle.seen.filter(id=>eligible.some(q=>q.id===id))),remaining=Math.max(0,eligible.length-validSeen.size),draw=block.mode?Math.min(block.sample,fullPool.length):Math.min(block.sample,remaining||eligible.length);
-        const action=block.mode==='weak'?'Review scheduled items':block.mode==='due'?'Do due review':block.day==='30 Aug'?'Start assessment':`Start ${draw} fresh question${draw===1?'':'s'}`;
-        const card=document.createElement('article');card.className='day-card';card.innerHTML=`<div class="day-main"><div><div class="day-title"><h2>${esc(block.day)}</h2><strong>${esc(block.label)}</strong><span class="status ${statusClass}">${esc(status)}</span></div><div class="cycle-line"><span>${fullPool.length} eligible questions</span>${block.mode?'':`<span class="cycle-badge">Cycle ${cycle.round}: ${validSeen.size}/${eligible.length} seen</span><span>No immediate repeats</span>`}</div></div><button class="primary" ${fullPool.length?'':'disabled'}>${esc(action)}</button></div><div class="scope"><strong>Locked scope:</strong> ${esc(block.scope)}</div>`;
-        card.querySelector('button').onclick=()=>openNotes(block.day);list.appendChild(card)
-      });renderSaveStatus()
-    }
-
-    function openNotes(day){const block=blocks.find(b=>b.day===day),n=notes[day]||{title:day,intro:'Review the exact scope before practice.',must:[],sections:[]};document.getElementById('notesTitle').textContent=n.title;document.getElementById('notesIntro').textContent=n.intro||'';document.getElementById('notesScope').textContent=block.scope;document.getElementById('mustList').innerHTML=(n.must||n.items||[]).map(x=>`<li>${esc(x)}</li>`).join('');document.getElementById('notesSections').innerHTML=(n.sections||[]).map(s=>`<section class="note-section"><h3>${esc(s.title)}</h3><ul>${(s.items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></section>`).join('');document.getElementById('notesStartButton').onclick=()=>startBlock(block);show('notes')}
-    function selectFresh(block){
-      const pool=poolFor(block),pending=new Set(Object.keys(state.reviews)),eligible=pool.filter(q=>!pending.has(q.id));if(!eligible.length)return{questions:[],remaining:0,round:cycleFor(block.day).round};
-      const cycle=cycleFor(block.day),validIds=new Set(eligible.map(q=>q.id));cycle.seen=cycle.seen.filter(id=>validIds.has(id));cycle.lastSession=cycle.lastSession.filter(id=>validIds.has(id));let seen=new Set(cycle.seen),remaining=eligible.filter(q=>!seen.has(q.id));
-      if(!remaining.length){cycle.round+=1;cycle.seen=[];remaining=eligible.filter(q=>!cycle.lastSession.includes(q.id));if(!remaining.length)remaining=[...eligible]}
-      const n=Math.min(block.sample,remaining.length),questions=shuffle([...remaining]).slice(0,n);cycle.lastSession=questions.map(q=>q.id);save();return{questions,remaining:Math.max(0,eligible.length-cycle.seen.length-questions.length),round:cycle.round,total:eligible.length}
-    }
-    function startBlock(block){reviewMode=['weak','due'].includes(block.mode);if(reviewMode){const pool=poolFor(block);if(!pool.length){alert('There are no eligible review questions yet.');showDashboard();return}sessionInfo={kind:'review'};startQuiz(shuffle([...pool]).slice(0,Math.min(block.sample,pool.length)),`${block.day} — ${block.label}`,block.day);return}const selected=selectFresh(block);if(!selected.questions.length){alert('Every available question is currently held for a scheduled review. Start with Due today when it becomes available.');showDashboard();return}sessionInfo={kind:'fresh',round:selected.round,remaining:selected.remaining,total:selected.total};startQuiz(selected.questions,`${block.day} — ${block.label}`,block.day)}
-    function attemptedContentDays(){return blocks.filter(b=>!b.mode&&b.day!=='30 Aug'&&latestPct(b.day)!==null).map(b=>b.day)}
-    function startMixed(){
-      const days=attemptedContentDays();if(!days.length){alert('Complete at least one dated block first.');return}const pool=bank.filter(q=>days.includes(q.day)&&!state.reviews[q.id]);if(!pool.length){alert('No mixed questions are currently available.');return}
-      const cycle=cycleFor('Mixed'),valid=new Set(pool.map(q=>q.id));cycle.seen=cycle.seen.filter(id=>valid.has(id));let remaining=pool.filter(q=>!cycle.seen.includes(q.id));if(!remaining.length){cycle.round+=1;cycle.seen=[];remaining=pool.filter(q=>!cycle.lastSession.includes(q.id));if(!remaining.length)remaining=[...pool]}
-      const qs=shuffle([...remaining]).slice(0,Math.min(15,remaining.length));cycle.lastSession=qs.map(q=>q.id);save();reviewMode=false;sessionInfo={kind:'fresh',round:cycle.round,remaining:Math.max(0,pool.length-cycle.seen.length-qs.length),total:pool.length};startQuiz(qs,'Mixed test — attempted blocks','Mixed')
-    }
-    function startDue(){const pool=Object.entries(state.reviews).filter(([,r])=>r.due<=todayISO()).map(([id])=>byId.get(id)).filter(Boolean);if(!pool.length){alert('No reviews are due today.');return}reviewMode=true;sessionInfo={kind:'review'};startQuiz(shuffle(pool).slice(0,Math.min(20,pool.length)),'Due spaced-repetition review','Due')}
-    function startQuiz(qs,title,day){quizQuestions=qs;current=0;score=0;quizTitle=title;quizDay=day;show('quiz');renderQuestion()}
-    function renderQuestion(){
-      const q=quizQuestions[current];document.getElementById('quizTitle').textContent=quizTitle;document.getElementById('questionCounter').textContent=`Question ${current+1} of ${quizQuestions.length}`;document.getElementById('quizBar').style.width=`${current/quizQuestions.length*100}%`;document.getElementById('freshBadge').textContent=sessionInfo.kind==='review'?'Scheduled review':`Cycle ${sessionInfo.round||1} · fresh questions first`;
-      const context=document.getElementById('questionContext');context.textContent=q.context||'';context.classList.toggle('hidden',!q.context);document.getElementById('direction').textContent=q.direction||q.topic;document.getElementById('questionText').textContent=q.q;const area=document.getElementById('inputArea');area.innerHTML='';
-      if(q.type==='mc'){const box=document.createElement('div');box.className='answers';shuffle([...q.opts]).forEach(option=>{const button=document.createElement('button');button.className='answer-button';button.textContent=option;button.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));button.classList.add('selected');button.dataset.selected='1'};box.appendChild(button)});area.appendChild(box)}else{area.innerHTML='<textarea id="textAnswer" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Write the full answer here."></textarea>'}
-      document.getElementById('feedback').className='feedback hidden';document.getElementById('checkButton').classList.remove('hidden');document.getElementById('nextButton').classList.add('hidden')
-    }
-    function mark(q,answer){if(q.type==='exact_any')return{ok:(q.accepted||[]).some(x=>normExact(x)===normExact(answer)),missing:[]};if(q.type==='eng_auto'){if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return{ok:true,missing:[]};const missing=[];(q.groups||[]).forEach(g=>{if(!g.some(p=>phrase(answer,p)))missing.push(g[0])});return{ok:missing.length===0,missing}}if(q.type==='lat_auto'){if((q.accepted||[]).some(x=>norm(x)===norm(answer)))return{ok:true,missing:[]};const t=tokens(answer),missing=[];(q.latinGroups||[]).forEach(g=>{if(!g.every(x=>t.has(norm(x))))missing.push(g.join(' + '))});return{ok:missing.length===0,missing}}return{ok:false,missing:[]}}
-    function updateReview(q,ok){state.results[q.id]={ok,date:new Date().toISOString()};if(!ok){state.reviews[q.id]={stage:1,due:addDays(2),lastWrong:new Date().toISOString()};return}const review=state.reviews[q.id];if(reviewMode&&review){if(review.stage===1)state.reviews[q.id]={stage:2,due:addDays(7),lastWrong:review.lastWrong};else delete state.reviews[q.id]}}
-    function checkAnswer(){
-      const q=quizQuestions[current],feedback=document.getElementById('feedback');let ok=false,missing=[],given='';if(q.type==='mc'){const selected=document.querySelector('.answer-button[data-selected="1"]');if(!selected){alert('Choose an answer first.');return}given=selected.textContent;ok=norm(given)===norm(q.a)}else{const input=document.getElementById('textAnswer');given=input.value.trim();if(!given){alert('Write an answer first.');return}const result=mark(q,given);ok=result.ok;missing=result.missing}
-      if(ok)score++;updateReview(q,ok);if(!reviewMode&&sessionInfo.kind==='fresh'){const cycle=cycleFor(quizDay);if(!cycle.seen.includes(q.id))cycle.seen.push(q.id);sessionInfo.remaining=Math.max(0,(sessionInfo.total||0)-cycle.seen.length)}save();playTone(ok?'correct':'wrong');const answer=q.a||q.answerExample||(q.accepted||[])[0]||'';let html=`<div class="feedback-title">${ok?'✓ Correct':'Not quite — let’s fix it'}</div><div class="your-answer"><strong>Your answer:</strong> ${esc(given)}</div>`;
-      if(!ok&&missing.length)html+=`<div><strong>Missing or inaccurate:</strong><ul class="feedback-list">${missing.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;if(answer)html+=`<div class="answer-example"><strong>Accepted answer:</strong><br>${esc(answer)}</div>`;
-      html+=`<div class="explanation-box"><strong>How to work it out</strong><ol class="feedback-list">${(q.steps||[q.explain||'Compare with the accepted answer.']).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${q.explain?`<div class="small muted" style="margin-top:8px">${esc(q.explain)}</div>`:''}</div>`;html+=`<div class="memory-box"><strong>Must remember:</strong> ${esc(q.mustRemember||q.explain||'Review the exact form before moving on.')}</div>`;
-      if(!ok)html+='<div class="review-schedule"><strong>Saved for later:</strong> this question leaves normal Practice and returns in 2 days. After a correct retest, it returns once more in 7 days.</div>';feedback.innerHTML=html;feedback.className='feedback '+(ok?'good':'bad');document.getElementById('checkButton').classList.add('hidden');document.getElementById('nextButton').classList.remove('hidden')
-    }
-    function nextQuestion(){if(current<quizQuestions.length-1){current++;renderQuestion()}else finish()}
-    function finish(){const pct=Math.round(score/quizQuestions.length*100);state.attempts.push({date:new Date().toISOString(),day:quizDay,percent:pct,score,total:quizQuestions.length,title:quizTitle});save();playTone('complete');document.getElementById('resultScore').textContent=`${score}/${quizQuestions.length} — ${pct}%`;document.getElementById('resultMessage').textContent=pct>=masteryTarget?'Mastered for this attempt (85%+). Scheduled reviews still matter: one good attempt is not the end of memory practice.':'Below 85%. Missed questions are now held out of normal Practice and scheduled for a 2-day review.';document.getElementById('cycleResult').innerHTML=sessionInfo.kind==='fresh'?`<strong>Question cycle:</strong> ${sessionInfo.remaining} unseen question${sessionInfo.remaining===1?'':'s'} remain in cycle ${sessionInfo.round}. Your next ordinary Practice will draw from those unseen questions.`:'<strong>Review complete:</strong> correct 2-day items move to a 7-day check; correct 7-day items leave the review queue.';show('results')}
-
-    function toggleSound(){state.settings.sound=state.settings.sound===false;save();if(state.settings.sound)playTone('correct')}
-    function playTone(kind){if(state.settings.sound===false)return;const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;const audio=new Ctx(),patterns={correct:[392,523],wrong:[294,247],complete:[392,523,659]},toneList=patterns[kind]||patterns.correct;toneList.forEach((frequency,index)=>{const oscillator=audio.createOscillator(),gain=audio.createGain(),start=audio.currentTime+index*.11;oscillator.type='sine';oscillator.frequency.value=frequency;gain.gain.setValueAtTime(.0001,start);gain.gain.exponentialRampToValueAtTime(kind==='wrong'?.035:.05,start+.015);gain.gain.exponentialRampToValueAtTime(.0001,start+.16);oscillator.connect(gain).connect(audio.destination);oscillator.start(start);oscillator.stop(start+.18)});setTimeout(()=>audio.close().catch(()=>{}),toneList.length*110+300)}
-    function exportProgress(){state.lastBackup=new Date().toISOString();save();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Latin_Revision_V7_progress_backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-    function importProgress(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!Array.isArray(data.attempts)||!data.reviews)throw new Error();state=mergeState(data);save();migrationMessage='Progress backup restored successfully.';showDashboard()}catch(err){alert('This does not look like a valid Latin Revision progress backup.')}event.target.value=''};reader.readAsText(file)}
-    function resetProgress(){if(confirm('Reset all Latin Revision scores, question cycles and review dates on this device?')){state=emptyState();save();migrationMessage='';showDashboard()}}
-
-    renderDashboard();if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-  </script>
   <script src="app.js"></script>
 </body>
 </html>
