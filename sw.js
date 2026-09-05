@@ -1,6 +1,6 @@
-const CACHE='latin-revision-v9-1-2-routingfix-20260905';
+const CACHE='latin-revision-v9-1-3-lightweight-games-20260905';
 const APP_PREFIX='latin-revision-';
-const CORE=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest'];
+const CORE=['./','./index.html','./app.js','./question-bank.js','./manifest.webmanifest','./assets/games/victory.png','./assets/games/hero.png','./assets/games/match.png','./assets/games/gladiator.png','./assets/games/sentence.png','./assets/games/sprint.png','./assets/games/bronze.png','./assets/games/silver.png','./assets/games/gold.png','./assets/games/laurel.png','./assets/games/correct.png'];
 
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));

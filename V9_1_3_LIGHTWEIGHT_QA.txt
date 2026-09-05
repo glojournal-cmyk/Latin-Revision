@@ -1,0 +1,29 @@
+LATIN REVISION V9.1.3 — LIGHTWEIGHT GAMES FIX
+
+LIVE REPO DIAGNOSIS
+The deployed repository showed index.html at 15.4 MB and app.js at 9.09 MB because game PNGs were embedded as base64.
+This build removes game image data from HTML/JS and serves them as normal files.
+
+NEW FILE SIZES
+{
+  "index.html": 2.911,
+  "app.js": 0.086,
+  "question-bank.js": 0.718,
+  "sw.js": 0.001
+}
+
+STATIC QA
+app.js: PASS
+question-bank.js: PASS
+sw.js: PASS
+gamesHub screen exists: PASS
+gamePlay screen exists: PASS
+Home Games route exists: PASS
+Match route exists: PASS
+Gladiator route exists: PASS
+Sentence route exists: PASS
+Sprint route exists: PASS
+No game base64 left in app.js: PASS
+No game base64 left in index.html: PASS
+Game assets copied: PASS
+Cache version bumped: PASS
