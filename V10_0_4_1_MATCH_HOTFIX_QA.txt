@@ -1,0 +1,25 @@
+LATIN REVISION V10.0.4.1 — VERBUM MATCH HOTFIX QA
+
+Verified teacher-bank Latin→English matching pairs: 292
+
+Root causes removed: showScreen(), questionBank.vocab, shuffleArray(), saveState().
+Level mode uses original proven helpers: show(), latinVocabPairs(), gameShuffle(), save().
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+No invalid showScreen: PASS
+No invalid questionBank.vocab: PASS
+No invalid shuffleArray: PASS
+No invalid saveState: PASS
+Uses original show(): PASS
+Uses original latinVocabPairs(): PASS
+Uses original gameShuffle(): PASS
+Uses original save(): PASS
+Six levels present: PASS
+Heart fail: PASS
+Unlock logic: PASS
+Perfect clear 100: PASS
+39 artworks: PASS
+Version/cache: PASS
+Match pool >= 8: PASS

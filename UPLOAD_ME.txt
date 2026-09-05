@@ -1,17 +1,14 @@
-V10.0.4 — VERBUM MATCH LEVELS
+V10.0.4.1 — VERBUM MATCH HOTFIX
 
-Upload and replace ALL files at the repository root.
+Upload/replace ALL files in this ZIP at repository ROOT.
 
-What changed
-- Verbum Match now opens a level-select campaign
-- 6 levels with increasing board size and heart limits
-- Clear a level to unlock the next one
-- Stars are awarded based on mistakes
-- Replay current level or go straight to next level
-- Progress saves locally in the browser
+After deploy:
+1. Reload once.
+2. Footer must say Lux et Labor · Latin Revision V10.0.4.1
+3. Games → Verbum Match
+4. Six level cards should appear.
+5. Level 1 is unlocked.
+6. Clear Level 1 to unlock Level 2.
 
-After upload
-1. Hard refresh once
-2. Confirm footer says Lux et Labor · Latin Revision V10.0.4
-3. Open Games → Verbum Match
-4. Confirm level cards show and Level 1 is unlocked
+This build removes the invalid references that caused
+“That button hit an app error”.
