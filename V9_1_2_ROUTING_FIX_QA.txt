@@ -1,0 +1,39 @@
+LATIN REVISION V9.1.2 — ROUTING STRUCTURE FIX
+
+ROOT CAUSE FIXED
+• Latin Games entry had been inserted OUTSIDE the dashboard screen.
+• gamesHub/gamePlay used the HTML hidden attribute while the app router only toggled the .hidden class.
+• The result was a click that could run but could never reveal the Games screen.
+
+FIXES
+• Games entry moved inside dashboard, between Today and Learn.
+• gamesHub/gamePlay now use class="screen hidden", matching the rest of the app.
+• show() defensively removes hidden attributes before revealing a screen.
+• app.js and question-bank.js now use ?v=9.1.2 cache-busting URLs.
+• Service Worker cache bumped to V9.1.2.
+
+QA
+• Games entry is inside dashboard: PASS
+• Games Hub uses class hidden: PASS
+• Game Play uses class hidden: PASS
+• No Games Hub hidden attribute: PASS
+• No Game Play hidden attribute: PASS
+• Router removes hidden attribute: PASS
+• app.js cache-busted: PASS
+• question-bank.js cache-busted: PASS
+• Only one Games entry: PASS
+• app.js syntax: PASS
+• question-bank.js syntax: PASS
+• sw.js syntax: PASS
+• Screen dashboard: PASS
+• Screen dailyPicker: PASS
+• Screen learnPage: PASS
+• Screen practiceHub: PASS
+• Screen progressPage: PASS
+• Screen morePage: PASS
+• Screen wordbank: PASS
+• Screen notes: PASS
+• Screen quiz: PASS
+• Screen results: PASS
+• Screen gamesHub: PASS
+• Screen gamePlay: PASS

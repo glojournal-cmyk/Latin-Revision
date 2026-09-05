@@ -1,0 +1,17 @@
+LATIN REVISION V9.1.2
+
+Replace these files in GitHub Pages root:
+- index.html
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
+
+IMPORTANT:
+After GitHub deploy shows green:
+1. Open the site in Chrome/Safari.
+2. Confirm browser tab says V9.1.2.
+3. Hard refresh once.
+4. If using iPad Home Screen PWA, fully close it and reopen.
+5. Latin Games card should now sit between Today and Learn.
+6. Tap Latin Games: the four game cards must appear.

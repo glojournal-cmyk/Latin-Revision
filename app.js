@@ -464,9 +464,13 @@ function show(id, options = {}) {
   }
   APP_SCREENS.forEach(section => {
     const el = document.getElementById(section);
-    if (el) el.classList.add('hidden');
+    if (el) {
+      el.removeAttribute('hidden');
+      el.classList.add('hidden');
+    }
   });
   const next = document.getElementById(id) || document.getElementById('dashboard');
+  next.removeAttribute('hidden');
   next.classList.remove('hidden');
   currentScreen = next.id;
   window.scrollTo(0, 0);
