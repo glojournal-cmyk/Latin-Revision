@@ -1,0 +1,85 @@
+LATIN REVISION V9.0.3 — FULL FUNCTION / NAVIGATION QA
+
+MAIN REBUILD
+------------
+• Removed all inline onclick handlers from the static UI.
+• Every main control now uses one delegated data-action router.
+• Navigation no longer depends on renderDashboard() succeeding first.
+• Added error isolation: a rendering error on one page must not stop navigation to another page.
+• Added real screen history and Back behaviour.
+• Decorative artwork cannot intercept taps.
+• Simplified the streak / sound controls to remove unsupported decorative glyphs.
+
+DAILY REVISION
+--------------
+• Daily Revision now opens a date picker.
+• Number of teacher-locked dates shown: 24
+• First date: 18 Jul
+• Last date: 1 Sep
+• Selecting a date opens that exact date's notes.
+• Notes -> Start practice uses the selected date, not 18 Jul.
+• Back from Notes returns to the date picker.
+• Home always returns to the V9 Home screen.
+
+REAL CONTENT MAPPING
+--------------------
+Question bank total: 1056
+Grammar matching questions: 225
+Vocabulary matching questions: 613
+Translation matching questions: 175
+Roman World / culture matching questions: 24
+
+CONTROL MATRIX
+--------------
+Home:
+• Daily Revision -> date picker
+• Word Bank -> daily Word Bank
+• Mistake Review -> due review / Practice fallback
+• Quick Quiz -> 10-question quiz
+• Grammar -> real Grammar module
+• Vocabulary -> real Vocabulary module
+• Translation -> real Translation module
+• Roman World -> real culture/location/research module
+• Next Up -> correct dated revision block
+• Menu -> More / Parent controls
+• Sound -> toggle sound
+
+Bottom navigation:
+• Home -> Home
+• Learn -> Learn library
+• Practice -> Practice hub
+• Words -> Word Bank
+• Progress -> Progress page
+
+Subpages:
+• Date picker -> exact dated Notes
+• Notes -> Start selected date practice
+• Notes -> Back
+• Learn module -> Start focused practice
+• Word Bank -> Reveal / Again / Got it / Back
+• Quiz -> Check answer / Next / Pause
+• Results -> Home / Due reviews
+• More -> Backup / Restore / Parent report / Reset
+
+STATIC QA
+---------
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+Duplicate HTML IDs: 0
+Static inline onclick handlers remaining: 0
+Static inline onchange handlers remaining: 0
+Static data-action controls: 44
+Unhandled static data-actions: 0
+App screens declared: dashboard, dailyPicker, learnPage, practiceHub, progressPage, morePage, wordbank, notes, quiz, results
+
+SERVICE WORKER
+--------------
+Cache: latin-revision-v9-0-3-functional-20260905
+Artwork remains embedded in index.html, so no assets/ folder is required.
+
+NOTE
+----
+The local Chromium renderer in this environment is not stable enough for a trustworthy full visual interaction claim.
+This build therefore uses code-level route isolation, delegated native button handling, static control coverage checks,
+real question-pool verification, and explicit date mapping. Final iPad validation should still be done after deployment.

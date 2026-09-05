@@ -448,7 +448,7 @@ function renderSaveStatus() {
   document.getElementById('soundLabel').textContent = sound ? 'Sound on' : 'Sound off';
 }
 
-const APP_SCREENS = ['dashboard','learnPage','practiceHub','progressPage','morePage','wordbank','notes','quiz','results'];
+const APP_SCREENS = ['dashboard','dailyPicker','learnPage','practiceHub','progressPage','morePage','wordbank','notes','quiz','results'];
 let currentScreen = 'dashboard';
 let screenHistory = [];
 
@@ -549,12 +549,48 @@ function startCategoryPractice(kind = currentLearnKind) {
 }
 
 function startDailyRevision() {
-  if (state.activeSession) return resumeSession();
-  const due = dueQuestions();
-  if (due.length) return startDue();
-  const block = suggestedBlock();
-  if (block) return startBlock(block);
-  return startQuickQuiz();
+  showDailyPicker();
+}
+
+function showDailyPicker() {
+  renderDatePicker();
+  show('dailyPicker');
+  setNavActive('today');
+}
+
+function renderDatePicker() {
+  const list = document.getElementById('datePickerList');
+  if (!list) return;
+  list.innerHTML = '';
+  blocks.forEach(block => {
+    const focus = focusPoolFor(block);
+    const cycle = cycleFor(block.day);
+    const latest = latestPct(block.day);
+    const completed = cycle.completedPercent;
+    let status = 'Not started';
+    let cls = '';
+    if (Number.isFinite(completed)) {
+      status = completed >= masteryTarget ? `Mastered ${completed}%` : `Cycle ${completed}%`;
+      cls = completed >= masteryTarget ? 'completed' : 'started';
+    } else if ((cycle.seen || []).length || latest !== null) {
+      status = latest === null ? 'In progress' : `Last session ${latest}%`;
+      cls = 'started';
+    }
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `date-card ${cls}`.trim();
+    button.dataset.action = 'open-date';
+    button.dataset.day = block.day;
+    const sample = block.mode === 'due' ? 'Due review' : block.mode === 'weak' ? 'Weak-question review' : `${Math.min(block.sample || 15, focus.length || block.sample || 15)}-question focus`;
+    button.innerHTML = `<strong>${esc(block.day)}</strong><span>${esc(block.label)}</span><span>${esc(block.scope)}</span><b>${esc(status)} · ${esc(sample)} →</b>`;
+    list.appendChild(button);
+  });
+}
+
+function openDateBlock(day) {
+  const block = blocks.find(item => item.day === day);
+  if (!block) return showRouteError('That revision date is not available.');
+  openNotes(block.day);
 }
 
 function openMistakeReview() {
@@ -584,7 +620,7 @@ function startQuickQuiz() {
 
 
 function showDashboard() {
-  renderDashboard();
+  try { renderDashboard(); } catch (error) { console.error('Dashboard render failed:', error); }
   show('dashboard', { noHistory: true });
   currentScreen = 'dashboard';
   screenHistory = [];
@@ -592,7 +628,6 @@ function showDashboard() {
 }
 
 function showLearn(kind = '') {
-  renderDashboard();
   currentLearnKind = LEARN_MODULES[kind] ? kind : '';
   const title = document.getElementById('learnPageTitle');
   const intro = document.getElementById('learnPageIntro');
@@ -610,20 +645,21 @@ function showLearn(kind = '') {
     if (start) {
       start.disabled = !pool.length;
       start.textContent = `Start ${module.title} practice`;
-      start.onclick = () => startCategoryPractice(currentLearnKind);
+      start.dataset.action = `start-module:${currentLearnKind}`;
+      start.onclick = null;
     }
   } else {
     if (title) title.textContent = 'Your revision library';
-    if (intro) intro.textContent = 'Choose a topic above or open the teacher-locked dated revision plan.';
-    if (count) count.textContent = 'Choose Grammar, Vocabulary, Translation or Roman World.';
-    if (hint) hint.textContent = 'Every topic button now opens a real matching question pool.';
+    if (intro) intro.textContent = 'Choose Grammar, Vocabulary, Translation or Roman World, or open the dated revision plan.';
+    if (count) count.textContent = 'Choose a topic to see its question pool.';
+    if (hint) hint.textContent = 'Each topic uses only matching teacher-covered questions.';
     if (start) {
       start.disabled = true;
       start.textContent = 'Choose a topic first';
+      delete start.dataset.action;
       start.onclick = null;
     }
   }
-
   show('learnPage');
   setNavActive('learn');
 }
@@ -762,7 +798,9 @@ function renderDashboard() {
     const card = document.createElement('article');
     card.className = 'day-card';
     card.innerHTML = `<div class="day-main"><div><div class="day-title"><h2>${esc(block.day)}</h2><strong>${esc(block.label)}</strong><span class="status ${statusClass}">${esc(status)}</span></div><div class="cycle-line">${countLine}</div></div><button class="primary" ${poolAvailable ? '' : 'disabled'}>${esc(action)}</button></div><div class="scope"><strong>Locked scope:</strong> ${esc(block.scope)}</div>`;
-    card.querySelector('button').onclick = () => openNotes(block.day);
+    const dayButton = card.querySelector('button');
+    dayButton.dataset.action = 'open-date';
+    dayButton.dataset.day = block.day;
     list.appendChild(card);
   });
   renderV82DashboardExtras();
@@ -772,16 +810,31 @@ function renderDashboard() {
 function openNotes(day) {
   const block = blocks.find(item => item.day === day);
   if (!block) {
-    alert('That revision block is no longer available.');
-    return showLearn();
+    showRouteError('That revision block is no longer available.');
+    return showDailyPicker();
   }
-  const note = notes[day] || { title: block.label || day, intro: 'Review the exact scope before practice.', must: [], sections: [] };
-  document.getElementById('notesTitle').textContent = note.title || block.label || day;
-  document.getElementById('notesIntro').textContent = note.intro || '';
-  document.getElementById('notesScope').textContent = block.scope || '';
-  document.getElementById('mustList').innerHTML = (note.must || note.items || []).map(item => `<li>${esc(item)}</li>`).join('');
-  document.getElementById('notesSections').innerHTML = (note.sections || []).map(section => `<section class="note-section"><h3>${esc(section.title)}</h3><ul>${(section.items || []).map(item => `<li>${esc(item)}</li>`).join('')}</ul></section>`).join('');
-  document.getElementById('notesStartButton').onclick = () => startBlock(block);
+  const note = notes[day] || {
+    title: `${block.day} — ${block.label}`,
+    intro: 'Review the exact locked scope before starting practice.',
+    must: [],
+    sections: []
+  };
+  const title = document.getElementById('notesTitle');
+  const intro = document.getElementById('notesIntro');
+  const scope = document.getElementById('notesScope');
+  const must = document.getElementById('mustList');
+  const sections = document.getElementById('notesSections');
+  if (title) title.textContent = note.title || `${block.day} — ${block.label}`;
+  if (intro) intro.textContent = note.intro || '';
+  if (scope) scope.textContent = block.scope || '';
+  if (must) must.innerHTML = (note.must || note.items || []).map(item => `<li>${esc(item)}</li>`).join('');
+  if (sections) sections.innerHTML = (note.sections || []).map(section => `<section class="note-section"><h3>${esc(section.title)}</h3><ul>${(section.items || []).map(item => `<li>${esc(item)}</li>`).join('')}</ul></section>`).join('');
+  const start = document.getElementById('notesStartButton');
+  if (start) {
+    start.dataset.action = 'start-date';
+    start.dataset.day = block.day;
+    start.onclick = null;
+  }
   show('notes');
   setNavActive('learn');
 }
@@ -1395,7 +1448,9 @@ function renderV82DashboardExtras() {
     if (nextMeta) nextMeta.textContent = block.scope;
     if (nextButton) {
       nextButton.disabled = false;
-      nextButton.onclick = () => openNotes(block.day);
+      nextButton.dataset.action = 'open-date';
+      nextButton.dataset.day = block.day;
+      nextButton.onclick = null;
     }
     const focus = focusPoolFor(block);
     const cycle = cycleFor(block.day);
@@ -1419,21 +1474,19 @@ function continueToday() {
 }
 
 function showProgress() {
-  renderDashboard();
-  renderProgressPage();
+  try { renderProgressPage(); } catch (error) { console.error('Progress render failed:', error); }
   show('progressPage');
   setNavActive('progress');
 }
 
 function showPracticeHub() {
-  renderDashboard();
   const due = dueQuestions().length;
   const dueButton = document.getElementById('practiceDueButton');
   const dueText = document.getElementById('practiceDueText');
   if (dueButton) dueButton.disabled = !due;
   if (dueText) dueText.textContent = due ? `${due} review question${due === 1 ? '' : 's'} ready today.` : 'Nothing due right now.';
   const mixedButton = document.getElementById('practiceMixedButton');
-  if (mixedButton) mixedButton.disabled = !attemptedContentDays().length;
+  if (mixedButton) mixedButton.disabled = false;
   show('practiceHub');
   setNavActive('practice');
 }
@@ -1480,7 +1533,7 @@ function renderProgressPage() {
 }
 
 function showMore() {
-  renderDashboard();
+  try { renderParentReport(); renderSaveStatus(); } catch (error) { console.error('More-page render failed:', error); }
   show('morePage');
   setNavActive('more');
 }
@@ -1727,6 +1780,81 @@ function resetProgress() {
   showDashboard();
 }
 
+
+function showRouteError(message) {
+  console.error(message);
+  let box = document.getElementById('routeError');
+  if (!box) {
+    box = document.createElement('div');
+    box.id = 'routeError';
+    box.className = 'route-error';
+    box.setAttribute('role', 'alert');
+    const main = document.querySelector('main');
+    if (main) main.prepend(box); else document.body.prepend(box);
+  }
+  box.textContent = message;
+  box.classList.remove('hidden');
+  setTimeout(() => box.classList.add('hidden'), 5000);
+}
+
+function runAction(action, element) {
+  if (!action) return;
+  try {
+    if (action === 'home') return showDashboard();
+    if (action === 'learn') return showLearn();
+    if (action === 'practice') return showPracticeHub();
+    if (action === 'wordbank') return openWordBank();
+    if (action === 'progress') return showProgress();
+    if (action === 'more') return showMore();
+    if (action === 'sound') return toggleSound();
+    if (action === 'resume') return resumeSession();
+    if (action === 'daily-picker') return showDailyPicker();
+    if (action === 'mistake-review') return openMistakeReview();
+    if (action === 'quick-quiz') return startQuickQuiz();
+    if (action === 'revision-plan') return showRevisionPlan();
+    if (action === 'due') return startDue();
+    if (action === 'mixed') return startMixed();
+    if (action === 'export') return exportProgress();
+    if (action === 'import') {
+      const input = document.getElementById('importfile');
+      if (input) input.click();
+      return;
+    }
+    if (action === 'share-report') return shareParentReport();
+    if (action === 'reset') return resetProgress();
+    if (action === 'wb-reveal') return revealWordBank();
+    if (action === 'back') return goBack();
+    if (action === 'wb-again') return rateWordBank(false);
+    if (action === 'wb-known') return rateWordBank(true);
+    if (action === 'check-answer') return checkAnswer();
+    if (action === 'next-question') return nextQuestion();
+    if (action === 'pause-quiz') return pauseQuiz();
+    if (action.startsWith('module:')) return showLearn(action.split(':')[1]);
+    if (action.startsWith('start-module:')) return startCategoryPractice(action.split(':')[1]);
+    if (action === 'open-date') return openDateBlock(element.dataset.day);
+    if (action === 'start-date') {
+      const block = blocks.find(item => item.day === element.dataset.day);
+      if (!block) return showRouteError('That revision date is not available.');
+      return startBlock(block);
+    }
+    showRouteError(`Unknown action: ${action}`);
+  } catch (error) {
+    console.error(`Action failed: ${action}`, error);
+    showRouteError('That button hit an app error. Your progress is safe; please try Home and open it again.');
+  }
+}
+
+document.addEventListener('click', event => {
+  const control = event.target.closest('[data-action]');
+  if (!control || control.disabled) return;
+  event.preventDefault();
+  runAction(control.dataset.action, control);
+});
+
+const importInput = document.querySelector('[data-import-progress="1"]');
+if (importInput) importInput.addEventListener('change', importProgress);
+
+
 ['pointerdown', 'keydown', 'touchstart'].forEach(eventName => {
   document.addEventListener(eventName, noteStudyInteraction, { passive: true });
 });
@@ -1736,6 +1864,8 @@ document.addEventListener('visibilitychange', () => {
 });
 setInterval(tickActiveStudy, 15000);
 
-renderDashboard();
+try { renderDashboard(); } catch (error) { console.error('Initial dashboard render failed:', error); }
+show('dashboard', { noHistory: true });
+currentScreen = 'dashboard';
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));

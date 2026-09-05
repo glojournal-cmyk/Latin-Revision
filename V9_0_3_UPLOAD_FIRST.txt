@@ -1,0 +1,33 @@
+LATIN REVISION V9.0.3 — FUNCTION FIRST
+
+Before updating:
+1. Open More / Parent controls.
+2. Backup progress.
+
+Upload/replace these five files in GitHub root:
+- index.html
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
+
+No assets/ upload is required.
+Keep your existing icons/ folder.
+
+After GitHub Pages deploys:
+1. Wait for the deployment green tick.
+2. Open the site once in Safari and refresh.
+3. Fully close the Home Screen Latin app.
+4. Reopen it.
+
+FIRST TEST
+----------
+1. Daily Revision -> you MUST see a date chooser.
+2. Choose e.g. 24 Aug -> Notes title MUST be 24 Aug, not 18 Jul.
+3. Back -> date chooser.
+4. Home -> V9 Home.
+5. Grammar -> module page -> Start Grammar practice.
+6. Vocabulary -> module page -> Start Vocabulary practice.
+7. Translation -> module page -> Start Translation practice.
+8. Roman World -> module page -> Start Roman World practice.
+9. Test bottom Home / Learn / Practice / Words / Progress.
