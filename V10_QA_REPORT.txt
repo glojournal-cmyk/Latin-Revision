@@ -1,0 +1,63 @@
+LATIN REVISION V10 — LUX ET LABOR
+FINAL QA REPORT
+
+Core architecture
+- V9.1.5 teacher-locked revision engine retained.
+- Existing progress key retained: latinSummerV8State.
+- 1,056-question bank retained unchanged.
+- 24 dated revision blocks + 24 teacher note blocks retained.
+- Formal mastery remains >=85% only after completion of the focus cycle.
+- Wrong-answer spaced review remains 2-day then 7-day.
+- Game scores remain stored separately from formal mastery.
+- Daily goal remains 20 active minutes + 30 questions.
+- Word Bank uses teacher-covered vocabulary only.
+
+V10 additions
+- Lux et Labor visual system with real HTML/CSS UI.
+- Home / Lessons / Games / Vocabulary / Translation / Progress navigation.
+- 39 supplied artworks optimized to lightweight WebP.
+- Artwork placed at repository ROOT to avoid the previous assets/games path problem.
+- Full vocabulary search over the existing Word Bank.
+- Real 7-day activity / weak-topic / mastery-win Progress panels.
+- Parent report, export, restore and reset retained.
+- Refined Web Audio feedback: soft correct/wrong, card/tile, match, combo, completion and medal cues.
+- Ordinary page navigation intentionally has no transition sound.
+- Fixed legacy missing setText() helper that could interrupt dashboard rendering.
+
+Static / build checks
+- app.js syntax: PASS
+- question-bank.js syntax: PASS
+- sw.js syntax: PASS
+- No duplicate HTML IDs: PASS
+- No inline onclick handlers: PASS
+- V10 cache name present: PASS
+- Lux et Labor footer present: PASS
+- Six top-level destinations present: PASS
+- Daily Revision picker retained: PASS
+- Games hub + play screen retained: PASS
+- Vocabulary full-bank search added: PASS
+- Parent report + backup/restore retained: PASS
+- Refined sound palette present: PASS
+- Legacy localStorage key retained: PASS
+- 39 optimized supplied artworks packaged: PASS
+- Teacher bank = 1,056 questions: PASS
+- Revision plan = 24 blocks: PASS
+- Teacher notes = 24 blocks: PASS
+
+Headless browser interaction checks
+- Home loaded: PASS
+- Lessons opens: PASS
+- 24 revision blocks render: PASS
+- Translation pool shows 175 matching questions: PASS
+- Games hub opens: PASS
+- Verbum Match renders 12 selectable tiles: PASS
+- Vocabulary search returns teacher-bank matches: PASS
+- Progress page opens and renders 7-day activity: PASS
+- Daily Revision opens the 24-date picker: PASS
+- A selected revision date opens its exact notes: PASS
+- Browser page errors during navigation test: 0
+
+Important deployment note
+Upload every file in this package to the ROOT of the GitHub Pages repository.
+There is no assets/games folder dependency in V10.
+After GitHub Pages deploys, reload once so the new service-worker cache takes control.

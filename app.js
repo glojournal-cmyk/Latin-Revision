@@ -3,6 +3,8 @@ const blocks = window.LATIN_BLOCKS || [];
 const notes = window.LATIN_NOTES || {};
 const byId = new Map(bank.map(question => [question.id, question]));
 
+function setText(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
+
 const derivativeHints = {
   custodit:'custody, custodian', epistula:'epistle', frustra:'frustrate', fugit:'fugitive',
   credit:'credit, credible', convenit:'convene, convention', invitat:'invite, invitation',
@@ -664,8 +666,10 @@ function showLearn(kind = '') {
       start.onclick = null;
     }
   }
+  const learnPage = document.getElementById('learnPage');
+  if (learnPage) learnPage.dataset.kind = currentLearnKind || 'all';
   show('learnPage');
-  setNavActive('learn');
+  setNavActive(currentLearnKind === 'translation' ? 'translation' : 'learn');
 }
 
 function cycleFor(day) {
@@ -1355,7 +1359,7 @@ function finish() {
 
 
 function setNavActive(name) {
-  const map = { today: 'navToday', learn: 'navLearn', practice: 'navPractice', words: 'navWords', progress: 'navProgress' };
+  const map = { today: 'navToday', learn: 'navLearn', practice: 'navPractice', words: 'navWords', translation: 'navTranslation', progress: 'navProgress' };
   Object.values(map).forEach(id => {
     const button = document.getElementById(id);
     if (button) button.classList.remove('active');
@@ -1628,8 +1632,8 @@ function renderWordBankCard() {
         <p class="muted">You reviewed ${ratings.length} teacher-covered words today.</p>
         <div class="wb-kpis"><div class="wb-kpi"><strong>${known}</strong><div class="small muted">Got it</div></div><div class="wb-kpi"><strong>${again}</strong><div class="small muted">Again</div></div></div>
         <div class="wb-actions">
-          ${again ? '<button class="primary" onclick="reviewAgainWords()">Review Again words</button>' : ''}
-          <button class="secondary" onclick="showDashboard()">Back to Today</button>
+          ${again ? '<button class="primary" data-action="wb-review-again" type="button">Review Again words</button>' : ''}
+          <button class="secondary" data-action="home" type="button">Back to Today</button>
         </div>`;
     }
     const count = document.getElementById('wordBankCount');
@@ -1727,20 +1731,30 @@ function playTone(kind) {
   if (!audioContext) audioContext = new AudioContext();
   const audio = audioContext;
   if (audio.state === 'suspended') audio.resume().catch(() => {});
-  const patterns = { correct: [392, 523], wrong: [294, 247], complete: [392, 523, 659] };
-  const toneList = patterns[kind] || patterns.correct;
-  toneList.forEach((frequency, index) => {
-    const oscillator = audio.createOscillator();
+  const patterns = {
+    correct:[{f:392,t:0,v:.032},{f:523.25,t:.075,v:.038},{f:659.25,t:.15,v:.026}],
+    wrong:[{f:246.94,t:0,v:.022},{f:220,t:.09,v:.017}],
+    complete:[{f:329.63,t:0,v:.028},{f:440,t:.09,v:.033},{f:554.37,t:.18,v:.038},{f:659.25,t:.29,v:.032}],
+    match:[{f:440,t:0,v:.024},{f:587.33,t:.07,v:.029}],
+    tile:[{f:330,t:0,v:.012}],
+    combo:[{f:523.25,t:0,v:.024},{f:659.25,t:.065,v:.027},{f:783.99,t:.13,v:.029}],
+    medal:[{f:392,t:0,v:.028},{f:523.25,t:.09,v:.032},{f:659.25,t:.18,v:.036},{f:783.99,t:.30,v:.029}]
+  };
+  const notes = patterns[kind] || patterns.correct;
+  notes.forEach(note => {
+    const when = audio.currentTime + note.t;
+    const osc = audio.createOscillator();
     const gain = audio.createGain();
-    const start = audio.currentTime + index * 0.11;
-    oscillator.type = 'sine';
-    oscillator.frequency.value = frequency;
-    gain.gain.setValueAtTime(0.0001, start);
-    gain.gain.exponentialRampToValueAtTime(kind === 'wrong' ? 0.035 : 0.05, start + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
-    oscillator.connect(gain).connect(audio.destination);
-    oscillator.start(start);
-    oscillator.stop(start + 0.18);
+    const filter = audio.createBiquadFilter();
+    osc.type = kind === 'wrong' ? 'triangle' : 'sine';
+    osc.frequency.setValueAtTime(note.f, when);
+    filter.type='lowpass';
+    filter.frequency.setValueAtTime(kind === 'wrong' ? 900 : 1800, when);
+    gain.gain.setValueAtTime(.0001,when);
+    gain.gain.exponentialRampToValueAtTime(note.v,when+.012);
+    gain.gain.exponentialRampToValueAtTime(.0001,when+(kind==='tile'?.07:.16));
+    osc.connect(filter).connect(gain).connect(audio.destination);
+    osc.start(when); osc.stop(when+.19);
   });
 }
 
@@ -1836,6 +1850,7 @@ if (action === 'home') return showDashboard();
     if (action === 'back') return goBack();
     if (action === 'wb-again') return rateWordBank(false);
     if (action === 'wb-known') return rateWordBank(true);
+    if (action === 'wb-review-again') return reviewAgainWords();
     if (action === 'check-answer') return checkAnswer();
     if (action === 'next-question') return nextQuestion();
     if (action === 'pause-quiz') return pauseQuiz();
@@ -1894,7 +1909,7 @@ function gameSafeRender(fn){
     const area=document.getElementById('gameArea');
     if(area) area.innerHTML='<div class="game-question"><h2>Game needs a refresh</h2><p>'+
       gameEsc(error && error.message ? error.message : error)+'</p>'+
-      '<button type="button" class="secondaryButton" onclick="openGames()">Back to Games</button></div>';
+      '<button type="button" class="secondaryButton" data-action="open-games">Back to Games</button></div>';
   }
 }
 
@@ -2084,6 +2099,7 @@ function pickLatinMatch(button){
   const selected=document.querySelector('.match-tile.selected');
   if(!selected){
     button.classList.add('selected');
+    playTone('tile');
     return;
   }
   if(selected===button) return;
@@ -2101,6 +2117,7 @@ function pickLatinMatch(button){
     latinGame.combo++;
     latinGame.round++;
     updateLatinGameStats();
+    playTone(latinGame.combo>=3 ? 'combo' : 'match');
 
     if(latinGame.round>=latinGame.pairs.length){
       setTimeout(finishLatinGame,350);
@@ -2108,6 +2125,7 @@ function pickLatinMatch(button){
   }else{
     latinGame.combo=0;
     updateLatinGameStats();
+    playTone('wrong');
   }
 }
 
@@ -2162,6 +2180,7 @@ function answerLatinChallenge(answer){
 
   latinGame.round++;
   updateLatinGameStats();
+  playTone(correct ? (latinGame.combo>=3 ? 'combo' : 'correct') : 'wrong');
 
   const area=document.getElementById('gameArea');
   area.querySelectorAll('[data-game-answer]').forEach(b=>b.disabled=true);
@@ -2216,6 +2235,7 @@ function renderLatinSentence(){
     button.addEventListener('click',()=>{
       if(button.classList.contains('used')) return;
       button.classList.add('used');
+      playTone('tile');
       latinGame.selected.push(button.textContent);
       document.getElementById('sentenceBuild').textContent=latinGame.selected.join(' ');
     });
@@ -2239,6 +2259,7 @@ function checkLatinSentence(){
 
   latinGame.round++;
   updateLatinGameStats();
+  playTone(correct ? (latinGame.combo>=3 ? 'combo' : 'correct') : 'wrong');
 
   const area=document.getElementById('gameArea');
   const feedback=document.createElement('p');
@@ -2251,6 +2272,7 @@ function checkLatinSentence(){
 
 function finishLatinGame(){
   stopLatinGameTimer();
+  playTone('medal');
 
   const score=latinGame.score;
   const medal=score>=120 ? 'gold' : score>=60 ? 'silver' : 'bronze';
@@ -2296,3 +2318,73 @@ document.addEventListener('click', function(event){
   event.preventDefault();
   try{ openGames(); }catch(error){ console.error('Games open failed',error); }
 }, true);
+
+
+/* ===== V10 Lux et Labor helpers ===== */
+function renderParentReport(){
+  const box=document.getElementById('parentReportPreview');
+  if(box) box.textContent=parentReportText();
+}
+function v10SearchVocabulary(){
+  const input=document.getElementById('vocabSearchInput');
+  const box=document.getElementById('vocabSearchResults');
+  if(!box) return;
+  const query=String(input?.value||'').trim().toLowerCase();
+  const results=(wordBankEntries||[]).filter(entry=>!query ||
+    String(entry.latin||'').toLowerCase().includes(query) ||
+    String(entry.english||'').toLowerCase().includes(query) ||
+    String(entry.group||'').toLowerCase().includes(query));
+  const shown=results.slice(0,40);
+  box.innerHTML=shown.length ? shown.map(entry=>
+    '<div class="vocab-result"><strong>'+esc(entry.latin)+'</strong><span>'+esc(entry.english)+'</span><small>'+esc(entry.group||'')+'</small></div>'
+  ).join('')+(results.length>40?'<p class="small muted">Showing the first 40 of '+results.length+' matches.</p>':'')
+  : '<p class="muted">No teacher-covered vocabulary matches that search.</p>';
+}
+function v10FilterLessons(){
+  const query=String(document.getElementById('lessonSearchInput')?.value||'').trim().toLowerCase();
+  document.querySelectorAll('#daylist .day-card').forEach(card=>{card.style.display=!query||card.textContent.toLowerCase().includes(query)?'':'none';});
+  document.querySelectorAll('#daylist .phase').forEach(phase=>{phase.style.display=query?'none':'';});
+}
+function renderV10ProgressExtras(){
+  const overall=Number(String(document.getElementById('progressOverall')?.textContent||'0').replace(/\D/g,''))||0;
+  document.getElementById('v10OverallRing')?.style.setProperty('--p',Math.max(0,Math.min(100,overall)));
+
+  const week=document.getElementById('v10WeekBars');
+  if(week){
+    const rows=[];
+    for(let offset=6;offset>=0;offset--){
+      const d=new Date(); d.setHours(12,0,0,0); d.setDate(d.getDate()-offset);
+      const iso=d.toISOString().slice(0,10), rec=(state.daily||{})[iso]||{}, mins=Math.floor(Number(rec.activeMs||0)/60000);
+      rows.push({label:d.toLocaleDateString(undefined,{weekday:'short'}),mins});
+    }
+    const max=Math.max(dailyGoalMinutes,...rows.map(x=>x.mins),1);
+    week.innerHTML=rows.map(x=>'<div class="week-col"><i style="height:'+Math.max(3,Math.round(x.mins/max*145))+'px"></i><span>'+esc(x.label)+'</span><div>'+x.mins+'m</div></div>').join('');
+  }
+
+  const totals={};
+  Object.values(state.daily||{}).forEach(rec=>Object.entries(rec.topics||{}).forEach(([topic,s])=>{
+    if(!totals[topic]) totals[topic]={answered:0,correct:0};
+    totals[topic].answered+=Number(s.answered||0); totals[topic].correct+=Number(s.correct||0);
+  }));
+  const weakRows=Object.entries(totals).map(([topic,s])=>({topic,...s,pct:s.answered?Math.round(s.correct/s.answered*100):100}))
+    .filter(x=>x.answered>0).sort((a,b)=>a.pct-b.pct||b.answered-a.answered).slice(0,4);
+  const weak=document.getElementById('v10WeakList');
+  if(weak) weak.innerHTML=weakRows.length?weakRows.map(x=>'<div class="weak-row"><strong>'+esc(x.topic)+'</strong><div class="small muted">'+x.correct+'/'+x.answered+' correct · '+x.pct+'%</div></div>').join(''):'<p class="muted">Complete some practice and your weakest topics will appear here.</p>';
+
+  const mastered=blocks.filter(block=>!block.mode&&Number.isFinite(cycleFor(block.day).completedPercent)&&cycleFor(block.day).completedPercent>=masteryTarget).slice(-4).reverse();
+  const wins=document.getElementById('v10RecentWins');
+  if(wins) wins.innerHTML=mastered.length?mastered.map(block=>'<div class="win-row"><strong>'+esc(block.label)+'</strong><div class="small muted">'+esc(block.day)+' · Mastered '+cycleFor(block.day).completedPercent+'%</div></div>').join(''):'<p class="muted">Complete a full focus cycle at 85%+ to add your first mastery win.</p>';
+
+  let best=0; try{['match','gladiator','sentence','sprint'].forEach(type=>best=Math.max(best,Number(localStorage.getItem('latinGameBest_'+type)||0)));}catch(e){}
+  const bestEl=document.getElementById('v10GameBest'); if(bestEl) bestEl.textContent=String(best);
+}
+const _v10ShowProgress=showProgress;
+showProgress=function(){_v10ShowProgress();renderV10ProgressExtras();};
+const _v10ShowMore=showMore;
+showMore=function(){_v10ShowMore();renderParentReport();};
+document.getElementById('vocabSearchButton')?.addEventListener('click',v10SearchVocabulary);
+document.getElementById('vocabSearchInput')?.addEventListener('input',v10SearchVocabulary);
+document.getElementById('vocabSearchInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();v10SearchVocabulary();}});
+document.getElementById('lessonSearchInput')?.addEventListener('input',v10FilterLessons);
+document.getElementById('lessonSearchClear')?.addEventListener('click',()=>{const i=document.getElementById('lessonSearchInput');if(i)i.value='';v10FilterLessons();});
+const vocabTotal=document.getElementById('v10VocabTotal'); if(vocabTotal) vocabTotal.textContent=wordBankEntries.length+' words';

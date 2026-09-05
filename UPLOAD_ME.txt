@@ -1,0 +1,23 @@
+LUX ET LABOR — LATIN REVISION V10
+
+UPLOAD ALL FILES IN THIS PACKAGE TO THE ROOT OF THE GITHUB REPOSITORY.
+
+Replace:
+- index.html
+- styles.css
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
+
+Also upload every .webp file beside index.html.
+The artwork is intentionally at repository root: there is NO assets/games folder dependency.
+
+After deployment:
+1. Wait for GitHub Pages to finish.
+2. Open the site and reload once.
+3. Confirm the footer says: Lux et Labor · Latin Revision V10
+4. Test:
+   Home → Lessons → Games → Vocabulary → Translation → Progress
+5. Open Daily Revision and confirm the 24-date picker appears.
+6. Existing progress should remain because latinSummerV8State is unchanged.

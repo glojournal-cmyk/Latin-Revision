@@ -1,24 +1,9 @@
 {
-  "name": "Latin Revision — Illustrated Study Journal V9",
+  "name": "Lux et Labor \u2014 Latin Revision",
   "short_name": "Latin Revision",
-  "description": "Illustrated Year 8 Latin study journal with source-locked practice, daily word bank, positive feedback, mastery cycles and spaced repetition.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#f8f3fa",
-  "theme_color": "#f8f3fa",
-  "icons": [
-    {
-      "src": "icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
+  "background_color": "#fbf7f0",
+  "theme_color": "#fbf7f0",
+  "description": "Teacher-locked Year 8 Latin revision with lessons, games, vocabulary, translation and progress."
 }
