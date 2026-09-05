@@ -408,3 +408,288 @@
   pointer-events:auto !important;
   touch-action:manipulation;
 }
+
+/* ===== V10.0.4.4 Whole-App Layout Polish ===== */
+
+/* Never allow one child to force the whole page wider than the viewport. */
+html,body{
+  max-width:100%;
+  overflow-x:hidden;
+}
+.app-main,
+.page-screen,
+.screen-shell,
+.home-wrap,
+.page-grid,
+.module-tabs,
+.today-grid,
+.learn-grid,
+.game-grid,
+.home-kpis,
+.progress-kpis,
+.progress-lower,
+.vocab-layout{
+  min-width:0;
+}
+.card,
+.page-card,
+.panel,
+.lesson-tile,
+.learn-card,
+.game-card,
+.feature-card,
+.kpi,
+.progress-kpi,
+.progress-panel{
+  min-width:0;
+}
+
+/* Safer responsive grids: minmax(0,1fr) prevents text/images from creating horizontal overflow. */
+.home-kpis{grid-template-columns:repeat(4,minmax(0,1fr))}
+.today-grid,.learn-grid,.game-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.module-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+.progress-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+.progress-lower{grid-template-columns:repeat(3,minmax(0,1fr))}
+.vocab-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.page-grid{grid-template-columns:minmax(0,1fr) minmax(280px,330px)}
+
+/* Lessons cards: fixed visual rhythm, equal height, no drifting image/copy blocks. */
+.module-tabs{
+  align-items:stretch;
+}
+.module-tabs .lesson-tile{
+  display:grid;
+  grid-template-rows:178px minmax(112px,1fr);
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  border-radius:20px;
+  background:#fffdf9;
+}
+.module-tabs .lesson-tile img{
+  width:100%;
+  height:178px;
+  object-fit:contain;
+  object-position:center;
+  padding:10px 14px 4px;
+  background:linear-gradient(180deg,#faf6ef,#f6eee4);
+}
+.module-tabs .lesson-tile .copy{
+  padding:16px 16px 18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-height:112px;
+  background:#fffdf9;
+}
+.module-tabs .lesson-tile h3{
+  margin:0 0 7px;
+  line-height:1.15;
+}
+.module-tabs .lesson-tile p{
+  margin:0;
+  line-height:1.42;
+  color:#445b7b;
+}
+.module-tabs .lesson-tile.active{
+  border-color:#8fa8c2;
+  box-shadow:0 0 0 3px rgba(14,76,145,.08),0 15px 32px rgba(28,49,82,.10);
+  transform:translateY(-2px);
+}
+.module-tabs .lesson-tile.active:after{
+  content:"Selected";
+  position:absolute;
+  top:12px;
+  right:12px;
+  border-radius:999px;
+  padding:5px 8px;
+  background:rgba(255,253,249,.94);
+  border:1px solid #cbd7e3;
+  color:#0e4c91;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.04em;
+}
+.module-tabs .lesson-tile{
+  position:relative;
+}
+
+/* Keep all card images visually consistent across Home/Games. */
+.learn-card img,
+.feature-card img,
+.game-card img{
+  object-position:center;
+}
+.learn-card{
+  display:grid;
+  grid-template-rows:132px 1fr;
+  height:100%;
+}
+.learn-card > div{
+  min-height:108px;
+}
+.game-card{
+  display:grid;
+  grid-template-rows:minmax(190px,230px) 1fr;
+  height:100%;
+}
+.game-card-copy{
+  display:flex;
+  flex-direction:column;
+}
+.game-card-copy .primaryButton{
+  margin-top:auto;
+}
+
+/* Hero typography: long module names (e.g. Roman World & Culture) must not overflow. */
+.hero-copy h1,
+.page-hero .hero-copy h1,
+#learnPageTitle{
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  text-wrap:balance;
+}
+.page-hero .hero-copy{
+  min-width:0;
+}
+#learnPage .page-hero h1{
+  font-size:clamp(2.35rem,4.1vw,4.45rem);
+  line-height:.98;
+}
+
+/* Stronger tap targets everywhere relevant to study flow. */
+.lesson-tile,
+.learn-card,
+.game-card,
+.feature-card,
+.nav-btn,
+.primary,
+.secondary,
+.primaryButton,
+.secondaryButton,
+.backButton,
+.game-sound{
+  min-height:44px;
+  touch-action:manipulation;
+}
+
+/* Better Vocabulary behaviour when text is long. */
+.vocab-result{
+  grid-template-columns:minmax(100px,.9fr) minmax(120px,1.25fr) minmax(70px,.55fr);
+  align-items:start;
+}
+.vocab-result > *{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+
+/* Progress labels shouldn't stretch cards. */
+.progress-kpi,
+.kpi{
+  overflow:hidden;
+}
+.progress-kpi strong,
+.kpi strong{
+  overflow-wrap:anywhere;
+}
+
+/* Mid-size iPad / small laptop layout — this was the missing range. */
+@media (max-width:1250px) and (min-width:761px){
+  .screen-shell,.page-screen{
+    padding-left:20px;
+    padding-right:20px;
+  }
+  .module-tabs{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .module-tabs .lesson-tile{
+    grid-template-rows:165px minmax(104px,1fr);
+  }
+  .module-tabs .lesson-tile img{
+    height:165px;
+  }
+  .today-grid,.learn-grid,.game-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .home-kpis{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .progress-lower{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .progress-lower .progress-panel:last-child{
+    grid-column:1/-1;
+  }
+  .page-grid{
+    grid-template-columns:minmax(0,1fr) minmax(260px,300px);
+  }
+  #learnPage .page-hero h1{
+    font-size:clamp(2.2rem,5vw,3.75rem);
+  }
+}
+
+/* iPad portrait: clean two-column cards instead of four squeezed columns. */
+@media (max-width:900px) and (min-width:761px){
+  .topbar{
+    gap:8px;
+  }
+  .brand{
+    min-width:170px;
+  }
+  .brand-title{
+    font-size:1.12rem;
+  }
+  .nav-btn{
+    padding-left:7px;
+    padding-right:7px;
+    font-size:.88rem;
+  }
+  .page-hero{
+    height:340px;
+    min-height:340px;
+  }
+  .page-hero .hero-copy{
+    height:340px;
+    min-height:340px;
+    width:58%;
+    padding-left:28px;
+  }
+  .vocab-layout,
+  .page-grid{
+    grid-template-columns:1fr;
+  }
+  .side-stack{
+    margin-top:14px;
+  }
+}
+
+/* Mobile: one-column module cards with a shorter image block. */
+@media (max-width:760px){
+  .module-tabs{
+    grid-template-columns:1fr;
+  }
+  .module-tabs .lesson-tile{
+    grid-template-rows:150px auto;
+  }
+  .module-tabs .lesson-tile img{
+    height:150px;
+  }
+  .module-tabs .lesson-tile .copy{
+    min-height:0;
+  }
+  .vocab-result{
+    grid-template-columns:1fr;
+    gap:3px;
+  }
+}
+
+/* Respect iPad safe area in landscape and installed PWA. */
+.topbar{
+  padding-left:max(18px,env(safe-area-inset-left));
+  padding-right:max(18px,env(safe-area-inset-right));
+}
+.app-main{
+  padding-left:env(safe-area-inset-left);
+  padding-right:env(safe-area-inset-right);
+}

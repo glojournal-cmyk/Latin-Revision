@@ -1,0 +1,49 @@
+LATIN REVISION V10.0.4.4 — WHOLE APP POLISH AUDIT
+
+WHAT WAS IMPROVED
+- Lessons four-card row uses safe minmax grids and equal card geometry.
+- Lesson images now share a fixed image zone and consistent copy height.
+- Selected module gets a visible active state.
+- Added the missing iPad mid-size breakpoint (761–1250px).
+- iPad portrait/small landscape uses 2-column content instead of squeezing 4 cards.
+- Home / Games / Learn / KPI grids use minmax(0,1fr) to prevent horizontal overflow.
+- Long hero titles wrap safely.
+- Vocabulary search rows are safer with long Latin/English strings.
+- Page and card children cannot force body horizontal scrolling.
+- Safe-area padding added for installed iPad PWA.
+- Existing module-tap, Games runtime, Verbum levels, teacher bank and progress engine retained.
+
+SOURCE BANK
+- Questions: 1056
+- Revision blocks: 24
+- Note blocks: 24
+
+PACKAGE
+- Optimized WebP artwork total: 3.61 MB
+- Core sizes (KB): {'index.html': 23.5, 'manifest.webmanifest': 0.3, 'sw.js': 1.7, 'app.js': 211.3, 'styles.css': 31.4, 'question-bank.js': 735.3}
+
+STATIC REGRESSION CHECKS
+- app.js syntax: PASS
+- question-bank.js syntax: PASS
+- sw.js syntax: PASS
+- No duplicate HTML IDs: PASS
+- No inline onclick: PASS
+- Four lesson module actions: PASS
+- Direct module tap hotfix preserved: PASS
+- Game runtime helper fixes preserved: PASS
+- Verbum level mode preserved: PASS
+- Soft sound mapping preserved: PASS
+- Module active state added: PASS
+- No horizontal overflow guard: PASS
+- Module minmax grid: PASS
+- iPad two-column breakpoint: PASS
+- Long hero heading protection: PASS
+- 39 WebP artworks preserved: PASS
+- V10.0.4.4 cache: PASS
+- 1,056 teacher questions preserved: PASS
+- 24 blocks preserved: PASS
+- 24 note blocks preserved: PASS
+
+LIMITATION
+This build was statically audited against the supplied screenshots and source code.
+A physical iPad Safari rendering test was not performed in this environment.

@@ -1,19 +1,21 @@
-V10.0.4.3 — MODULE TAP HOTFIX
+V10.0.4.4 — WHOLE APP POLISH
 
 Upload/replace ALL files in this ZIP at repository ROOT.
 
-Fixes the four Lessons cards:
-- Grammar
-- Vocabulary
-- Translation
-- Roman World
+Primary visual fixes:
+- Lessons card alignment/overflow
+- consistent card image/copy heights
+- selected lesson module highlight
+- better iPad landscape/portrait breakpoints
+- safer Home/Games/Progress/Vocabulary grids
+- long-title overflow protection
 
-They now have direct iPad pointerup bindings plus click fallback, instead of relying only on the global delegated router.
+All previous fixes are included:
+- four Lesson module direct tap bindings
+- all four Games runtime bank helpers
+- Verbum Match level mode
+- soft sound mode
 
-After deploy:
-1. Reload once.
-2. Confirm footer says Lux et Labor · Latin Revision V10.0.4.3.
-3. Open Lessons.
-4. Tap all four cards.
-5. Each tap should change the hero title/count immediately.
-6. Tap the blue Start ... practice button for each module.
+After deployment reload once.
+Footer must say:
+Lux et Labor · Latin Revision V10.0.4.4

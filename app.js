@@ -669,6 +669,14 @@ function showLearn(kind = '') {
   }
   const learnPage = document.getElementById('learnPage');
   if (learnPage) learnPage.dataset.kind = currentLearnKind || 'all';
+
+  document.querySelectorAll('#learnPage .module-tabs [data-action^="module:"]').forEach(card => {
+    const cardKind = String(card.dataset.action || '').split(':')[1] || '';
+    const active = !!currentLearnKind && cardKind === currentLearnKind;
+    card.classList.toggle('active', active);
+    card.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
   show('learnPage');
   setNavActive(currentLearnKind === 'translation' ? 'translation' : 'learn');
 }
