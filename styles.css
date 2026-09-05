@@ -378,3 +378,33 @@
   font-weight:700;
   color:#66748a;
 }
+
+/* ===== V10.0.4.3 module-card hitbox fix ===== */
+.module-tabs,
+.learn-grid{
+  position:relative;
+  z-index:8;
+  pointer-events:auto !important;
+}
+.module-tabs .lesson-tile,
+.learn-grid .learn-card,
+#navTranslation{
+  position:relative;
+  z-index:9;
+  pointer-events:auto !important;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:rgba(10,45,99,.08);
+  cursor:pointer;
+}
+.module-tabs .lesson-tile > *,
+.learn-grid .learn-card > *{
+  pointer-events:none !important;
+}
+.module-tabs .lesson-tile:active,
+.learn-grid .learn-card:active{
+  transform:scale(.985);
+}
+#learnStartButton{
+  pointer-events:auto !important;
+  touch-action:manipulation;
+}

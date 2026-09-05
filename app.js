@@ -2813,3 +2813,71 @@ document.getElementById('vocabSearchInput')?.addEventListener('keydown',e=>{if(e
 document.getElementById('lessonSearchInput')?.addEventListener('input',v10FilterLessons);
 document.getElementById('lessonSearchClear')?.addEventListener('click',()=>{const i=document.getElementById('lessonSearchInput');if(i)i.value='';v10FilterLessons();});
 const vocabTotal=document.getElementById('v10VocabTotal'); if(vocabTotal) vocabTotal.textContent=wordBankEntries.length+' words';
+
+
+/* ===== V10.0.4.3 iPad module-card direct tap hotfix ===== */
+(function bindDirectModuleTaps(){
+  const lastTap=new WeakMap();
+
+  function invokeModule(control, kind, event){
+    const now=Date.now();
+    const previous=lastTap.get(control)||0;
+
+    // pointerup normally fires before the synthetic click on iPad.
+    // Suppress the follow-up click so the module does not open twice.
+    if(event.type==='click' && now-previous<650) return;
+
+    if(event.type==='pointerup') lastTap.set(control,now);
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    try{
+      showLearn(kind);
+    }catch(error){
+      console.error('Direct module tap failed:',kind,error);
+      showRouteError('That lesson button could not open. Your progress is safe.');
+    }
+  }
+
+  const controls=document.querySelectorAll(
+    '.module-tabs [data-action^="module:"], .learn-grid [data-action^="module:"], #navTranslation[data-action^="module:"]'
+  );
+
+  controls.forEach(control=>{
+    const action=String(control.dataset.action||'');
+    const kind=action.startsWith('module:')?action.split(':')[1]:'';
+    if(!kind) return;
+
+    control.dataset.directModuleTap='1';
+    control.addEventListener('pointerup',event=>invokeModule(control,kind,event),{passive:false});
+    control.addEventListener('click',event=>invokeModule(control,kind,event),false);
+  });
+
+  const start=document.getElementById('learnStartButton');
+  if(start){
+    function invokeStart(event){
+      const now=Date.now();
+      const previous=lastTap.get(start)||0;
+      if(event.type==='click' && now-previous<650) return;
+      if(event.type==='pointerup') lastTap.set(start,now);
+
+      if(start.disabled) return;
+      event.preventDefault();
+      event.stopPropagation();
+
+      try{
+        const action=String(start.dataset.action||'');
+        const kind=action.startsWith('start-module:')?action.split(':')[1]:currentLearnKind;
+        if(kind) startCategoryPractice(kind);
+      }catch(error){
+        console.error('Direct module practice start failed:',error);
+        showRouteError('That practice button could not start. Your progress is safe.');
+      }
+    }
+
+    start.addEventListener('pointerup',invokeStart,{passive:false});
+    start.addEventListener('click',invokeStart,false);
+  }
+})();
+

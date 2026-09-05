@@ -1,19 +1,19 @@
-V10.0.4.2 — ALL GAMES RUNTIME + SOUND FIX
+V10.0.4.3 — MODULE TAP HOTFIX
 
 Upload/replace ALL files in this ZIP at repository ROOT.
 
-This build specifically fixes:
-- Gladiator Challenge: latinMCBank is not defined
-- Roman Sprint: latinSprintBank is not defined
-- Verbum Match: restores the missing latinVocabPairs helper
+Fixes the four Lessons cards:
+- Grammar
+- Vocabulary
+- Translation
+- Roman World
 
-Sound:
-- quieter paper / wood / soft-pluck palette
-- no metallic hit
-- no repeated last-10-second ticking
-- no page transition sound
+They now have direct iPad pointerup bindings plus click fallback, instead of relying only on the global delegated router.
 
 After deploy:
 1. Reload once.
-2. Footer must say Lux et Labor · Latin Revision V10.0.4.2
-3. Test Games → all four games.
+2. Confirm footer says Lux et Labor · Latin Revision V10.0.4.3.
+3. Open Lessons.
+4. Tap all four cards.
+5. Each tap should change the hero title/count immediately.
+6. Tap the blue Start ... practice button for each module.

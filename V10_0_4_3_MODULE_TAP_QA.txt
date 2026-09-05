@@ -1,0 +1,38 @@
+LATIN REVISION V10.0.4.3 — MODULE TAP HOTFIX QA
+
+Issue:
+The four visible Lessons module cards could render but were not reliably tappable on the user's iPad/browser.
+
+Fix:
+- direct pointerup binding for iPad/touch
+- direct click fallback for desktop
+- duplicate synthetic click suppression
+- hard pointer-events/touch-action hitbox CSS
+- child images/text cannot intercept the card tap
+- focused-practice button also receives a direct binding
+- original delegated action router remains as a fallback
+
+Real teacher-bank module pools:
+- Grammar: 225
+- Vocabulary: 613
+- Translation: 175
+- Roman World: 24
+
+app.js syntax: PASS
+question-bank.js syntax: PASS
+sw.js syntax: PASS
+No duplicate IDs: PASS
+Four module actions in HTML: PASS
+Router still supports module actions: PASS
+Direct pointerup binding present: PASS
+Direct click fallback present: PASS
+Direct module tap marker present: PASS
+Start practice direct binding: PASS
+Module cards force pointer events: PASS
+Module card children cannot steal hit: PASS
+Touch action manipulation: PASS
+39 artworks preserved: PASS
+Version/cache: PASS
+All four module pools non-empty: PASS
+
+jsdom available for extra DOM simulation: False
