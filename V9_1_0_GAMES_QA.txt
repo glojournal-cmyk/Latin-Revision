@@ -1,0 +1,32 @@
+LATIN REVISION V9.1.0 — LATIN GAMES QA
+
+BASE
+V9.0.3 Full Navigation Rebuild retained.
+
+GAMES INSIDE THE SAME APP
+• Verbum Match
+• Gladiator Challenge
+• Build the Sentence
+• Roman Sprint
+
+REAL SOURCE BANK POOLS
+• Total question bank: 1056
+• Latin→English pairs available: 310
+• Multiple-choice questions available: 284
+• Vocabulary-style MC for Roman Sprint: 13
+• Latin sentence-production items: 11
+
+RULES
+• Games draw only from LATIN_BANK.
+• Game scores/best scores are separate from formal mastery and spaced review.
+• Existing Daily Revision date picker, Learn, Practice, Words and Progress remain.
+
+STATIC QA
+• app.js syntax: PASS
+• question-bank.js syntax: PASS
+• sw.js syntax: PASS
+• Duplicate HTML IDs: 0
+• All game actions mapped: True
+
+NOTE
+Full iPad Safari touch behaviour still requires on-device validation after GitHub Pages deploy.

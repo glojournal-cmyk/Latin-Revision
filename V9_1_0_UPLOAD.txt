@@ -1,0 +1,17 @@
+LATIN REVISION V9.1.0 — LATIN GAMES
+
+Upload/replace these files in your GitHub Pages root:
+- index.html
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
+
+No extra artwork files are needed; game artwork is embedded.
+
+After deploy:
+1. Open in Safari and refresh once.
+2. Fully close the Home Screen app.
+3. Reopen.
+4. Test Daily Revision date picker first.
+5. Test Latin Games -> all four games -> Back.
