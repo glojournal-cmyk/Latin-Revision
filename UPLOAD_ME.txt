@@ -1,21 +1,34 @@
-V10.0.4.4 — WHOLE APP POLISH
+LUX ET LABOR — LATIN REVISION V10.1.0 GAMES REBUILD
 
-Upload/replace ALL files in this ZIP at repository ROOT.
+UPLOAD ALL FILES IN THIS PACKAGE TO THE ROOT OF THE GITHUB PAGES REPOSITORY.
 
-Primary visual fixes:
-- Lessons card alignment/overflow
-- consistent card image/copy heights
-- selected lesson module highlight
-- better iPad landscape/portrait breakpoints
-- safer Home/Games/Progress/Vocabulary grids
-- long-title overflow protection
+Replace the existing:
+- index.html
+- styles.css
+- app.js
+- question-bank.js
+- sw.js
+- manifest.webmanifest
 
-All previous fixes are included:
-- four Lesson module direct tap bindings
-- all four Games runtime bank helpers
-- Verbum Match level mode
-- soft sound mode
+Also upload:
+- games-v2.js
+- games-v2.css
+- every .webp file in this package
 
-After deployment reload once.
-Footer must say:
-Lux et Labor · Latin Revision V10.0.4.4
+Do not upload only games-v2.js; the HTML/service-worker/version files must match.
+
+AFTER DEPLOYMENT
+1. Wait for GitHub Pages to finish.
+2. Reload once (or close/reopen the installed PWA).
+3. Confirm the footer says:
+   Lux et Labor · Latin Revision V10.1.0
+4. Open Games.
+5. Test Level 1 of:
+   - Forma Forge
+   - Sentence Mosaic
+   - Verbum Match 2.0
+   - Manuscript Mystery
+6. Confirm sound toggle behaves as expected on the actual iPad.
+
+Existing learner progress remains under the existing latinSummerV8State storage key.
+Game-only progression is stored separately inside that saved state and does not directly reduce formal Mastery.

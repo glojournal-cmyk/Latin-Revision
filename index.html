@@ -6,9 +6,10 @@
 <meta name="theme-color" content="#fbf7f0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>Lux et Labor — Latin Revision V10.0.4.4</title>
+<title>Lux et Labor — Latin Revision V10.1.0 Games Rebuild</title>
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="stylesheet" href="./styles.css?v=10.0.4.4">
+<link rel="stylesheet" href="./styles.css?v=10.1.0">
+<link rel="stylesheet" href="./games-v2.css?v=10.1.0">
 </head>
 <body>
 <header class="topbar">
@@ -177,28 +178,53 @@
 </section>
 
 <section id="gamesHub" class="screen-shell hidden">
-  <div class="page-hero"><img src="./art_lessons.webp" alt=""><div class="hero-copy"><div class="eyebrow">GAMES</div><h1>Learn Through Play</h1><p>Same knowledge. A more exciting path.</p><div class="bodycopy">Scores are for fun and stay separate from formal mastery and the 2-day / 7-day review schedule.</div></div></div>
-  <div class="game-grid">
-    <button class="game-card" type="button" data-action="game-match"><img src="./game_match.webp" alt=""><div class="game-card-copy"><h3>Verbum Match</h3><p>Match Latin words with their English meanings.</p><span class="primaryButton" style="display:block">Play now →</span></div></button>
-    <button class="game-card" type="button" data-action="game-gladiator"><img src="./game_gladiator.webp" alt=""><div class="game-card-copy"><h3>Gladiator Challenge</h3><p>Ten source-bank questions. Build a winning combo.</p><span class="primaryButton" style="display:block">Play now →</span></div></button>
-    <button class="game-card" type="button" data-action="game-sentence"><img src="./game_sentence.webp" alt=""><div class="game-card-copy"><h3>Build the Sentence</h3><p>Put a teacher-bank Latin sentence back in order.</p><span class="primaryButton" style="display:block">Play now →</span></div></button>
-    <button class="game-card" type="button" data-action="game-sprint"><img src="./game_sprint.webp" alt=""><div class="game-card-copy"><h3>Roman Sprint</h3><p>Sixty seconds of quick vocabulary questions.</p><span class="primaryButton" style="display:block">Play now →</span></div></button>
+  <div class="page-hero"><img src="./art_lessons.webp" alt=""><div class="hero-copy"><div class="eyebrow">GAMES</div><h1>Learn Through Play</h1><p>Build, connect, restore and understand.</p><div class="bodycopy">Every game uses teacher-covered Latin already present in this app. Game mistakes stay separate from formal Mastery and the 2-day / 7-day review schedule.</div></div></div>
+
+  <div class="g2-hub-intro card">
+    <div><div class="eyebrow">PLAYFUL PRACTICE</div><h2>Four real mini-games</h2><p>Most interactions use building, dragging, sorting, highlighting, connecting or sequencing rather than standard multiple choice.</p></div>
+    <div class="g2-hub-key"><span>Accuracy ≠ Game Points</span><span>Stars reward secure learning</span><span>Formal mastery stays untouched</span></div>
+  </div>
+
+  <div class="game-grid g2-game-grid">
+    <button class="game-card g2-hub-card" type="button" data-action="game-forge">
+      <img src="./lesson_books.webp" alt="">
+      <div class="game-card-copy"><div class="eyebrow">MORPHOLOGY</div><h3>Forma Forge</h3><p>Build and repair Latin forms from source-taught stems, endings and forms.</p><div class="g2-card-progress" data-game-summary="forma">Level 1 ready</div><span class="primaryButton" style="display:block">Enter the forge →</span></div>
+    </button>
+
+    <button class="game-card g2-hub-card" type="button" data-action="game-mosaic">
+      <img src="./game_sentence.webp" alt="">
+      <div class="game-card-copy"><div class="eyebrow">SYNTAX</div><h3>Sentence Mosaic</h3><p>Construct Latin sentences without pretending Latin has one fixed English word order.</p><div class="g2-card-progress" data-game-summary="mosaic">Level 1 ready</div><span class="primaryButton" style="display:block">Build a mosaic →</span></div>
+    </button>
+
+    <button class="game-card g2-hub-card" type="button" data-action="game-verbum">
+      <img src="./game_match.webp" alt="">
+      <div class="game-card-copy"><div class="eyebrow">CONNECTIONS</div><h3>Verbum Match 2.0</h3><p>Progress from meanings to form families, sorting and grammar connections.</p><div class="g2-card-progress" data-game-summary="verbum">Level 1 ready</div><span class="primaryButton" style="display:block">Start matching →</span></div>
+    </button>
+
+    <button class="game-card g2-hub-card" type="button" data-action="game-manuscript">
+      <img src="./translation_scene.webp" alt="">
+      <div class="game-card-copy"><div class="eyebrow">SET TEXT</div><h3>Manuscript Mystery</h3><p>Restore, inspect, connect, sequence and interpret one teacher-covered passage.</p><div class="g2-card-progress" data-game-summary="manuscript">Level 1 ready</div><span class="primaryButton" style="display:block">Open the case file →</span></div>
+    </button>
   </div>
 </section>
 
 <section id="gamePlay" class="screen-shell hidden">
-  <div class="backbar"><button class="backButton" type="button" data-action="games-back">←</button><div><div class="eyebrow">LATIN GAMES</div><h2 id="gameTitle">Game</h2></div></div>
-  <div class="game-hud">
-    <div class="game-top">
-      <span id="gameScore" class="game-stat">Score 0</span>
-      <span id="gameRound" class="game-stat">Round 1</span>
-      <span id="gameCombo" class="game-stat">Combo 0</span>
-      <span id="gameTimer" class="game-stat"></span>
+  <div class="g2-game-head">
+    <div class="g2-game-title-row">
+      <button class="backButton" type="button" data-action="games-back" aria-label="Back to Games">←</button>
+      <div><div class="eyebrow">GAMES</div><h1 id="gameTitle">Game</h1><p id="gameSubtitle">Build · Practise · Understand</p></div>
+    </div>
+
+    <div class="g2-hud" aria-label="Game status">
+      <div class="g2-hud-level"><span id="gameLevel">Level 1 / 6</span><div id="gameLevelDots" class="g2-level-dots" aria-hidden="true"></div></div>
+      <div class="g2-hud-stat"><small>Game Points</small><strong id="gamePoints">0</strong></div>
+      <div class="g2-hud-stat"><small>Streak</small><strong id="gameStreak">0</strong></div>
+      <div class="g2-hud-stat"><small>Focus Shields</small><strong id="gameShields" aria-label="3 focus shields">◆ ◆ ◆</strong></div>
       <button id="gameSoundButton" class="game-sound" type="button" data-action="sound">♪ Soft sound</button>
     </div>
-    <div class="game-progress-track"><i id="gameProgressFill"></i></div>
-    <div id="gameMood" class="game-mood">Ready?</div>
   </div>
+  <div class="g2-progress-track"><i id="gameProgressFill"></i></div>
+  <div id="gameMood" class="g2-game-mood" aria-live="polite">Ready.</div>
   <div id="gameArea"></div>
 </section>
 
@@ -221,9 +247,10 @@
 </section>
 
 </main>
-<footer class="footer"><img src="./olive.webp" alt=""><div>DISCERE · INTELLEGERE · CRESCERE</div><div class="small">Lux et Labor · Latin Revision V10.0.4.4</div></footer>
+<footer class="footer"><img src="./olive.webp" alt=""><div>DISCERE · INTELLEGERE · CRESCERE</div><div class="small">Lux et Labor · Latin Revision V10.1.0</div></footer>
 <nav class="mobile-nav" aria-label="Mobile navigation"><button type="button" data-action="home"><span>⌂</span>Home</button><button type="button" data-action="learn"><span>▤</span>Lessons</button><button type="button" data-action="open-games"><span>◇</span>Games</button><button type="button" data-action="wordbank"><span>◫</span>Words</button><button type="button" data-action="module:translation"><span>✎</span>Translate</button><button type="button" data-action="progress"><span>◴</span>Progress</button></nav>
-<script src="./question-bank.js?v=10.0.4.4"></script>
-<script src="./app.js?v=10.0.4.4"></script>
+<script src="./question-bank.js?v=10.1.0"></script>
+<script src="./app.js?v=10.1.0"></script>
+<script src="./games-v2.js?v=10.1.0"></script>
 </body>
 </html>

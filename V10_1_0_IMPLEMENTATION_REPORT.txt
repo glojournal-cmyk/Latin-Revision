@@ -1,0 +1,94 @@
+LUX ET LABOR — V10.1.0 GAMES REBUILD
+IMPLEMENTATION REPORT
+
+1. FILES CHANGED / ADDED
+- index.html
+- styles.css
+- app.js
+- question-bank.js (preserved teacher bank)
+- sw.js
+- manifest.webmanifest
+- games-v2.js (new shared Games V2 engine and four production games)
+- games-v2.css (new Games V2 visual/touch system)
+- existing WebP artwork assets preserved
+
+2. SHARED GAME ENGINE / COMPONENTS
+- Standard Game HUD: Level / 6, Game Points, Streak, Focus Shields, progress dots
+- Shared clue flow
+- Shared first-error Repair Attempt
+- Shared second-error reveal + concise Must Remember feedback
+- Shared Echo Round
+- Shared game-only weakness tracking
+- Shared progression / stars / adaptive-tier logic
+- Shared drag + pointer/tap destination handling
+- Shared result screen and game-only persistence
+
+3. FORMA FORGE
+- Builds/repairs forms from source-covered components
+- Dynamic task/slot structure rather than a permanent pronoun+stem+ending formula
+- No timer for morphology construction
+- Repair feedback and Echo support
+- Drag plus tap-select/tap-slot fallback
+
+4. SENTENCE MOSAIC
+- Builds Latin production items from the teacher-covered sentence bank
+- Scaffolding reduces as levels rise
+- Validation is token/structure based rather than one exact visual slot order
+- Does not teach a single compulsory English-like Latin word order
+- Distractors only appear at later levels and are derived from unlocked material
+
+5. VERBUM MATCH 2.0
+- Six levels change cognitive demand, not merely board size/lives
+- Recognition, reverse recall, source-covered form-family connection, sorting and grammar relationships
+- Clues are derived from teacher/source metadata rather than generic invented Latin rules
+- Uses learned/unlocked source material only
+
+6. MANUSCRIPT MYSTERY
+- Progressive single-case flow:
+  Restore → Inspect → Connect → Sequence → Interpret → Case Solved
+- One stage active at a time
+- Evidence/tool tray changes with the current stage
+- Uses teacher-covered set-text / translation / grammar / comprehension sources
+- No one-click reveal-all shortcut
+
+7. CONTENT GATING
+- questionUnlocked() checks the dated teacher plan
+- already-started/completed source cycles and prior attempts may also make already-seen material eligible
+- all game selectors draw from unlockedBank()
+- no second independent syllabus was created
+
+8. FLEXIBLE LATIN ANSWER VALIDATION
+- Production games use canonicalised token/structure checks where appropriate
+- Sentence Mosaic does not compare only one raw full-string order
+- Required lexical/morphological material remains source-locked
+- No runtime invention of additional acceptable Latin forms
+
+9. REPAIR / ECHO SYSTEM
+- First wrong: combo reset + targeted clue + repair opportunity
+- Correct repair: reduced points
+- Second wrong: answer + Must Remember, weakness recorded
+- Skill retest scheduled after roughly 3–5 interactions
+- Short Echo Round revisits tricky skills without rewriting formal mastery
+
+10. PERSISTENCE
+- Games use state.gamesV2 inside the existing saved app state
+- Stores unlocked levels, stars, points, weakness data, recent sessions and active-session summary
+- Existing latinSummerV8State key is retained
+- Games do not directly mutate formal Mastery / 2-day / 7-day review data
+
+11. QA COMPLETED
+- JavaScript syntax checks
+- HTML ID / inline-handler checks
+- local asset existence
+- service-worker CORE asset verification
+- teacher-bank count verification
+- progression-threshold verification
+- formal-mastery mutation scan
+- mockup-sample contamination scan
+- game architecture marker checks
+- package completeness check
+
+12. GENUINE REMAINING LIMITATIONS
+- Final packaging environment blocks localhost browser navigation, so a fresh browser automation pass could not be run here.
+- Physical iPad Safari touch feel and speaker/audio quality still need a short post-deploy device check.
+- Games intentionally do not use AI to invent Latin content or new accepted answers at runtime.

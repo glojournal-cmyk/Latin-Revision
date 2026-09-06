@@ -1,0 +1,54 @@
+LUX ET LABOR — LATIN REVISION V10.1.0
+GAMES REBUILD — FINAL QA REPORT
+
+Automated/static release checks: 35/35 PASS
+
+- app.js: JavaScript syntax: PASS
+- games-v2.js: JavaScript syntax: PASS
+- question-bank.js: JavaScript syntax: PASS
+- sw.js: JavaScript syntax: PASS
+- HTML: no duplicate IDs: PASS
+- HTML: no inline onclick: PASS
+- All HTML local assets exist: PASS
+- Teacher bank: 1,056 questions: PASS
+- Revision plan: 24 blocks: PASS
+- Teacher notes: 24 blocks: PASS
+- Four production games: PASS
+- Separate Accuracy / Game Points / Stars: PASS
+- Focus Shields: PASS
+- Repair loop: PASS
+- Echo Round: PASS
+- Game-only weakness store: PASS
+- Game persistence: PASS
+- Teacher-content gating: PASS
+- 3–5 interaction skill retest: PASS
+- Two consecutive >=85% adaptive rule: PASS
+- Drag + tap fallback: PASS
+- Game points not /100: PASS
+- 70% completion threshold: PASS
+- 80% next-level threshold: PASS
+- 85% two-star threshold: PASS
+- 90% + <=1 clue three-star threshold: PASS
+- Manuscript boss/context progression >=85%: PASS
+- Games V2 has no obvious formal Mastery/review mutation: PASS
+- No supplied mockup sample Latin hard-coded: PASS
+- Existing formal localStorage key retained: PASS
+- Games V2 linked separately: PASS
+- V10.1.0 footer: PASS
+- V10.1.0 service-worker cache: PASS
+- 39 supplied WebP artworks packaged: PASS
+- Service worker CORE assets all exist: PASS
+
+SOURCE INTEGRITY
+- Teacher question bank: 1056 questions
+- Dated revision blocks: 24
+- Teacher note blocks: 24
+- Mockup PNGs were treated as visual references only; known image-generated sample Latin was scanned and is not hard-coded in games-v2.js.
+
+RUNTIME / DEVICE QA LIMITATION
+- Chromium is installed in the execution environment, but localhost navigation is blocked by administrator policy.
+- Therefore this final release does NOT claim a fresh end-to-end browser run in this packaging step.
+- Earlier implementation testing exercised the game flows while building, but physical iPad Safari/audio quality still requires a device check after deployment.
+
+RELEASE DECISION
+- Static/release checks above must all be PASS before upload.
